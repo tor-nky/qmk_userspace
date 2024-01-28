@@ -337,10 +337,10 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_SHFT|B_Z    , .func = ng_send_ho    },  // ほ
   {.key = B_SHFT|B_X    , .func = ng_send_hi    },  // ひ
   {.key = B_SHFT|B_C    , .func = ng_send_wo    },  // を
-  {.key = B_V|B_SHFT    , .func = ng_edit_touten},  // 、
+  {.key = B_SHFT|B_V    , .func = ng_edit_touten},  // 、
   {.key = B_SHFT|B_B    , .func = ng_send_mi    },  // み
   {.key = B_SHFT|B_N    , .func = ng_send_o     },  // お
-  {.key = B_M|B_SHFT    , .func = ng_edit_kuten },  // 。
+  {.key = B_SHFT|B_M    , .func = ng_edit_kuten },  // 。
   {.key = B_SHFT|B_COMM , .func = ng_send_mu    },  // む
   {.key = B_SHFT|B_DOT  , .func = ng_send_wa    },  // わ
   {.key = B_SHFT|B_SLSH , .func = ng_send_re    },  // れ

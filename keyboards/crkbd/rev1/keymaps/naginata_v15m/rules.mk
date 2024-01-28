@@ -9,10 +9,10 @@ OLED_DRIVER		= ssd1306
 OS_DETECTION_ENABLE = no									# 264 bytes (v0.23.4)
 
 
-RING_BUFFERED_6KRO_REPORT_ENABLE = no						# 398 bytes (v0.23.4)
+# RING_BUFFERED_6KRO_REPORT_ENABLE = yes					# 398 bytes (v0.23.4)
 	# USB 6-Key Rollover - Instead of stopping any new input once 6 keys
 	# are pressed, the oldest key is released and the new key is pressed.
-DEBOUNCE_TYPE = sym_defer_pk	# debouncing per key.		# 922 bytes (v0.23.4)
+# DEBOUNCE_TYPE = sym_defer_pk	# debouncing per key.		# 922 bytes (v0.23.4)
 
 
 #  Squeezing the most out of AVR
