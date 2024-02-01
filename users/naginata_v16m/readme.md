@@ -44,7 +44,7 @@ config.h に次の記述を加えてコンパイルしてください。ユニ�
 #define TAP_CODE_DELAY 24   // Sets the delay between `register_code` and `unregister_code`
 ```
 ## OSの設定とIMへの単語の登録 (BLE Micro Pro)
-iOS以外では下表のものを __辞書登録__ してください。
+iOSとLinux以外では下表のものを __辞書登録__ してください。
 |単語|読み|参考|
 |---|---|---|
 |……|なぎてて|__なぎ__ なたしき __て__ ん __て__ ん|
@@ -58,7 +58,7 @@ iOS以外では下表のものを __辞書登録__ してください。
 |×　　　×　　　×|なぎばつ|__なぎ__ なたしき __ばつ__|
 |｜《》|なぎる|__なぎ__ なたしき __るび__|
 |○|なぎまる|__なぎ__ なたしき __まる__|
-### Windows辞書式の場合
+### Windows辞書式(BMP専用)の場合
 キーボード設定を日本語106キーボードにする。
 
 IMEのキー設定
@@ -66,14 +66,14 @@ IMEのキー設定
 |---|:---:|:---:|
 |Ctrl+Shift+無変換| - |全消去|
 |Ctrl+Shift+変換| - |全確定|
-### Mac辞書式の場合
+### Mac辞書式(BMP専用)の場合
 キーボードが日本語/英語どちらの設定でも動きます。
 
 また、「キーボード設定を開く...」から「入力ソース」に英語「U.S.」を加えます。  
 「英数」キーでIMをオフにしたとき「U.S.」になるようにしてください。
-### Linux辞書式の場合
+### Linux(BMP専用)の場合
 キーボード設定を日本語106キーボードにする。
-### iOSの場合
+### iOS(BMP専用)の場合
 キーボードが日本語/英語どちらの設定でも動きます。  
 単語登録した記号を入力することが不可能になりましたので、__記号を含む編集モードを押しても何も起きません__。
 ## QMKファームウェアの設定
@@ -99,19 +99,20 @@ F+G を押さなくても 左右シフト＋英字 で IMEオフになるので�
 | 設定項目 | 設定 | キーコード | 関数呼び出し | 
 |---|---|---|---|
 | OS切り替え            | Windows  | NGSW_WIN  | switchOS(NG_WIN)  | 
-|                       | MacOS    | NGSW_MAC  | switchOS(NG_MAC)  | 
-|                       | Linux    | NGSW_LNX  | switchOS(NG_LNX)  | 
-|                       | Windows辞書式(BMP専用) | NGSW_WIN  | switchOS(NG_WIN_DIC)  | 
-|                       | Mac辞書式(BMP専用)     | NGSW_MAC  | switchOS(NG_MAC_DIC)  | 
-|                       | Linux辞書式(BMP専用)   | NGSW_LNX  | switchOS(NG_LNX_DIC)  | 
-|                       | iOS(BMP専用) | NGSW_IOS  | switchOS(NG_IOS)  | 
+|                      | MacOS    | NGSW_MAC  | switchOS(NG_MAC)  | 
+|                      | Linux    | NGSW_LNX  | switchOS(NG_LNX)  | 
+|                      | Windows(BMP専用) | NGSW_WIN  | switchOS(NG_WIN_BMP)  | 
+|                      | Mac(BMP専用)     | NGSW_MAC  | switchOS(NG_MAC_BMP)  | 
+|                      | Linux(BMP専用)   | NGSW_LNX  | switchOS(NG_LNX_BMP)  | 
+|                      | iOS(BMP専用) | NGSW_IOS  | switchOS(NG_IOS_BMP)  | 
 | MacOSのライブ変換対応(BMPにはなし) | ON/OFFトグル   | NG_MLV   | mac_live_conversion_toggle()  | 
 | 縦書き、横書き        | ON/OFFトグル   | NG_TAYO    | tategaki_toggle()  | 
 | 後置シフト            | ON/OFFトグル   | NG_KOTI  | kouchi_shift_toggle()  | 
 | 現在設定の出力        |   | NG_SHOS   | ng_show_os()  | 
 
 本家のDvorakJ版薙刀式は前置シフトですが、
-後置シフトも有効にできます。
+時間制限付き後置シフトも有効にできます。
+naginata.h 内の `#define NG_KOUCHI_SHIFT_MS 60` にミリ秒単位で設定し、コンパイルします。
 
 MacOSでライブ変換が有効な場合、
 記号入力で変換操作が不要なので、ライブ変換対応をオンにしてください。
