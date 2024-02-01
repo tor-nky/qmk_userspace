@@ -43,6 +43,13 @@ config.h に次の記述を加えてコンパイルしてください。ユニ�
 #define USB_POLLING_INTERVAL_MS 8   // sets the USB polling rate in milliseconds
 #define TAP_CODE_DELAY 24   // Sets the delay between `register_code` and `unregister_code`
 ```
+IMEのキー設定
+|モード|入力キー|コマンド|
+|---|:---:|:---:|
+|変換前入力中|Ctrl Shift Henkan|__確定__|
+|変換中|〃|__〃__|
+|変換前入力中|Ctrl Shift Muhenkan|__キャンセル__|
+|変換中|〃|__〃__|
 ## OSの設定とIMへの単語の登録 (BLE Micro Pro)
 iOSとLinux以外では下表のものを __辞書登録__ してください。
 |単語|読み|参考|
