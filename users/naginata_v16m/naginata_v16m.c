@@ -123,8 +123,8 @@ typedef struct {
 
 // かな定義
 // 3キー同時 → 2キー同時 → センターシフト → 単打 の順
-// シフト残り判定は、3キー同時内と2キー同時内の順序で決まる
-// 同じ key の定義が複数ある時の動作は不明
+// シフト復活判定は、3キー同時と2キー同時の順序で決まる
+// 同じ key の定義が複数ある時は、早期出力がうまくいかない
 const PROGMEM naginata_keymap ngmap[] = {
   // ********** 3キー同時 **********
   // 拗音、外来音
@@ -914,7 +914,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     pushed_key |= recent_key;  // キーを加える
 
 #ifdef NG_KOUCHI_SHIFT_MS
-    // センターシフト(時間制限内のため後置シフトとして処理するものを除く)
+    // センターシフト(前置シフト限定か制限時間外の後置シフトの場合)
     if (recent_key == B_SHFT && (!naginata_config.kouchi_shift
         || (uint16_t)(record->event.time - previous_pushed_ms) > (NG_KOUCHI_SHIFT_MS))) {
 #else
@@ -962,7 +962,8 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // バッファ内の全てのキーを組み合わせている
       // (前置シフト限定でセンターシフトの時は全て出力する)
       if (searching_count == waiting_count && !store_key_later) {
-        if (pressed && recent_key) {
+        // 薙刀式のキーを押した時(同時押し定義の最大数に達していたら変換するため飛ばす)
+        if (pressed && recent_key && waiting_count < NKEYS) {
           // 今押したキー以外の出力が済んでいるとシフト復活へ
           if (waiting_count == 1 && rest_shift_state == Checking) {
             rest_shift_state = Once;
@@ -988,6 +989,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // かな定義を探して出力する
       if (ng_search_and_send(searching_key)) {
         // センターシフトの連続用
+        // (センターシフト+2キー以上同時押しの定義がある時に、シフトの引き継ぎ落としを防ぐ)
         contains_center_shift = searching_key; // 薙刀式v15では不要
         // 1回出力したらシフト復活は終わり
         if (rest_shift_state == Once) {
