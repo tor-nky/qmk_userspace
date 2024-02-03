@@ -17,6 +17,11 @@
 #include QMK_KEYBOARD_H
 #include "unicode_P.h"
 
+// Keycodes used for starting Unicode input on different platforms
+#ifndef UNICODE_KEY_MAC
+#    define UNICODE_KEY_MAC KC_LEFT_ALT
+#endif
+
 // Delay finishing Unicode input, in ms
 #ifndef UNICODE_FINISH_DELAY
 #    define UNICODE_FINISH_DELAY 80
