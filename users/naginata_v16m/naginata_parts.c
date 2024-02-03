@@ -1479,6 +1479,9 @@ void ng_edit_nijuu_yama_kakko(void) { // 《》{改行}{↑}
 }
 
 void copy_spc_to_clipboard(void) {
+    // Linuxではうまく行かないので退出
+    if (naginata_config.os == NG_LINUX) return;
+
     tap_code(KC_SPC);
     add_mods(MOD_BIT(KC_LSFT));
     ng_up(1);
