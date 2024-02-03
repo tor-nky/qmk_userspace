@@ -456,6 +456,7 @@ void naginata_off(void) {
   switch (naginata_config.os) {
 #ifndef NG_BMP
     case NG_WIN:
+    case NG_LINUX:
       // Shift+Ctrl+変換 にIMEの確定を設定しておくこと
       // 確定→ひらがな→半角/全角
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
@@ -470,12 +471,9 @@ void naginata_off(void) {
     case NG_MAC:
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
       break;
-    case NG_LINUX:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_GRV); // 半角/全角
-      break;
 #else
     case NG_WIN_BMP:
+    case NG_LINUX_BMP:
       // Shift+Ctrl+変換 にIMEの確定を設定しておくこと
       // 確定→ひらがな→半角/全角
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
@@ -485,9 +483,6 @@ void naginata_off(void) {
     case NG_MAC_BMP:
     case NG_IOS_BMP:
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
-      break;
-    case NG_LINUX_BMP:
-      tap_code(KC_GRV); // 半角/全角
       break;
 #endif
   }
@@ -1085,7 +1080,11 @@ void ng_cut() {
       break;
     case NG_LINUX:
       send_shortcut_delay(LCTL(KC_X), 72);
-      wait_ms(8);
+# ifdef USB_POLLING_INTERVAL_MS
+      wait_ms(USB_POLLING_INTERVAL_MS + 7); // 確実に動作させるため 8ms 空ける
+# else
+      wait_ms(8); // 確実に動作させるため
+# endif
       break;
     case NG_MAC:
       tap_code16(LCMD(KC_X));
@@ -1111,6 +1110,11 @@ void ng_copy() {
       break;
     case NG_LINUX:
       send_shortcut_delay(LCTL(KC_C), 72);
+# ifdef USB_POLLING_INTERVAL_MS
+      wait_ms(USB_POLLING_INTERVAL_MS + 7); // 確実に動作させるため 8ms 空ける
+# else
+      wait_ms(8); // 確実に動作させるため
+# endif
       break;
     case NG_MAC:
       tap_code16(LCMD(KC_C));
@@ -1136,7 +1140,11 @@ void ng_paste() {
       break;
     case NG_LINUX:
       send_shortcut_delay(LCTL(KC_V), 72);
-      wait_ms(8);
+# ifdef USB_POLLING_INTERVAL_MS
+      wait_ms(USB_POLLING_INTERVAL_MS + 7); // 確実に動作させるため 8ms 空ける
+# else
+      wait_ms(8); // 確実に動作させるため
+# endif
       break;
     case NG_MAC:
       register_code(KC_LCMD);
