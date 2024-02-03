@@ -1479,6 +1479,9 @@ void ng_edit_nijuu_yama_kakko(void) { // 《》{改行}{↑}
 }
 
 void copy_spc_to_clipboard(void) {
+    // Linuxではうまく行かないので退出
+    if (naginata_config.os == NG_LINUX) return;
+
     tap_code(KC_SPC);
     add_mods(MOD_BIT(KC_LSFT));
     ng_up(1);
@@ -1570,9 +1573,9 @@ void ng_edit_surround_ruby(void) { // ^x｜{改行}^v《》{改行}{↑}{Space}+
     ng_cut();
     ng_send_unicode_string_P(PSTR("｜"));
     ng_paste();
-    copy_spc_to_clipboard();
     ng_send_unicode_string_P(PSTR("《》"));
     ng_up(1);
+    copy_spc_to_clipboard();
 #else
     switch (naginata_config.os) {
     case NG_IOS_BMP:
