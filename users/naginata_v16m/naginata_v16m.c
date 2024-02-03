@@ -1064,7 +1064,8 @@ void ng_delete_with_repeat(void) { // {Del}
   register_code(repeating.code);
 }
 
-void send_shortcut_delay(uint16_t code, uint16_t delay) {
+// 修飾キー(Shift、Alt、Control、GUI)を押下、delayミリ秒後に通常キーを押し、これらのキーを離す
+void tap_code16_delay_after_mods(uint16_t code, uint16_t delay) {
   register_code16(code & ~(QK_MODS_GET_BASIC_KEYCODE(0xFFFF)));
   for (uint16_t i = delay; i > 0; i--) {
     wait_ms(1);
@@ -1080,7 +1081,7 @@ void ng_cut() {
       tap_code16(LCTL(KC_X));
       break;
     case NG_LINUX:
-      send_shortcut_delay(LCTL(KC_X), 72);
+      tap_code16_delay_after_mods(LCTL(KC_X), 72);
 # ifdef USB_POLLING_INTERVAL_MS
       wait_ms(USB_POLLING_INTERVAL_MS + 7); // 確実に動作させるため 8ms 空ける
 # else
@@ -1110,7 +1111,7 @@ void ng_copy() {
       tap_code16(LCTL(KC_C));
       break;
     case NG_LINUX:
-      send_shortcut_delay(LCTL(KC_C), 72);
+      tap_code16_delay_after_mods(LCTL(KC_C), 72);
 # ifdef USB_POLLING_INTERVAL_MS
       wait_ms(USB_POLLING_INTERVAL_MS + 7); // 確実に動作させるため 8ms 空ける
 # else
@@ -1140,7 +1141,7 @@ void ng_paste() {
       tap_code16(LCTL(KC_V));
       break;
     case NG_LINUX:
-      send_shortcut_delay(LCTL(KC_V), 72);
+      tap_code16_delay_after_mods(LCTL(KC_V), 72);
 # ifdef USB_POLLING_INTERVAL_MS
       wait_ms(USB_POLLING_INTERVAL_MS + 7); // 確実に動作させるため 8ms 空ける
 # else
@@ -1298,7 +1299,7 @@ void ng_save() {
       tap_code16(LCTL(KC_S));
       break;
     case NG_LINUX:
-      send_shortcut_delay(LCTL(KC_S), 72);
+      tap_code16_delay_after_mods(LCTL(KC_S), 72);
       break;
     case NG_MAC:
       tap_code16(LCMD(KC_S));
@@ -1338,7 +1339,7 @@ void ng_redo() {
       tap_code16(LCTL(KC_Y));
       break;
     case NG_LINUX:
-      send_shortcut_delay(LCTL(KC_Y), 72);
+      tap_code16_delay_after_mods(LCTL(KC_Y), 72);
       break;
     case NG_MAC:
       tap_code16(LCMD(LSFT(KC_Z)));
@@ -1363,7 +1364,7 @@ void ng_undo() {
       tap_code16(LCTL(KC_Z));
       break;
     case NG_LINUX:
-      send_shortcut_delay(LCTL(KC_Z), 72);
+      tap_code16_delay_after_mods(LCTL(KC_Z), 72);
       break;
     case NG_MAC:
       tap_code16(LCMD(KC_Z));
@@ -1418,7 +1419,7 @@ void ng_eof() {
       tap_code16(LCTL(KC_END));
       break;
     case NG_LINUX:
-      send_shortcut_delay(LCTL(KC_END), 72);
+      tap_code16_delay_after_mods(LCTL(KC_END), 72);
       break;
     case NG_MAC:
       if (naginata_config.tategaki)
