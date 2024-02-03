@@ -22,6 +22,7 @@
 #    define UNICODE_FINISH_DELAY 80
 #endif
 
+// Borrowed from https://github.com/qmk/qmk_firmware/blob/master/quantum/unicode/unicode.c
 void unicode_input_finish(void) {
     extern unicode_config_t unicode_config;
     extern uint8_t          unicode_saved_mods;

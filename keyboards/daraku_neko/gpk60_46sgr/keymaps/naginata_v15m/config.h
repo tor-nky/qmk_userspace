@@ -6,16 +6,8 @@
 // iOS device need lessthan 100
 //#define USB_MAX_POWER_CONSUMPTION 100
 
+#define UNICODE_TYPE_DELAY 0
 
-// 薙刀式の編集モード、固有名詞が不要であればコメントアウト
-// #define NG_NO_HENSHU1
-// #define NG_NO_HENSHU2
-#define NG_NO_KOYUMEISHI
-
-
-// Linuxで使うときは下1行を有効にする
-//#define USB_POLLING_INTERVAL_MS 8   // sets the USB polling rate in milliseconds
-//#define TAP_CODE_DELAY 24   // Sets the delay between `register_code` and `unregister_code`
 
 #define NG_USE_KAWASEMI // Mac汎用 → かわせみ専用
 

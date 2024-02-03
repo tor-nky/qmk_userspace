@@ -32,6 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAPPING_TERM 200
 #define PERMISSIVE_HOLD
 
+// fix iPhone and iPad power adapter issue
+// iOS device need lessthan 100
+// #define USB_MAX_POWER_CONSUMPTION 100
+
+#define UNICODE_TYPE_DELAY 0
+
 #ifdef RGBLIGHT_ENABLE
     #undef RGBLIGHT_ANIMATIONS
     #undef RGBLIGHT_EFFECT_BREATHING
@@ -107,9 +113,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     #undef ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif
 
-#define USB_MAX_POWER_CONSUMPTION 100
-
-
 // Squeezing the most out of AVR
 //  (from qmk_firmware/docs/squeezing_avr.md)
 #undef LOCKING_SUPPORT_ENABLE
@@ -119,15 +122,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NO_MUSIC_MODE
 #define LAYER_STATE_8BIT    // 96 bytes (v0.23.6)
 
-
-// 薙刀式の編集モード、固有名詞が不要であればコメントアウト
-// #define NG_NO_HENSHU1
-// #define NG_NO_HENSHU2
-#define NG_NO_KOYUMEISHI
-
-// Linuxで使うときは下1行を有効にする
-//#define USB_POLLING_INTERVAL_MS 8   // sets the USB polling rate in milliseconds
-//#define TAP_CODE_DELAY 24   // Sets the delay between `register_code` and `unregister_code`
 
 #define NG_USE_KAWASEMI // Mac汎用 → かわせみ専用
 
