@@ -34,7 +34,9 @@ void unicode_input_finish(void) {
             break;
         case UNICODE_MODE_LINUX:
             tap_code(KC_SPACE);
-            wait_ms(UNICODE_FINISH_DELAY);
+#if (UNICODE_FINISH_DELAY > TAP_CODE_DELAY)
+            wait_ms(UNICODE_FINISH_DELAY - TAP_CODE_DELAY);
+#endif
             if (unicode_saved_led_state.caps_lock) {
                 tap_code(KC_CAPS_LOCK);
             }
