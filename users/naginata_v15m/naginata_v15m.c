@@ -122,7 +122,7 @@ typedef struct {
 #define NGMAP_COUNT (sizeof ngmap / sizeof ngmap[0])
 
 // かな定義
-// 3キー同時 → 2キー同時 → センターシフト → 単打 の順
+// 3キー同時 → 2キー同時 → センターシフト → 単打 の順を推奨
 // シフト復活判定は、3キー同時と2キー同時の順序で決まる
 // 同じ key の定義が複数ある時は、早期出力がうまくいかない
 const PROGMEM naginata_keymap ngmap[] = {

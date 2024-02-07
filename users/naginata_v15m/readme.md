@@ -35,14 +35,12 @@ IM にかわせみを使用する場合は、コード入力に Option+Shift+B �
 
 [Karabiner-Elements](https://karabiner-elements.pqrs.org/)をインストールします。  
 ファイル unicode_hex_input_switcher.json をフォルダ ~/.config/karabiner/assets/complex_modification にコピーし、  
-Karabiner-Elements に Unicode Hex Input Switcher を登録してください。  
+Karabiner-Elements に Unicode Hex Input Switcher を登録してください。
+
+念のため、Karabiner-Elements の設定 Device で、2つある Keyboard Quantizer が有効になっているか確認してください。
 ### Linuxの場合
 キーボード設定を日本語106キーボードにする。
-config.h に次の記述を加えてコンパイルしてください。ユニコード入力と一部の編集モードに必要です。
-```
-#define USB_POLLING_INTERVAL_MS 8   // sets the USB polling rate in milliseconds
-#define TAP_CODE_DELAY 24   // Sets the delay between `register_code` and `unregister_code`
-```
+
 IMEのキー設定
 |モード|入力キー|コマンド|
 |---|:---:|:---:|
@@ -80,9 +78,10 @@ IMEのキー設定
 「英数」キーでIMをオフにしたとき「U.S.」になるようにしてください。
 ### Linux(BMP専用)の場合
 キーボード設定を日本語106キーボードにする。
+単語登録した記号を入力することが不可能になりましたので、__記号を含む編集モードの多くでは、押しても何も起きません__。
 ### iOS(BMP専用)の場合
 キーボードが日本語/英語どちらの設定でも動きます。  
-単語登録した記号を入力することが不可能になりましたので、__記号を含む編集モードを押しても何も起きません__。
+単語登録した記号を入力することが不可能になりましたので、__記号を含む編集モードの多くでは、押しても何も起きません__。
 ## QMKファームウェアの設定
 
 独自拡張として、標準のシフト&スペースに加えて、シフト&エンターキーを追加しました。
@@ -147,15 +146,9 @@ Bluetooth接続でご利用ください。
 キーボードの電源を入れてから、またはキーボードをリセットしてから約10秒間は、```『』【】〇``` などの辞書登録した記号を入力できません。  
 iPhoneの仕様で、ひらがな変換、カタカナ変換、再変換などは使えません。
 ## 不具合
-* BLE Micro Pro 新ファームウェア(>=1.0.0)では、今のところフォルダ
-```keyboards/ble_micro_pro/keymaps/naginata_v15m/```
-と
-```users/naginata_v15m/```
-内を編集するだけでは使えるようになりません。  
-さらに __iOSでは__ 辞書式での記号入力ができません。(bmp-vial-1.1.1で確認)
 * 定義が設定されていないキーを押しても、何の代わりも出力しない  
 この場合、キーマップから該当するキーを NG_** でないものに変えてください。
-* Windows の秀丸エディタは、入力が速すぎるとクラッシュすることがあります。
+* Windows の秀丸エディタでは、入力が速すぎると表示が乱れたりクラッシュすることがあります。
 ## DvorakJ版、Hachikuとの違い
 ### 文字キーを押し、未出力のままスペースを押し離す
 |DvorakJ|Hachiku|naginata_v15m|
