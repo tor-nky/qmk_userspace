@@ -982,7 +982,8 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       }
 
       // かな定義を探して出力する
-      if (ng_search_and_send(searching_key)) {
+      // 1キーで何も定義がないキーもここで配列から取り除く
+      if (ng_search_and_send(searching_key) || searching_count == 1) {
         // センターシフトの連続用
         // (センターシフト+2キー以上同時押しの定義がある時に、シフトの引き継ぎ落としを防ぐ)
         contains_center_shift = searching_key; // 薙刀式v15では不要
@@ -1009,10 +1010,6 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       }
     }
 
-    // 何も定義がないキー
-    if (!searching_count) {
-      waiting_count = 0;
-    }
     // シフト復活は不発
     if (rest_shift_state == Checking) {
       rest_shift_state = Stop;
