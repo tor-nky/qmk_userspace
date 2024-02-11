@@ -315,7 +315,7 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_V|B_M       , .func = ng_enter},
 
   // センターシフト
-  // {.key = B_SHFT|B_Q    , .func = ng_null       },  // ヴ
+  {.key = B_SHFT|B_Q    , .func = ng_null       },  // ヴ
   {.key = B_SHFT|B_W    , .func = ng_send_me    },  // め
   {.key = B_SHFT|B_E    , .func = ng_send_ri    },  // り
   {.key = B_SHFT|B_R    , .func = ng_send_ne    },  // ね
