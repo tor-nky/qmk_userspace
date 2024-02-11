@@ -156,7 +156,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       rgblight_sethsv_noeeprom(HSV_CYAN);
     }
   } else {
-    rgblight_sethsv_noeeprom(HSV_GOLD);
+    rgblight_sethsv(HSV_GOLD);
   }
   return state;
 }
