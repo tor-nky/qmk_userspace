@@ -28,6 +28,8 @@
 #define NG_KOUCHI_SHIFT_MS 20
 // ********************************************
 
+// LINUX で編集モードを使うときの間
+#define LINUX_WAIT_MS 72
 
 // 互換性
 #if !(defined(IS_QK_KB) || defined(KC_LNG9))
