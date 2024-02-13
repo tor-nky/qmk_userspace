@@ -1189,7 +1189,7 @@ void ng_send_tsa(void) {    // つぁ
 void ng_edit_touten(void) { // 、
 #ifndef NG_BMP
     tap_code(KC_COMMA);
-    tap_code(KC_ENT);
+    tap_code(KC_ENTER);
 #else
     switch (naginata_config.os) {
     case NG_IOS_BMP:
@@ -1198,7 +1198,7 @@ void ng_edit_touten(void) { // 、
         break;
     default:
         tap_code(KC_COMMA);
-        tap_code(KC_ENT);
+        tap_code(KC_ENTER);
         break;
     }
 #endif
@@ -1206,7 +1206,7 @@ void ng_edit_touten(void) { // 、
 void ng_edit_kuten(void) { // 。
 #ifndef NG_BMP
     tap_code(KC_DOT);
-    tap_code(KC_ENT);
+    tap_code(KC_ENTER);
 #else
     switch (naginata_config.os) {
     case NG_IOS_BMP:
@@ -1215,7 +1215,7 @@ void ng_edit_kuten(void) { // 。
         break;
     default:
         tap_code(KC_DOT);
-        tap_code(KC_ENT);
+        tap_code(KC_ENTER);
         break;
     }
 #endif
@@ -1232,8 +1232,8 @@ void ng_edit_tenten(void) { // ……{改行}
     switch (naginata_config.os) {
     case NG_IOS_BMP:
         register_code(KC_LOPT);
-        tap_code(KC_SCLN);
-        tap_code(KC_SCLN);
+        tap_code(KC_SEMICOLON);
+        tap_code(KC_SEMICOLON);
         unregister_code(KC_LOPT);
         ng_ime_complete();
         break;
@@ -1262,17 +1262,17 @@ void ng_symbol_yokobou(void) { // ――{改行}
 }
 void ng_symbol_question(void) { // ？{改行}
 #ifndef NG_BMP
-    tap_code16(LSFT(KC_SLSH));
-    tap_code(KC_ENT);
+    tap_code16(LSFT(KC_SLASH));
+    tap_code(KC_ENTER);
 #else
     switch (naginata_config.os) {
     case NG_IOS_BMP:
-        tap_code16(LSFT(KC_SLSH));
+        tap_code16(LSFT(KC_SLASH));
         ng_ime_complete();
         break;
     default:
-        tap_code16(LSFT(KC_SLSH));
-        tap_code(KC_ENT);
+        tap_code16(LSFT(KC_SLASH));
+        tap_code(KC_ENTER);
         break;
     }
 #endif
@@ -1280,7 +1280,7 @@ void ng_symbol_question(void) { // ？{改行}
 void ng_symbol_exclaim(void) { // ！{改行}
 #ifndef NG_BMP
     tap_code16(LSFT(KC_1));
-    tap_code(KC_ENT);
+    tap_code(KC_ENTER);
 #else
     switch (naginata_config.os) {
     case NG_IOS_BMP:
@@ -1289,7 +1289,7 @@ void ng_symbol_exclaim(void) { // ！{改行}
         break;
     default:
         tap_code16(LSFT(KC_1));
-        tap_code(KC_ENT);
+        tap_code(KC_ENTER);
         break;
     }
 #endif
@@ -1303,7 +1303,7 @@ void ng_symbol_slash(void) { // ／{改行}
 #else
     switch (naginata_config.os) {
     case NG_IOS_BMP:
-        tap_code16(LOPT(KC_SLSH));
+        tap_code16(LOPT(KC_SLASH));
         ng_ime_complete();
         break;
     default:
@@ -1372,20 +1372,20 @@ void ng_edit_s20_left(void) { // +{← 20}
     ng_move_cursor_with_repeat(true, KC_LEFT, 20);
 }
 void ng_edit_s_home(void) { // +{Home}
-    add_mods(MOD_BIT(KC_LSFT));
+    add_mods(MOD_BIT(KC_LEFT_SHIFT));
     ng_home();
-    del_mods(MOD_BIT(KC_LSFT));
+    del_mods(MOD_BIT(KC_LEFT_SHIFT));
 }
 void ng_edit_s_end(void) { // +{End}
-    add_mods(MOD_BIT(KC_LSFT));
+    add_mods(MOD_BIT(KC_LEFT_SHIFT));
     ng_end();
-    del_mods(MOD_BIT(KC_LSFT));
+    del_mods(MOD_BIT(KC_LEFT_SHIFT));
 }
 void ng_edit_delete_to_end(void) { // +{End}{BS}
-    add_mods(MOD_BIT(KC_LSFT));
+    add_mods(MOD_BIT(KC_LEFT_SHIFT));
     ng_end();
-    del_mods(MOD_BIT(KC_LSFT));
-    tap_code(KC_BSPC);
+    del_mods(MOD_BIT(KC_LEFT_SHIFT));
+    tap_code(KC_BACKSPACE);
 }
 void ng_edit_nijuu_yama_gakko(void) { // 『』{改行}{↑}
 #ifndef NG_BMP
@@ -1481,19 +1481,19 @@ void ng_edit_nijuu_yama_kakko(void) { // 《》{改行}{↑}
 void copy_spc_to_clipboard(void) {
     switch (naginata_config.os) {
     case NG_LINUX:
-        tap_code(KC_SPC);
+        tap_code(KC_SPACE);
         wait_ms(16); // 確実に動作させるため
-        add_mods(MOD_BIT(KC_LSFT));
+        add_mods(MOD_BIT(KC_LEFT_SHIFT));
         ng_up(1);
-        del_mods(MOD_BIT(KC_LSFT));
+        del_mods(MOD_BIT(KC_LEFT_SHIFT));
         wait_ms(16); // 確実に動作させるため
         ng_cut();
         break;
     default:
-        tap_code(KC_SPC);
-        add_mods(MOD_BIT(KC_LSFT));
+        tap_code(KC_SPACE);
+        add_mods(MOD_BIT(KC_LEFT_SHIFT));
         ng_up(1);
-        del_mods(MOD_BIT(KC_LSFT));
+        del_mods(MOD_BIT(KC_LEFT_SHIFT));
         ng_cut();
         break;
     }
@@ -1592,9 +1592,9 @@ void ng_edit_surround_ruby(void) { // ^x｜{改行}^v《》{改行}{↑}{Space}+
         // ng_cut();
         // dic_send_string("nagiru"); // "｜《》"
         // ng_up(2);   // 2文字戻る
-        // tap_code(KC_LCTL); tap_code(KC_LSFT); // ディレイの代わり
+        // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); // ディレイの代わり
         // ng_paste();
-        // tap_code(KC_LCTL); tap_code(KC_LSFT); // ディレイの代わり
+        // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); // ディレイの代わり
         // ng_down(1); // 1文字進む
         break;
     default:
@@ -1623,7 +1623,7 @@ void ng_edit_next_line_kagi_kakko(void) { // {改行}{End}{改行}「」{改行}
 #ifndef NG_BMP
     ng_ime_complete();
     ng_end();
-    tap_code(KC_ENT);
+    tap_code(KC_ENTER);
     ng_send_unicode_string_P(PSTR("「」"));
     ng_up(1);
 #else
@@ -1635,7 +1635,7 @@ void ng_edit_next_line_kagi_kakko(void) { // {改行}{End}{改行}「」{改行}
     default:
         ng_ime_complete();
         ng_end();
-        tap_code(KC_ENT);
+        tap_code(KC_ENTER);
         dic_send_string("nagikagi"); // "「」"
         ng_up(1);
         break;
@@ -1645,13 +1645,13 @@ void ng_edit_next_line_kagi_kakko(void) { // {改行}{End}{改行}「」{改行}
 void ng_edit_next_line_space(void) { // {改行}{End}{改行}{Space}
     ng_ime_complete();
     ng_end();
-    tap_code(KC_ENT);
-    tap_code(KC_SPC);
+    tap_code(KC_ENTER);
+    tap_code(KC_SPACE);
 }
 void ng_edit_separate_line(void) { // 　　　×　　　×　　　×{改行 2}
 #ifndef NG_BMP
     ng_send_unicode_string_P(PSTR("　　　×　　　×　　　×"));
-    tap_code(KC_ENT);
+    tap_code(KC_ENTER);
 #else
     switch (naginata_config.os) {
     case NG_LINUX_BMP:
@@ -1663,45 +1663,45 @@ void ng_edit_separate_line(void) { // 　　　×　　　×　　　×{改行 2
         tap_code(KC_SPACE);
         tap_code(KC_SPACE);
         dic_send_string("nagibatu"); // "　　　×　　　×　　　×"
-        tap_code(KC_ENT);
+        tap_code(KC_ENTER);
         break;
     }
 #endif
 }
 void ng_edit_3_space(void) { // {Space 3}
-    tap_code(KC_SPC);
-    tap_code(KC_SPC);
-    tap_code(KC_SPC);
+    tap_code(KC_SPACE);
+    tap_code(KC_SPACE);
+    tap_code(KC_SPACE);
 }
 void ng_edit_togaki(void) { // {Home}{改行}{Space 3}{←}
     ng_home();
-    tap_code(KC_ENT);
-    tap_code(KC_SPC);
-    tap_code(KC_SPC);
-    tap_code(KC_SPC);
+    tap_code(KC_ENTER);
+    tap_code(KC_SPACE);
+    tap_code(KC_SPACE);
+    tap_code(KC_SPACE);
     ng_left(1);
 }
 void ng_edit_serifu(void) { // {Home}{改行}{Space 1}{←}
     ng_home();
-    tap_code(KC_ENT);
-    tap_code(KC_SPC);
+    tap_code(KC_ENTER);
+    tap_code(KC_SPACE);
     ng_left(1);
 }
 void ng_edit_togaki_zengyo(void) { // {Home}{→}{End}{Del 4}{←}
     ng_home();
     ng_right(1);
     ng_end();
-    tap_code(KC_DEL);
-    tap_code(KC_DEL);
-    tap_code(KC_DEL);
-    tap_code(KC_DEL);
+    tap_code(KC_DELETE);
+    tap_code(KC_DELETE);
+    tap_code(KC_DELETE);
+    tap_code(KC_DELETE);
     ng_left(1);
 }
 void ng_edit_serifu_zengyo(void) { // {Home}{→}{End}{Del 2}{←}
     ng_home();
     ng_right(1);
     ng_end();
-    tap_code(KC_DEL);
-    tap_code(KC_DEL);
+    tap_code(KC_DELETE);
+    tap_code(KC_DELETE);
     ng_left(1);
 }

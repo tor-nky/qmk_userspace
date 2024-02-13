@@ -466,7 +466,7 @@ void naginata_off(void) {
       wait_ms(8); // 確実にIMEオフにするため
 # endif
       tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_GRV); // 半角/全角
+      tap_code(KC_GRAVE); // 半角/全角
       break;
     case NG_MAC:
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
@@ -478,7 +478,7 @@ void naginata_off(void) {
       // 確定→ひらがな→半角/全角
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_GRV); // 半角/全角
+      tap_code(KC_GRAVE); // 半角/全角
       break;
     case NG_MAC_BMP:
     case NG_IOS_BMP:
@@ -586,13 +586,13 @@ void ng_send_unicode_string_P(const char *str) {
 
   switch (naginata_config.os) {
     case NG_LINUX:
-      tap_code(KC_GRV);
+      tap_code(KC_GRAVE);
       send_unicode_string_P(str);
       tap_code(KC_INTERNATIONAL_2);
       break;
     case NG_WIN:
       send_unicode_string_P(str);
-      tap_code(KC_ENT);
+      tap_code(KC_ENTER);
       break;
     case NG_MAC:
 #ifndef NG_USE_KAWASEMI
@@ -761,8 +761,8 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
     uint8_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
     if (record->event.pressed && basic_keycode >= KC_A && basic_keycode <= KC_Z) {
       uint8_t mods = get_mods();
-      if ((mods & MOD_BIT(KC_LSFT)) == MOD_BIT(KC_LSFT) ||
-          (mods & MOD_BIT(KC_RSFT)) == MOD_BIT(KC_RSFT)) {
+      if ((mods & MOD_BIT(KC_LEFT_SHIFT)) == MOD_BIT(KC_LEFT_SHIFT) ||
+          (mods & MOD_BIT(KC_RIGHT_SHIFT)) == MOD_BIT(KC_RIGHT_SHIFT)) {
         del_mods(mods);
         naginata_off();
         add_mods(mods);
@@ -1042,9 +1042,9 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 void ng_space_or_enter(void) {
   if (ng_center_keycode == KC_NO) return;
   if (ng_pushed_spc | ng_pushed_ent) {
-    add_mods(MOD_BIT(KC_LSFT));
+    add_mods(MOD_BIT(KC_LEFT_SHIFT));
     tap_code(ng_center_keycode);
-    del_mods(MOD_BIT(KC_LSFT));
+    del_mods(MOD_BIT(KC_LEFT_SHIFT));
   } else {
     tap_code(ng_center_keycode);
   }
@@ -1144,7 +1144,7 @@ void ng_paste() {
 // リピート中を示す変数を更新
 void ng_move_cursor_with_repeat(bool shift, uint8_t code, uint8_t count) {
   if (shift) {
-    repeating.mod = KC_LSFT;
+    repeating.mod = KC_LEFT_SHIFT;
     register_code(repeating.mod);
   }
   repeating.code = code;
@@ -1361,10 +1361,10 @@ void ng_saihenkan() {
   switch (naginata_config.os) {
 #ifndef NG_BMP
     case NG_WIN:
-      tap_code16(LWIN(KC_SLSH));
+      tap_code16(LWIN(KC_SLASH));
       break;
     case NG_LINUX:
-      tap_code(KC_INT4);
+      tap_code(KC_INTERNATIONAL_4);
       break;
     case NG_MAC:
       tap_code(KC_LANGUAGE_1);
@@ -1372,10 +1372,10 @@ void ng_saihenkan() {
       break;
 #else
     case NG_WIN_BMP:
-      tap_code16(LWIN(KC_SLSH));
+      tap_code16(LWIN(KC_SLASH));
       break;
     case NG_LINUX_BMP:
-      tap_code(KC_INT4);
+      tap_code(KC_INTERNATIONAL_4);
       break;
     case NG_MAC_BMP:
     case NG_IOS_BMP:
@@ -1441,7 +1441,7 @@ void ng_ime_cancel() {
       tap_code(KC_NUM_LOCK);
       break;
     case NG_IOS_BMP:
-      tap_code(KC_ESC);
+      tap_code(KC_ESCAPE);
       break;
 #endif
   }
@@ -1455,7 +1455,7 @@ void ng_ime_complete() {
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       break;
     case NG_LINUX:
-      tap_code(KC_GRV);             // 半角/全角
+      tap_code(KC_GRAVE);             // 半角/全角
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC:
@@ -1476,7 +1476,7 @@ void ng_ime_complete() {
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       break;
     case NG_LINUX_BMP:
-      tap_code(KC_GRV);             // 半角/全角
+      tap_code(KC_GRAVE);             // 半角/全角
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC_BMP:
@@ -1486,7 +1486,7 @@ void ng_ime_complete() {
     case NG_IOS_BMP:
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
-      tap_code(KC_LCTL); // ディレイの代わり
+      tap_code(KC_LEFT_CTRL); // ディレイの代わり
       break;
   }
 #endif
@@ -1498,15 +1498,15 @@ void dic_send_string(const char *str) {
     case NG_LINUX_BMP:
     case NG_IOS_BMP:
       // ng_send_kana(str);
-      // tap_code(KC_LCTL); tap_code(KC_LSFT); tap_code(KC_LCTL); // ディレイの代わり
-      // tap_code(KC_SPC);
-      // tap_code(KC_ENT);
-      // tap_code(KC_LCTL); // ディレイの代わり
+      // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); tap_code(KC_LEFT_CTRL); // ディレイの代わり
+      // tap_code(KC_SPACE);
+      // tap_code(KC_ENTER);
+      // tap_code(KC_LEFT_CTRL); // ディレイの代わり
       break;
     default:
       ng_send_kana(str);
-      tap_code(KC_SPC);
-      tap_code(KC_ENT);
+      tap_code(KC_SPACE);
+      tap_code(KC_ENTER);
       break;
   }
 }
@@ -1518,9 +1518,9 @@ void dic_send_string_with_cut_paste(const char *str) {
       // ng_cut();
       // dic_send_string(str);
       // ng_up(1);     // 1文字戻る
-      // tap_code(KC_LCTL); tap_code(KC_LSFT); // ディレイの代わり
+      // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); // ディレイの代わり
       // ng_paste();
-      // tap_code(KC_LCTL); tap_code(KC_LSFT); // ディレイの代わり
+      // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); // ディレイの代わり
       // ng_down(1);   // 1文字進む
       break;
     default:

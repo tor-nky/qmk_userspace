@@ -31,34 +31,7 @@
 // LINUX で編集モードを使うときの間
 #define LINUX_WAIT_MS 72
 
-// 互換性
-#if !(defined(IS_QK_KB) || defined(KC_LNG9))
-#   define KC_LANGUAGE_1 KC_LANG1
-#   define KC_LANGUAGE_2 KC_LANG2
-#   define KC_INTERNATIONAL_2 KC_KANA
-#   define KC_INTERNATIONAL_4 KC_HENK
-#   define KC_INTERNATIONAL_5 KC_MHEN
-#   define KC_NUM_LOCK KC_NUMLOCK
-#   define KC_LEFT_SHIFT KC_LSFT
-#   define KC_LEFT_ALT KC_LALT
-#   define KC_LEFT_GUI KC_LGUI
-#   define KC_LEFT_CTRL KC_LCTL
-#   define KC_RIGHT_CTRL KC_RCTL
-#   define KC_RIGHT_SHIFT KC_RSFT
-#   define KC_RIGHT_ALT KC_RALT
-#   define KC_RIGHT_GUI KC_RGUI
-#   define KC_BACKSPACE KC_BSPACE
-#   define X_BACKSPACE X_BSPACE
-#   define UNICODE_MODE_WINCOMPOSE UC_WINC
-#   define UNICODE_MODE_MACOS UC_MAC
-#   define UNICODE_MODE_LINUX UC_LNX
-#   define QK_MODS_GET_BASIC_KEYCODE(kc) ((kc)&0xFF)
-#   define IS_QK_MOD_TAP(code) ((code) >= QK_MOD_TAP && (code) <= QK_MOD_TAP_MAX)
-#   define IS_MODIFIER_KEYCODE(code) ((code) >= KC_LEFT_CTRL && (code) <= KC_RIGHT_GUI)
-# ifdef NG_BMP
-#   include "bmp_custom_keycode.h" // For BLE Miro Pro old firmware(<1.0.0)
-# endif
-#elif (defined(NG_BMP))
+#if (defined(NG_BMP))
 #   include "bmp_custom_keycodes.h" // For BLE Miro Pro new firmware(>=1.0.0)
 #endif
 
