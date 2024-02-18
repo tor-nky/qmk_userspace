@@ -762,8 +762,7 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
     uint8_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
     if (record->event.pressed && basic_keycode >= KC_A && basic_keycode <= KC_Z) {
       uint8_t mods = get_mods();
-      if ((mods & MOD_BIT(KC_LEFT_SHIFT)) == MOD_BIT(KC_LEFT_SHIFT) ||
-          (mods & MOD_BIT(KC_RIGHT_SHIFT)) == MOD_BIT(KC_RIGHT_SHIFT)) {
+      if (mods == MOD_BIT(KC_LEFT_SHIFT) || mods == MOD_BIT(KC_RIGHT_SHIFT)) {
         clear_mods();
         naginata_type(KC_NO, record); // 未出力キーを処理
         naginata_off();
