@@ -37,7 +37,7 @@ IM にかわせみを使用する場合は、コード入力に Option+Shift+B �
 ファイル unicode_hex_input_switcher.json をフォルダ ~/.config/karabiner/assets/complex_modification にコピーし、  
 Karabiner-Elements に Unicode Hex Input Switcher を登録してください。
 
-念のため、Karabiner-Elements の設定 Device で、2つある Keyboard Quantizer が有効になっているか確認してください。
+念のため、Karabiner-Elements の設定 Device で、本ファームウェアが入ったキーボードが有効になっているか確認してください。
 ### Linuxの場合
 キーボード設定を日本語106キーボードにする。
 
@@ -131,8 +131,6 @@ OLEDをオンにしているときは、設定の状態がOLEDに表示されま
 ## 通常の QMK で使う場合
 config.h の中に ``#define NG_BMP`` がなければ、そのままコンパイルできます。
 ## BLE Micro Pro で使う場合
-__※ 旧ファームウェア(<1.0.0)でのみ動作します。__
-
 config.h の中に ``#define NG_BMP`` を書き加えてコンパイルします。
 
 USB接続時には、編集モードの多くが正常に動きません。
@@ -143,7 +141,6 @@ Bluetooth接続でご利用ください。
 日本語IMのライブ変換を使用中に M+Comma+Z を押すと、「　　　×　　　×　　　×」が入力できなくなります。
 ライブ変換をやめ、変換学習をリセットすると入力できるようになります。
 * iOS辞書式(BMP専用)  
-キーボードの電源を入れてから、またはキーボードをリセットしてから約10秒間は、```『』【】〇``` などの辞書登録した記号を入力できません。  
 iPhoneの仕様で、ひらがな変換、カタカナ変換、再変換などは使えません。
 ## 不具合
 * 定義が設定されていないキーを押しても、何の代わりも出力しない  
