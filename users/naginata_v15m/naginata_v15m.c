@@ -203,12 +203,12 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_J|B_K|B_T   , .func = ng_symbol_chuuten}, // ・
   {.key = B_J|B_K|B_A   , .func = ng_edit_tenten}, // ……{改行}
   {.key = B_J|B_K|B_S   , .func = ng_edit_maru_kakko}, // (){改行}{↑}
-  {.key = B_J|B_K|B_D   , .func = ng_symbol_question}, // ？{改行}
+  {.key = B_J|B_K|B_D   , .func = ng_edit_question}, // ？{改行}
   {.key = B_J|B_K|B_F   , .func = ng_edit_kagi_kakko}, // 「」{改行}{↑}
   {.key = B_J|B_K|B_G   , .func = ng_edit_nijuu_yama_kakko}, // 《》{改行}{↑}
-  {.key = B_J|B_K|B_Z   , .func = ng_symbol_yokobou}, // ――{改行}
+  {.key = B_J|B_K|B_Z   , .func = ng_edit_yokobou}, // ――{改行}
   {.key = B_J|B_K|B_X   , .func = ng_edit_sumituki_kakko}, // 【】{改行}{↑}
-  {.key = B_J|B_K|B_C   , .func = ng_symbol_exclaim}, // ！{改行}
+  {.key = B_J|B_K|B_C   , .func = ng_edit_exclaim}, // ！{改行}
   {.key = B_J|B_K|B_V   , .func = ng_edit_kakutei_down}, // {改行}{↓}
   {.key = B_J|B_K|B_B   , .func = ng_edit_kakutei_left}, // {改行}{←}
   {.key = B_C|B_V|B_Y   , .func = ng_edit_s_home}, // +{Home}
@@ -230,7 +230,7 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_M|B_COMM|B_W, .func = ng_edit_surround_nijuu_yama_gakko}, // ^x『^v』{改行}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_E, .func = ng_edit_togaki}, // {Home}{改行}{Space 3}{←}
   {.key = B_M|B_COMM|B_R, .func = ng_edit_3_space}, // {Space 3}
-  {.key = B_M|B_COMM|B_T, .func = ng_symbol_maru}, // 〇{改行}
+  {.key = B_M|B_COMM|B_T, .func = ng_edit_maru}, // 〇{改行}
   {.key = B_M|B_COMM|B_A, .func = ng_edit_serifu_zengyo}, // {Home}{→}{End}{Del 2}{←}
   {.key = B_M|B_COMM|B_S, .func = ng_edit_surround_maru_kakko}, // ^x(^v){改行}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_D, .func = ng_edit_serifu}, // {Home}{改行}{Space 1}{←}
@@ -238,7 +238,7 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_M|B_COMM|B_G, .func = ng_edit_surround_ruby}, // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_Z, .func = ng_edit_separate_line}, // 　　　×　　　×　　　×{改行 2}
   {.key = B_M|B_COMM|B_X, .func = ng_edit_surround_sumituki_kakko}, // ^x【^v】{改行}{Space}+{↑}^x
-  {.key = B_M|B_COMM|B_C, .func = ng_symbol_slash}, // ／{改行}
+  {.key = B_M|B_COMM|B_C, .func = ng_edit_slash}, // ／{改行}
   {.key = B_M|B_COMM|B_V, .func = ng_edit_next_line_kagi_kakko}, // {改行}{End}{改行}「」{改行}{↑}
   {.key = B_M|B_COMM|B_B, .func = ng_edit_next_line_space}, // {改行}{End}{改行}{Space}
 
@@ -585,14 +585,14 @@ void ng_send_unicode_string_P(const char *str) {
 #endif
 
   switch (naginata_config.os) {
+    case NG_WIN:
+      send_unicode_string_P(str);
+      tap_code(KC_ENTER);
+      break;
     case NG_LINUX:
       tap_code(KC_GRAVE);
       send_unicode_string_P(str);
       tap_code(KC_INTERNATIONAL_2);
-      break;
-    case NG_WIN:
-      send_unicode_string_P(str);
-      tap_code(KC_ENTER);
       break;
     case NG_MAC:
 #ifndef NG_USE_KAWASEMI

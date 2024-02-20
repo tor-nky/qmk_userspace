@@ -1244,7 +1244,7 @@ void ng_edit_tenten(void) { // ……{改行}
     }
 #endif
 }
-void ng_symbol_yokobou(void) { // ――{改行}
+void ng_edit_yokobou(void) { // ――{改行}
 #ifndef NG_BMP
     ng_send_unicode_string_P(PSTR("──"));
 #else
@@ -1260,7 +1260,7 @@ void ng_symbol_yokobou(void) { // ――{改行}
     }
 #endif
 }
-void ng_symbol_question(void) { // ？{改行}
+void ng_edit_question(void) { // ？{改行}
 #ifndef NG_BMP
     tap_code16(LSFT(KC_SLASH));
     tap_code(KC_ENTER);
@@ -1277,7 +1277,7 @@ void ng_symbol_question(void) { // ？{改行}
     }
 #endif
 }
-void ng_symbol_exclaim(void) { // ！{改行}
+void ng_edit_exclaim(void) { // ！{改行}
 #ifndef NG_BMP
     tap_code16(LSFT(KC_1));
     tap_code(KC_ENTER);
@@ -1297,7 +1297,7 @@ void ng_symbol_exclaim(void) { // ！{改行}
 void ng_symbol_chuuten(void) { // ・
     tap_code(KC_SLASH);
 }
-void ng_symbol_slash(void) { // ／{改行}
+void ng_edit_slash(void) { // ／{改行}
 #ifndef NG_BMP
     ng_send_unicode_string_P(PSTR("／"));
 #else
@@ -1313,7 +1313,7 @@ void ng_symbol_slash(void) { // ／{改行}
     }
 #endif
 }
-void ng_symbol_maru(void) { // 〇{改行}
+void ng_edit_maru(void) { // 〇{改行}
 #ifndef NG_BMP
     ng_send_unicode_string_P(PSTR("〇"));
 #else
