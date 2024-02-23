@@ -1589,13 +1589,7 @@ void ng_edit_surround_ruby(void) { // ^x｜{改行}^v《》{改行}{↑}{Space}+
 #else
     switch (naginata_config.os) {
     case NG_IOS_BMP:
-        // ng_cut();
-        // dic_send_string("nagiru"); // "｜《》"
-        // ng_up(2);   // 2文字戻る
-        // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); // ディレイの代わり
-        // ng_paste();
-        // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); // ディレイの代わり
-        // ng_down(1); // 1文字進む
+        // 動作しないので省略
         break;
     default:
         ng_cut();

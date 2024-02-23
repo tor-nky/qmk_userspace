@@ -1480,13 +1480,9 @@ void ng_ime_complete() {
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC_BMP:
-      tap_code(KC_LANGUAGE_2);  // (Mac)英数
-      tap_code(KC_LANGUAGE_1);  // (Mac)かな
-      break;
     case NG_IOS_BMP:
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
-      tap_code(KC_LEFT_CTRL); // ディレイの代わり
       break;
   }
 #endif
@@ -1497,11 +1493,7 @@ void dic_send_string(const char *str) {
   switch (naginata_config.os) {
     case NG_LINUX_BMP:
     case NG_IOS_BMP:
-      // ng_send_kana(str);
-      // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); tap_code(KC_LEFT_CTRL); // ディレイの代わり
-      // tap_code(KC_SPACE);
-      // tap_code(KC_ENTER);
-      // tap_code(KC_LEFT_CTRL); // ディレイの代わり
+      // 動作しないので省略
       break;
     default:
       ng_send_kana(str);
@@ -1515,13 +1507,7 @@ void dic_send_string_with_cut_paste(const char *str) {
   switch (naginata_config.os) {
     case NG_LINUX_BMP:
     case NG_IOS_BMP:
-      // ng_cut();
-      // dic_send_string(str);
-      // ng_up(1);     // 1文字戻る
-      // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); // ディレイの代わり
-      // ng_paste();
-      // tap_code(KC_LEFT_CTRL); tap_code(KC_LEFT_SHIFT); // ディレイの代わり
-      // ng_down(1);   // 1文字進む
+      // 動作しないので省略
       break;
     default:
       ng_cut();
