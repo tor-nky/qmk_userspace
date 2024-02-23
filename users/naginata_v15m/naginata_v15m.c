@@ -876,7 +876,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   static uint_fast8_t waiting_count = 0; // 文字キーを数える
   static enum RestShiftState rest_shift_state = Stop;
 
-  Ngkey recent_key;  // 各ビットがキーに対応する
+  Ngkey recent_key = 0;  // 各ビットがキーに対応する
   const bool pressed = record->event.pressed;
   bool store_key_later = false;
 
@@ -885,19 +885,24 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       recent_key = ng_key[keycode - NG_Q];
       break;
     case NG_SHFT: // スペースキー
-      recent_key = B_SHFT;
       ng_pushed_spc = pressed;
-      // センターキーの渡り対策
-      ng_center_keycode = pressed || ng_center_keycode == KC_SPACE ? KC_SPACE : KC_NO;
+      if (pressed) {
+        recent_key = B_SHFT;
+        ng_center_keycode = KC_SPACE;
+      } else if (!ng_pushed_ent) {
+        recent_key = B_SHFT;
+      }
       break;
     case NG_SHFT2:  // エンターキー
-      recent_key = B_SHFT;
       ng_pushed_ent = pressed;
-      // センターキーの渡り対策
-      ng_center_keycode = pressed || ng_center_keycode == KC_ENTER ? KC_ENTER : KC_NO;
+      if (pressed) {
+        recent_key = B_SHFT;
+        ng_center_keycode = KC_ENTER;
+      } else if (!ng_pushed_spc) {
+        recent_key = B_SHFT;
+      }
       break;
     default:
-      recent_key = 0;
       break;
   }
 
@@ -1025,9 +1030,9 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 #ifdef NG_USE_SHIFT_WHEN_SPACE_UP
     pushed_key &= ~recent_key; // キーを取り除く
 #endif
-    // スペースを押していないなら次回、シフト復活可能
     if (pushed_key & B_SHFT || !pushed_key) {
       rest_shift_state = Stop;
+    // スペースを押していないなら次回、シフト復活可能
     } else if (rest_shift_state != Once) {
       rest_shift_state = Checking;
     }
@@ -1042,12 +1047,11 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 void ng_space_or_enter(void) {
   if (ng_center_keycode == KC_NO) return;
   if (ng_pushed_spc | ng_pushed_ent) {
-    add_mods(MOD_BIT(KC_LEFT_SHIFT));
-    tap_code(ng_center_keycode);
-    del_mods(MOD_BIT(KC_LEFT_SHIFT));
+    tap_code16(LSFT(ng_center_keycode));
   } else {
     tap_code(ng_center_keycode);
   }
+  ng_center_keycode = KC_NO;
 }
 
 void ng_backspace_with_repeat(void) { // {BS}
