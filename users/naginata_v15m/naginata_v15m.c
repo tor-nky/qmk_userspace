@@ -26,6 +26,7 @@ static uint8_t naginata_layer = 0; // NG_*を配置しているレイヤー番�
 static uint16_t ngon_keys[2]; // 薙刀式をオンにするキー(通常HJ)
 static uint16_t ngoff_keys[2]; // 薙刀式をオフにするキー(通常FG)
 static Ngkey pushed_key = 0; // 同時押しの状態を示す。各ビットがキーに対応する。
+static uint8_t center_shift_count = 0;
 
 // 31キーを32bitの各ビットに割り当てる
 #define B_Q    (1UL<<0)
@@ -418,8 +419,6 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
 // 薙刀式をオン
 void naginata_on(void) {
   is_naginata = true;
-  // pushed_key = 0;
-  // naginata_clear();
   layer_on(naginata_layer);
 
   switch (naginata_config.os) {
@@ -450,6 +449,7 @@ void naginata_on(void) {
 void naginata_off(void) {
   is_naginata = false;
   pushed_key = 0;
+  center_shift_count = 0;
   naginata_clear();
   layer_off(naginata_layer);
 
@@ -860,7 +860,6 @@ void end_repeating_key(void) {
   }
 }
 
-static bool ng_pushed_spc = false, ng_pushed_ent = false;
 static uint8_t ng_center_keycode = KC_NO;
 enum RestShiftState { Stop, Checking, Once };
 
@@ -885,21 +884,27 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       recent_key = ng_key[keycode - NG_Q];
       break;
     case NG_SHFT: // スペースキー
-      ng_pushed_spc = pressed;
       if (pressed) {
+        center_shift_count++;
         recent_key = B_SHFT;
         ng_center_keycode = KC_SPACE;
-      } else if (!ng_pushed_ent) {
-        recent_key = B_SHFT;
+      } else {
+        center_shift_count--;
+        if (!center_shift_count) {
+          recent_key = B_SHFT;
+        }
       }
       break;
     case NG_SHFT2:  // エンターキー
-      ng_pushed_ent = pressed;
       if (pressed) {
+        center_shift_count++;
         recent_key = B_SHFT;
         ng_center_keycode = KC_ENTER;
-      } else if (!ng_pushed_spc) {
-        recent_key = B_SHFT;
+      } else {
+        center_shift_count--;
+        if (!center_shift_count) {
+          recent_key = B_SHFT;
+        }
       }
       break;
     default:
@@ -1046,7 +1051,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 
 void ng_space_or_enter(void) {
   if (ng_center_keycode == KC_NO) return;
-  if (ng_pushed_spc | ng_pushed_ent) {
+  if (center_shift_count) {
     tap_code16(LSFT(ng_center_keycode));
   } else {
     tap_code(ng_center_keycode);
