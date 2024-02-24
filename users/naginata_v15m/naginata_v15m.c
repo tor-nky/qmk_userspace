@@ -457,7 +457,6 @@ void naginata_off(void) {
 #ifndef NG_BMP
     case NG_WIN:
     case NG_LINUX:
-      // Shift+Ctrl+変換 にIMEの確定を設定しておくこと
       // 確定→ひらがな→半角/全角
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
 # ifdef USB_POLLING_INTERVAL_MS
@@ -474,9 +473,6 @@ void naginata_off(void) {
 #else
     case NG_WIN_BMP:
     case NG_LINUX_BMP:
-      // Shift+Ctrl+変換 にIMEの確定を設定しておくこと
-      // 確定→ひらがな→半角/全角
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
       break;
@@ -1402,8 +1398,6 @@ void ng_eof() {
       break;
 #else
     case NG_WIN_BMP:
-      tap_code16(LCTL(KC_END));
-      break;
     case NG_LINUX_BMP:
       tap_code16(LCTL(KC_END));
       break;
@@ -1449,12 +1443,9 @@ void ng_ime_complete() {
 #ifndef NG_BMP
   switch (naginata_config.os) {
     case NG_WIN:
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
-      break;
     case NG_LINUX:
-      tap_code(KC_GRAVE);             // 半角/全角
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
+      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       break;
     case NG_MAC:
 # ifndef NG_USE_KAWASEMI
@@ -1474,7 +1465,7 @@ void ng_ime_complete() {
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       break;
     case NG_LINUX_BMP:
-      tap_code(KC_GRAVE);             // 半角/全角
+      tap_code(KC_GRAVE);           // 半角/全角
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC_BMP:

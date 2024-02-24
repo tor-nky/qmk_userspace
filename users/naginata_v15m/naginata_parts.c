@@ -1230,6 +1230,9 @@ void ng_edit_tenten(void) { // ……{改行}
     ng_send_unicode_string_P(PSTR("……"));
 #else
     switch (naginata_config.os) {
+    case NG_LINUX_BMP:
+        // 動作しないので省略
+        break;
     case NG_IOS_BMP:
         register_code(KC_LOPT);
         tap_code(KC_SEMICOLON);
@@ -1308,7 +1311,9 @@ void ng_edit_slash(void) { // ／{改行}
         break;
     default:
         ng_ime_complete();
-        dic_send_string("naginame"); // "／"
+        tap_code(KC_SLASH);
+        tap_code(KC_F9);
+        tap_code(KC_ENTER);
         break;
     }
 #endif
