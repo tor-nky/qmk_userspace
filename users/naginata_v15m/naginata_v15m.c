@@ -884,22 +884,11 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       recent_key = ng_key[keycode - NG_Q];
       break;
     case NG_SHFT: // スペースキー
-      if (pressed) {
-        center_shift_count++;
-        recent_key = B_SHFT;
-        ng_center_keycode = KC_SPACE;
-      } else {
-        center_shift_count--;
-        if (!center_shift_count) {
-          recent_key = B_SHFT;
-        }
-      }
-      break;
     case NG_SHFT2:  // エンターキー
       if (pressed) {
         center_shift_count++;
         recent_key = B_SHFT;
-        ng_center_keycode = KC_ENTER;
+        ng_center_keycode = (keycode == NG_SHFT ? KC_SPACE : KC_ENTER);
       } else {
         center_shift_count--;
         if (!center_shift_count) {
