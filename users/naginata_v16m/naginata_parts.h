@@ -218,6 +218,7 @@ void ng_enter(void);        // {Enter}
 // 編集モード
 void ng_edit_tenten(void); // ……{改行}
 void ng_edit_yokobou(void); // ――{改行}
+void ng_edit_tatebou(void); // ｜{改行}
 void ng_edit_question(void); // ？{改行}
 void ng_edit_exclaim(void); // ！{改行}
 void ng_symbol_chuuten(void); // ・

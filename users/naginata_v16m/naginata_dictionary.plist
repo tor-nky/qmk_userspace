@@ -16,6 +16,12 @@
 	</dict>
 	<dict>
 		<key>phrase</key>
+		<string>｜</string>
+		<key>shortcut</key>
+		<string>なぎたて</string>
+	</dict>
+	<dict>
+		<key>phrase</key>
 		<string>《》</string>
 		<key>shortcut</key>
 		<string>なぎにや</string>
@@ -43,12 +49,6 @@
 		<string>『』</string>
 		<key>shortcut</key>
 		<string>なぎにか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>／</string>
-		<key>shortcut</key>
-		<string>なぎなめ</string>
 	</dict>
 	<dict>
 		<key>phrase</key>
