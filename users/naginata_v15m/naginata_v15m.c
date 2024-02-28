@@ -25,7 +25,7 @@ static bool is_naginata = false; // 薙刀式がオンかオフか
 static uint8_t naginata_layer = 0; // NG_*を配置しているレイヤー番号
 static uint16_t ngon_keys[2]; // 薙刀式をオンにするキー(通常HJ)
 static uint16_t ngoff_keys[2]; // 薙刀式をオフにするキー(通常FG)
-static Ngkey pushed_key = 0; // 同時押しの状態を示す。各ビットがキーに対応する。
+static Ngkey pressed_key = 0; // 同時押しの状態を示す。各ビットがキーに対応する。
 static uint8_t center_shift_count = 0;
 
 // 31キーを32bitの各ビットに割り当てる
@@ -448,7 +448,7 @@ void naginata_on(void) {
 // 薙刀式をオフ
 void naginata_off(void) {
   is_naginata = false;
-  pushed_key = 0;
+  pressed_key = 0;
   center_shift_count = 0;
   naginata_clear();
   layer_off(naginata_layer);
@@ -800,8 +800,8 @@ bool ng_search_and_send(Ngkey searching_key) {
 
 // 押されているキーのどれかをシフトとするかな定義を探し、配列の添え字を返す
 // 見つからないと NGMAP_COUNT を返す
-Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pushed_key) {
-  // if (!(searching_key && pushed_key))  return NGMAP_COUNT;
+Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pressed_key) {
+  // if (!(searching_key && pressed_key))  return NGMAP_COUNT;
   Ngmap_num num = 0;
   for ( ; num < NGMAP_COUNT; num++) {
     Ngkey key;
@@ -811,7 +811,7 @@ Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pushed_key) {
     key = ngmap[num].key;
 #endif
     // 押しているキーに全て含まれ、今回のキーを含み、スペースを押さない定義を探す
-    if ((pushed_key & key) == key && (key & searching_key) == searching_key && !(key & B_SHFT)) {
+    if ((pressed_key & key) == key && (key & searching_key) == searching_key && !(key & B_SHFT)) {
       break;
     }
   }
@@ -872,7 +872,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   static enum RestShiftState rest_shift_state = Stop;
 
   Ngkey recent_key = 0;  // 各ビットがキーに対応する
-  const bool pressed = record->event.pressed;
+  const bool pressing = record->event.pressed;
   bool store_key_later = false;
 
   switch (keycode) {
@@ -881,7 +881,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       break;
     case NG_SHFT: // スペースキー
     case NG_SHFT2:  // エンターキー
-      if (pressed) {
+      if (pressing) {
         center_shift_count++;
         recent_key = B_SHFT;
         ng_center_keycode = (keycode == NG_SHFT ? KC_SPACE : KC_ENTER);
@@ -897,11 +897,11 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   }
 
   // センターシフトの連続用
-  Ngkey contains_center_shift = pushed_key;
+  Ngkey contains_center_shift = pressed_key;
 
   // 薙刀式のキーを押した
-  if (pressed) {
-    pushed_key |= recent_key;  // キーを加える
+  if (pressing) {
+    pressed_key |= recent_key;  // キーを加える
 
 #ifdef NG_KOUCHI_SHIFT_MS
     // センターシフト(前置シフト限定か制限時間外の後置シフトの場合)
@@ -921,7 +921,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 #endif
   }
   // 何かキーを押したか、リピート中のキーを離した時
-  if (pressed || (repeating_key & recent_key)) {
+  if (pressing || (repeating_key & recent_key)) {
     end_repeating_key();  // キーリピート解除
   }
 
@@ -937,7 +937,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 
       // シフト復活処理
       if (rest_shift_state == Once) {
-        Ngmap_num num = ng_search_with_rest_key(searching_key, pushed_key);
+        Ngmap_num num = ng_search_with_rest_key(searching_key, pressed_key);
         if (num < NGMAP_COUNT) {
 #if defined(__AVR__)
           Ngkey key;
@@ -953,7 +953,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // (前置シフト限定でセンターシフトの時は全て出力する)
       if (searching_count == waiting_count && !store_key_later) {
         // 薙刀式のキーを押した時(同時押し定義の最大数に達していたら変換するため飛ばす)
-        if (pressed && recent_key && waiting_count < NKEYS) {
+        if (pressing && recent_key && waiting_count < NKEYS) {
           // 今押したキー以外の出力が済んでいるとシフト復活へ
           if (waiting_count == 1 && rest_shift_state == Checking) {
             rest_shift_state = Once;
@@ -971,7 +971,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
           }
         // キーを離した時は、そのキーが関わるところまで出力する
         // (薙刀式以外のキーを離したのなら出力しない)
-        } else if (!pressed && !(searching_key & recent_key)) {
+        } else if (!pressing && !(searching_key & recent_key)) {
           break;
         }
       }
@@ -993,7 +993,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
         }
         searching_count = waiting_count;
         // キーを離したり、まだ探すキーが残ってたらキーリピートしない
-        if (!pressed || searching_count) {
+        if (!pressing || searching_count) {
           end_repeating_key();  // キーリピート解除
         // リピートするキーを保存
         } else {
@@ -1016,18 +1016,18 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     // 配列に押したキーを保存
     waiting_keys[waiting_count++] = recent_key;
   // キーを離した時
-  } else if (!pressed) {
+  } else if (!pressing) {
 #ifdef NG_USE_SHIFT_WHEN_SPACE_UP
-    pushed_key &= ~recent_key; // キーを取り除く
+    pressed_key &= ~recent_key; // キーを取り除く
 #endif
-    if (pushed_key & B_SHFT || !pushed_key) {
+    if (pressed_key & B_SHFT || !pressed_key) {
       rest_shift_state = Stop;
     // スペースを押していないなら次回、シフト復活可能
     } else if (rest_shift_state != Once) {
       rest_shift_state = Checking;
     }
 #ifndef NG_USE_SHIFT_WHEN_SPACE_UP
-    pushed_key &= ~recent_key; // キーを取り除く
+    pressed_key &= ~recent_key; // キーを取り除く
 #endif
   }
 
