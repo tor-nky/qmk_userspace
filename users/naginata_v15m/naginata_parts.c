@@ -1486,8 +1486,7 @@ void ng_edit_nijuu_yama_kakko(void) { // 《》{改行}{↑}
 void copy_spc_to_clipboard(void) {
     switch (naginata_config.os) {
     case NG_LINUX:
-        tap_code(KC_SPACE);
-        wait_ms(16); // 確実に動作させるため
+        tap_code_delay(KC_SPACE, 16);
         add_mods(MOD_BIT(KC_LEFT_SHIFT));
         ng_up(1);
         del_mods(MOD_BIT(KC_LEFT_SHIFT));

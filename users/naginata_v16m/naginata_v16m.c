@@ -459,11 +459,11 @@ void naginata_off(void) {
     case NG_WIN:
     case NG_LINUX:
       // 確定→ひらがな→半角/全角
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
 # ifdef USB_POLLING_INTERVAL_MS
-      wait_ms(USB_POLLING_INTERVAL_MS + 7); // 確実にIMEオフにするため 8ms 空ける
+      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)) // Shift+Ctrl+変換
+          , USB_POLLING_INTERVAL_MS + 7); // 確実にIMEオフにするため 8ms 空ける
 # else
-      wait_ms(8); // 確実にIMEオフにするため
+      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8); // Shift+Ctrl+変換
 # endif
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
@@ -601,8 +601,7 @@ void ng_send_unicode_string_P(const char *str) {
         }
       }
       tap_code(KC_LANGUAGE_2);  // 未確定文字を確定する
-      tap_code16(LCTL(KC_F20)); // Unicode HEX Inputへ切り替え
-      wait_ms(32);
+      tap_code16_delay(LCTL(KC_F20), 32); // Unicode HEX Inputへ切り替え
       send_unicode_string_P(str);
       tap_code(KC_LANGUAGE_1);
       tap_code(KC_NUM_LOCK);  // IME Cancel
@@ -1117,8 +1116,7 @@ void ng_paste() {
     case NG_MAC:
       register_code(KC_LCMD);
       wait_ms(100);
-      tap_code(KC_V);
-      wait_ms(100);
+      tap_code_delay(KC_V, 100);
       unregister_code(KC_LCMD);
       wait_ms(100);
       break;
