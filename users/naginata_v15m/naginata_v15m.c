@@ -458,12 +458,7 @@ void naginata_off(void) {
     case NG_WIN:
     case NG_LINUX:
       // 確定→ひらがな→半角/全角
-# ifdef USB_POLLING_INTERVAL_MS
-      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)) // Shift+Ctrl+変換
-          , USB_POLLING_INTERVAL_MS + 7); // 確実にIMEオフにするため 8ms 空ける
-# else
       tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8); // Shift+Ctrl+変換
-# endif
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
       break;
