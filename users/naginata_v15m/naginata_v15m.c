@@ -184,63 +184,63 @@ const PROGMEM naginata_keymap ngmap[] = {
 
   // 編集モード
   {.key = B_D|B_F|B_Y   , .func = ng_home}, // {Home}
-  {.key = B_D|B_F|B_U   , .func = ng_edit_delete_to_end}, // +{End}{BS}
-  {.key = B_D|B_F|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
-  {.key = B_D|B_F|B_O   , .func = ng_delete_with_repeat}, // {Del}
-  {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // {Esc 3}
   {.key = B_D|B_F|B_H   , .func = ng_edit_kakutei_end}, // {Enter}{End}
-  {.key = B_D|B_F|B_J   , .func = ng_edit_1_up}, // {↑}
-  {.key = B_D|B_F|B_K   , .func = ng_edit_s1_up}, // +{↑}
-  {.key = B_D|B_F|B_L   , .func = ng_edit_s7_up}, // +{↑ 7}
-  {.key = B_D|B_F|B_SCLN, .func = ng_katakana}, // ^i
   {.key = B_D|B_F|B_N   , .func = ng_end}, // {End}
+  {.key = B_D|B_F|B_U   , .func = ng_edit_delete_to_end}, // +{End}{BS}
+  {.key = B_D|B_F|B_J   , .func = ng_edit_1_up}, // {↑}
   {.key = B_D|B_F|B_M   , .func = ng_edit_1_down}, // {↓}
+  {.key = B_D|B_F|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
+  {.key = B_D|B_F|B_K   , .func = ng_edit_s1_up}, // +{↑}
   {.key = B_D|B_F|B_COMM, .func = ng_edit_s1_down}, // +{↓}
+  {.key = B_D|B_F|B_O   , .func = ng_delete_with_repeat}, // {Del}
+  {.key = B_D|B_F|B_L   , .func = ng_edit_s7_up}, // +{↑ 7}
   {.key = B_D|B_F|B_DOT , .func = ng_edit_s7_down}, // +{↓ 7}
+  {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // {Esc 3}
+  {.key = B_D|B_F|B_SCLN, .func = ng_katakana}, // ^i
   {.key = B_D|B_F|B_SLSH, .func = ng_hiragana}, // ^u
   {.key = B_J|B_K|B_Q   , .func = ng_eof}, // ^{End}
-  {.key = B_J|B_K|B_W   , .func = ng_edit_nijuu_yama_gakko}, // 『』{改行}{↑}
-  {.key = B_J|B_K|B_R   , .func = ng_save}, // ^s
-  {.key = B_J|B_K|B_T   , .func = ng_symbol_chuuten}, // ・
   {.key = B_J|B_K|B_A   , .func = ng_edit_tenten}, // ……{改行}
-  {.key = B_J|B_K|B_S   , .func = ng_edit_maru_kakko}, // (){改行}{↑}
-  {.key = B_J|B_K|B_D   , .func = ng_edit_question}, // ？{改行}
-  {.key = B_J|B_K|B_F   , .func = ng_edit_kagi_kakko}, // 「」{改行}{↑}
-  {.key = B_J|B_K|B_G   , .func = ng_edit_nijuu_yama_kakko}, // 《》{改行}{↑}
   {.key = B_J|B_K|B_Z   , .func = ng_edit_yokobou}, // ――{改行}
+  {.key = B_J|B_K|B_W   , .func = ng_edit_nijuu_yama_gakko}, // 『』{改行}{↑}
+  {.key = B_J|B_K|B_S   , .func = ng_edit_maru_kakko}, // (){改行}{↑}
   {.key = B_J|B_K|B_X   , .func = ng_edit_sumituki_kakko}, // 【】{改行}{↑}
+  {.key = B_J|B_K|B_D   , .func = ng_edit_question}, // ？{改行}
   {.key = B_J|B_K|B_C   , .func = ng_edit_exclaim}, // ！{改行}
+  {.key = B_J|B_K|B_R   , .func = ng_save}, // ^s
+  {.key = B_J|B_K|B_F   , .func = ng_edit_kagi_kakko}, // 「」{改行}{↑}
   {.key = B_J|B_K|B_V   , .func = ng_edit_kakutei_down}, // {改行}{↓}
+  {.key = B_J|B_K|B_T   , .func = ng_symbol_chuuten}, // ・
+  {.key = B_J|B_K|B_G   , .func = ng_edit_nijuu_yama_kakko}, // 《》{改行}{↑}
   {.key = B_J|B_K|B_B   , .func = ng_edit_kakutei_left}, // {改行}{←}
   {.key = B_C|B_V|B_Y   , .func = ng_edit_s_home}, // +{Home}
-  {.key = B_C|B_V|B_U   , .func = ng_cut}, // ^x
-  {.key = B_C|B_V|B_I   , .func = ng_paste}, // ^v
-  {.key = B_C|B_V|B_O   , .func = ng_redo}, // ^y
-  {.key = B_C|B_V|B_P   , .func = ng_undo}, // ^z
   {.key = B_C|B_V|B_H   , .func = ng_copy}, // ^c
-  {.key = B_C|B_V|B_J   , .func = ng_edit_1_right}, // {→}
-  {.key = B_C|B_V|B_K   , .func = ng_edit_s1_right}, // +{→}
-  {.key = B_C|B_V|B_L   , .func = ng_edit_s5_right}, // +{→ 5}
-  {.key = B_C|B_V|B_SCLN, .func = ng_edit_s20_right}, // +{→ 20}
   {.key = B_C|B_V|B_N   , .func = ng_edit_s_end}, // +{End}
+  {.key = B_C|B_V|B_U   , .func = ng_cut}, // ^x
+  {.key = B_C|B_V|B_J   , .func = ng_edit_1_right}, // {→}
   {.key = B_C|B_V|B_M   , .func = ng_edit_1_left}, // {←}
+  {.key = B_C|B_V|B_I   , .func = ng_paste}, // ^v
+  {.key = B_C|B_V|B_K   , .func = ng_edit_s1_right}, // +{→}
   {.key = B_C|B_V|B_COMM, .func = ng_edit_s1_left}, // +{←}
+  {.key = B_C|B_V|B_O   , .func = ng_redo}, // ^y
+  {.key = B_C|B_V|B_L   , .func = ng_edit_s5_right}, // +{→ 5}
   {.key = B_C|B_V|B_DOT , .func = ng_edit_s5_left}, // +{← 5}
+  {.key = B_C|B_V|B_P   , .func = ng_undo}, // ^z
+  {.key = B_C|B_V|B_SCLN, .func = ng_edit_s20_right}, // +{→ 20}
   {.key = B_C|B_V|B_SLSH, .func = ng_edit_s20_left}, // +{← 20}
   {.key = B_M|B_COMM|B_Q, .func = ng_edit_togaki_zengyo}, // {Home}{→}{End}{Del 4}{←}
-  {.key = B_M|B_COMM|B_W, .func = ng_edit_surround_nijuu_yama_gakko}, // ^x『^v』{改行}{Space}+{↑}^x
-  {.key = B_M|B_COMM|B_E, .func = ng_edit_togaki}, // {Home}{改行}{Space 3}{←}
-  {.key = B_M|B_COMM|B_R, .func = ng_edit_3_space}, // {Space 3}
-  {.key = B_M|B_COMM|B_T, .func = ng_edit_maru}, // 〇{改行}
   {.key = B_M|B_COMM|B_A, .func = ng_edit_serifu_zengyo}, // {Home}{→}{End}{Del 2}{←}
-  {.key = B_M|B_COMM|B_S, .func = ng_edit_surround_maru_kakko}, // ^x(^v){改行}{Space}+{↑}^x
-  {.key = B_M|B_COMM|B_D, .func = ng_edit_serifu}, // {Home}{改行}{Space 1}{←}
-  {.key = B_M|B_COMM|B_F, .func = ng_edit_surround_kagi_kakko}, // ^x「^v」{改行}{Space}+{↑}^x
-  {.key = B_M|B_COMM|B_G, .func = ng_edit_surround_ruby}, // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_Z, .func = ng_edit_separate_line}, // 　　　×　　　×　　　×{改行 2}
+  {.key = B_M|B_COMM|B_W, .func = ng_edit_surround_nijuu_yama_gakko}, // ^x『^v』{改行}{Space}+{↑}^x
+  {.key = B_M|B_COMM|B_S, .func = ng_edit_surround_maru_kakko}, // ^x(^v){改行}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_X, .func = ng_edit_surround_sumituki_kakko}, // ^x【^v】{改行}{Space}+{↑}^x
+  {.key = B_M|B_COMM|B_E, .func = ng_edit_togaki}, // {Home}{改行}{Space 3}{←}
+  {.key = B_M|B_COMM|B_D, .func = ng_edit_serifu}, // {Home}{改行}{Space 1}{←}
   {.key = B_M|B_COMM|B_C, .func = ng_edit_slash}, // ／{改行}
+  {.key = B_M|B_COMM|B_R, .func = ng_edit_3_space}, // {Space 3}
+  {.key = B_M|B_COMM|B_F, .func = ng_edit_surround_kagi_kakko}, // ^x「^v」{改行}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_V, .func = ng_edit_next_line_kagi_kakko}, // {改行}{End}{改行}「」{改行}{↑}
+  {.key = B_M|B_COMM|B_T, .func = ng_edit_maru}, // 〇{改行}
+  {.key = B_M|B_COMM|B_G, .func = ng_edit_surround_ruby}, // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_B, .func = ng_edit_next_line_space}, // {改行}{End}{改行}{Space}
 
   // ********** 2キー同時 **********
