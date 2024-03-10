@@ -16,18 +16,17 @@
 
 #include QMK_KEYBOARD_H
 #include "keymap_japanese.h"
-#include "print.h"
 
 #ifdef OS_DETECTION_ENABLE
-#include "os_detection.h"
+#   include "os_detection.h"
 #endif
 
 // 薙刀式
 #include "naginata.h"
 NGKEYS naginata_keys;
 #ifdef OLED_ENABLE
-bool update_oled = true;
-bool ng_state = false;
+  bool update_oled = true;
+  bool ng_state = false;
 #endif
 // 薙刀式
 #include "twpair_on_jis.h"
@@ -155,7 +154,7 @@ void matrix_init_user(void) {
   // 薙刀式
 
   // 自動でOSによってレイヤーや薙刀式の設定を切り替える
-  #ifdef OS_DETECTION_ENABLE
+#ifdef OS_DETECTION_ENABLE
   wait_ms(400);
   switch (detected_host_os()) {
     case OS_WINDOWS:
@@ -171,7 +170,7 @@ void matrix_init_user(void) {
     default:
       break;
   }
-  #endif
+#endif
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {

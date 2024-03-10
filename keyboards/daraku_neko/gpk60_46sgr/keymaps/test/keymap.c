@@ -51,6 +51,7 @@ enum custom_keycodes {
 #define ADJUST MO(_ADJUST)
 #define NUMPAD TG(_NUMPAD)
 // [_QWERTY]
+#define OP_ESC LALT_T(KC_ESC)
 #define CTL_TAB LCTL_T(KC_TAB)
 #define CM_EISU LGUI_T(KC_LNG2)
 #define LOW_BS LT(_LOWER, KC_BSPC)
@@ -67,10 +68,9 @@ enum custom_keycodes {
 #define WSHOOT  SGUI(KC_5)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
   [_QWERTY] = LAYOUT(
   //,-----------------------------------------------------.      ,--------------------------------------------------------------.
-       KC_ESC,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,           KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_MINS,     SF1,
+       OP_ESC,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,           KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_MINS,     SF1,
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------+--------|
       CTL_TAB,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,           KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,     SF2,
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------+--------|

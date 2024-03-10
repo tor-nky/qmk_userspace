@@ -5,3 +5,7 @@
 // fix iPhone and iPad power adapter issue
 // iOS device need lessthan 100
 // #define USB_MAX_POWER_CONSUMPTION 100
+
+
+// Forces the keyboard to wait for a USB connection to be established before it starts up
+#define WAIT_FOR_USB

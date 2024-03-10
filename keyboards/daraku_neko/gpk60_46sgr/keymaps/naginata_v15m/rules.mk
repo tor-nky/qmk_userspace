@@ -1,12 +1,8 @@
-#VIA_ENABLE = yes
-#SRC += ../../quantum/qmk_rc.c
-
 #BOOTMAGIC_ENABLE = yes		# Enable Bootmagic Lite
 #MOUSEKEY_ENABLE = yes		# Mouse keys
 #EXTRAKEY_ENABLE = yes		# Audio control and System control
 #NKRO_ENABLE = yes			# Enable N-Key Rollover
 #RGBLIGHT_ENABLE = yes		# Enable keyboard RGB underglow
-
 
 OS_DETECTION_ENABLE = yes
 RING_BUFFERED_6KRO_REPORT_ENABLE = yes

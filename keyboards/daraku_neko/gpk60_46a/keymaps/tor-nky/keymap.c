@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include QMK_KEYBOARD_H
 #include "keymap_japanese.h"
 // #include "twpair_on_jis.h"
@@ -54,7 +55,6 @@ enum custom_keycodes {
 #define WSHOOT  SGUI(KC_5)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
   [_QWERTY] = LAYOUT(
   //,-----------------------------------------------------.      ,--------------------------------------------------------------.
        OP_ESC,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,           KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_MINS, KC_BSPC,
