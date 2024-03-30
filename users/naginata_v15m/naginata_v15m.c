@@ -1478,7 +1478,7 @@ void dic_send_string(const char *str) {
       // 動作しないので省略
       break;
     default:
-      ng_send_kana(str);
+      send_string(str);
       tap_code(KC_SPACE);
       tap_code(KC_ENTER);
       break;
@@ -1498,48 +1498,5 @@ void dic_send_string_with_cut_paste(const char *str) {
       ng_paste();
       ng_down(1);   // 1文字進む
       break;
-  }
-}
-
-#define MAX_REGISTER_KEY 4 // 6ロールオーバーのうち、予備用に2を減ずる
-
-// キーをまとめて一気に押してから離す
-// 例: xtu → x押すt押すu押すx離すt離すu離す
-void ng_send_kana(const char *str) {
-  uint_fast8_t registered_count = 0;
-  uint8_t registered[MAX_REGISTER_KEY];
-  char ascii_code;
-
-  while ((ascii_code = pgm_read_byte(str++)) != '\0') {
-    // アスキーコードからキーコードに変換
-    uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-    // バッファに同じキーがあったらそのキーを離す
-    for (uint_fast8_t i = 0; i < registered_count; i++) {
-      if (registered[i] == keycode) {
-        unregister_code(keycode);
-        // registered[] を詰める
-        registered_count--;
-        for ( ; i < registered_count; i++) {
-          registered[i] = registered[i + 1];
-        }
-        break;
-      }
-    }
-    // バッファがいっぱいだったらバッファの先頭のキーを離す
-    if (registered_count == MAX_REGISTER_KEY) {
-      unregister_code(registered[0]);
-      registered_count--;
-      for (uint_fast8_t i = 0; i < registered_count; i++) {
-        registered[i] = registered[i + 1];
-      }
-    }
-    // キーを押す
-    register_code(keycode);
-    registered[registered_count++] = keycode;
-  }
-
-  // 最後にすべてのキーを離す
-  for (uint_fast8_t i = 0; i < registered_count; i++) {
-    unregister_code(registered[i]);
   }
 }

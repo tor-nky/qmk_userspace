@@ -31,7 +31,7 @@
 // LINUX で編集モードを使うときの間
 #define LINUX_WAIT_MS 72
 
-#if (defined(NG_BMP))
+#if defined(NG_BMP)
 #   include "bmp_custom_keycodes.h" // For BLE Miro Pro new firmware(>=1.0.0)
 #endif
 
@@ -93,9 +93,6 @@ void ng_ime_cancel(void);
 void ng_ime_complete(void);
 void dic_send_string(const char *);
 void dic_send_string_with_cut_paste(const char *);
-void ng_send_kana(const char *str);
-
-#define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
 
 #ifndef QK_NG
 #   define QK_NG QK_USER

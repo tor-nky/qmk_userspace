@@ -100,7 +100,7 @@ void ng_send_z(void) {
     tap_code(KC_Z);
 }
 
-#if defined(__AVR__)
+#if defined(__AVR__) || defined(NG_BMP)
 // 清音
 void ng_send_ka(void) { // か
     ng_send_k();
@@ -718,6 +718,34 @@ void ng_send_tsa(void) {    // つぁ
     ng_send_sa();
 }
 #else
+// 文字列を少し速く出力
+void ng_send_kana(const char *str) {
+    // 取り出し
+    char ascii_code = pgm_read_byte(str++);
+    while (ascii_code != '\0') {
+        // 出力バッファを空にする
+        clear_keys();
+        // 次のを取り出し
+        char next = pgm_read_byte(str++);
+        // 出力
+        {
+            // アスキーコードからキーコードに変換
+            uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
+            // 同じキーの連続
+            if (ascii_code == next) {
+                tap_code(keycode);
+            } else {
+                register_code(keycode);
+            }
+        }
+        // 更新
+        ascii_code = next;
+    }
+    // 最後にすべてのキーを離す
+    clear_keyboard_but_mods();  // 押されている修飾キー以外の全てのキーをクリア
+}
+
+#   define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
 // 清音
 void ng_send_ka(void) { // か
     NG_SEND_KANA("ka");
@@ -840,11 +868,10 @@ void ng_send_wo(void) { // を
     NG_SEND_KANA("wo");
 }
 void ng_send_nn(void) { // ん
-    ng_send_n();
-    ng_send_n();
+    NG_SEND_KANA("nn");
 }
 void ng_send_minus(void) {  // ー
-    tap_code(KC_MINUS);
+    NG_SEND_KANA("-");
 }
 
 // 濁音
