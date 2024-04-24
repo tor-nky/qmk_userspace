@@ -216,13 +216,15 @@ void ng_edit_kuten(void);   // 。
 void ng_enter(void);        // {Enter}
 
 // 編集モード
-void ng_edit_tenten(void); // ……{改行}
-void ng_edit_yokobou(void); // ――{改行}
+void ng_symbol_chuuten(void); // ・
 void ng_edit_question(void); // ？{改行}
 void ng_edit_exclaim(void); // ！{改行}
-void ng_symbol_chuuten(void); // ・
 void ng_edit_slash(void); // ／{改行}
 void ng_edit_maru(void); // 〇{改行}
+void ng_edit_tatebou(void); // ｜{改行}
+void ng_edit_tenten(void); // ……{改行}
+void ng_edit_yokobou(void); // ――{改行}
+void ng_edit_separate_line(void); // 　　　×　　　×　　　×{改行 2}
 
 void ng_edit_1_up(void); // {↑}
 void ng_edit_s1_up(void); // +{↑}
@@ -238,31 +240,29 @@ void ng_edit_1_left(void); // {←}
 void ng_edit_s1_left(void); // +{←}
 void ng_edit_s5_left(void); // +{← 5}
 void ng_edit_s20_left(void); // +{← 20}
-void ng_edit_s_home(void); // +{Home}
-void ng_edit_s_end(void); // +{End}
-
-void ng_edit_delete_to_end(void); // +{End}{BS}
-
-void ng_edit_nijuu_yama_gakko(void); // 『』{改行}{↑}
-void ng_edit_maru_kakko(void); // (void){改行}{↑}
-void ng_edit_sumituki_kakko(void); // 【】{改行}{↑}
-void ng_edit_kagi_kakko(void); // 「」{改行}{↑}
-void ng_edit_nijuu_yama_kakko(void); // 《》{改行}{↑}
-void ng_edit_surround_nijuu_yama_gakko(void); // ^x『^v』{改行}{Space}+{↑}^x
-void ng_edit_surround_maru_kakko(void); // ^x(^v){改行}{Space}+{↑}^x
-void ng_edit_surround_sumituki_kakko(void); // ^x【^v】{改行}{Space}+{↑}^x
-void ng_edit_surround_kagi_kakko(void); // ^x「^v」{改行}{Space}+{↑}^x
-void ng_edit_surround_ruby(void); // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
-
 void ng_edit_kakutei_down(void); // {改行}{↓}
 void ng_edit_kakutei_left(void); // {改行}{←}
 void ng_edit_kakutei_end(void); // {Enter}{End}
-void ng_edit_next_line_kagi_kakko(void); // {改行}{End}{改行}「」{改行}{↑}
-void ng_edit_next_line_space(void); // {改行}{End}{改行}{Space}
+void ng_edit_delete_to_end(void); // +{End}{BS}
+void ng_edit_s_home(void); // +{Home}
+void ng_edit_s_end(void); // +{End}
 
-void ng_edit_separate_line(void); // 　　　×　　　×　　　×{改行 2}
 void ng_edit_3_space(void); // {Space 3}
 void ng_edit_togaki(void); // {Home}{改行}{Space 3}{←}
 void ng_edit_serifu(void); // {Home}{改行}{Space 1}{←}
 void ng_edit_togaki_zengyo(void); // {Home}{→}{End}{Del 4}{←}
 void ng_edit_serifu_zengyo(void); // {Home}{→}{End}{Del 2}{←}
+
+void ng_edit_maru_kakko(void); // (){改行}{↑}
+void ng_edit_kagi_kakko(void); // 「」{改行}{↑}
+void ng_edit_nijuu_yama_gakko(void); // 『』{改行}{↑}
+void ng_edit_sumituki_kakko(void); // 【】{改行}{↑}
+void ng_edit_nijuu_yama_kakko(void); // 《》{改行}{↑}
+void ng_edit_next_line_kagi_kakko(void); // {改行}{End}{改行}「」{改行}{↑}
+void ng_edit_next_line_space(void); // {改行}{End}{改行}{Space}
+
+void ng_edit_surround_maru_kakko(void); // ^x(^v){改行}{Space}+{↑}^x
+void ng_edit_surround_kagi_kakko(void); // ^x「^v」{改行}{Space}+{↑}^x
+void ng_edit_surround_nijuu_yama_gakko(void); // ^x『^v』{改行}{Space}+{↑}^x
+void ng_edit_surround_sumituki_kakko(void); // ^x【^v】{改行}{Space}+{↑}^x
+void ng_edit_surround_ruby(void); // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x

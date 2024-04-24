@@ -22,21 +22,9 @@
 	</dict>
 	<dict>
 		<key>phrase</key>
-		<string>（）</string>
-		<key>shortcut</key>
-		<string>なぎまか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
 		<string>【】</string>
 		<key>shortcut</key>
 		<string>なぎすか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>「」</string>
-		<key>shortcut</key>
-		<string>なぎかぎ</string>
 	</dict>
 	<dict>
 		<key>phrase</key>
@@ -49,12 +37,6 @@
 		<string>×　　　×　　　×</string>
 		<key>shortcut</key>
 		<string>なぎばつ</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>｜《》</string>
-		<key>shortcut</key>
-		<string>なぎる</string>
 	</dict>
 	<dict>
 		<key>phrase</key>

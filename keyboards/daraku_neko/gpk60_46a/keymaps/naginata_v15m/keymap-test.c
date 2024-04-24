@@ -23,7 +23,6 @@
 
 // 薙刀式
 #include "naginata.h"
-NGKEYS naginata_keys;
 #ifdef OLED_ENABLE
   bool update_oled = true;
   bool ng_state = false;
@@ -219,55 +218,55 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (pressed) {
         keyrecord_t release;
         release.event.pressed = false;
-// こりゃ (かりょ)  // AVR12ms,RP9ms
+// こりゃ (かりょ)  // AVR12ms
         process_naginata(NG_V, record); // こ
         process_naginata(NG_H, record); // りゃ
-        process_naginata(NG_E, record); // AVR11ms,RP9ms
+        process_naginata(NG_E, record); // AVR11ms
         process_naginata(NG_V, &release);
         process_naginata(NG_H, &release);
         process_naginata(NG_E, &release);
-// ある情報 // AVR21ms,RP17ms
+// ある情報 // AVR21ms
         // process_naginata(NG_J, record); // あ
         // process_naginata(NG_I, record); // る
-        // process_naginata(NG_I, &release); // AVR6ms,RP5ms
+        // process_naginata(NG_I, &release); // AVR6ms
         // process_naginata(NG_I, record); // じょ
-        // process_naginata(NG_R, record); // AVR5ms,RP3ms
+        // process_naginata(NG_R, record); // AVR5ms
         // process_naginata(NG_L, record); // う
         // process_naginata(NG_R, &release);
         // process_naginata(NG_I, &release);
         // process_naginata(NG_J, &release);
         // process_naginata(NG_L, &release);
         // process_naginata(NG_Z, record); // ほ
-        // process_naginata(NG_L, record); // う // AVR4ms,RP3ms
+        // process_naginata(NG_L, record); // う // AVR4ms
         // process_naginata(NG_Z, &release);
         // process_naginata(NG_L, &release);
-// 姶良カルデラ // AVR29ms,RP22ms
+// 姶良カルデラ // AVR29ms
         // process_naginata(NG_J, record); // あ
         // process_naginata(NG_K, record); // い
-        // process_naginata(NG_DOT, record); // ら // AVR6ms,RP2ms
+        // process_naginata(NG_DOT, record); // ら // AVR6ms
         // process_naginata(NG_F, record);  // か
         // process_naginata(NG_J, &release);
         // process_naginata(NG_K, &release);
-        // process_naginata(NG_DOT, &release); // AVR4ms,RP3ms
+        // process_naginata(NG_DOT, &release); // AVR4ms
         // process_naginata(NG_I, record); // る
-        // process_naginata(NG_J, record); // で // AVR6ms,RP3ms
-        // process_naginata(NG_E, record); // AVR5ms,RP3ms
-        // process_naginata(NG_DOT, record); // ら // AVR5ms,RP3ms
+        // process_naginata(NG_J, record); // で // AVR6ms
+        // process_naginata(NG_E, record); // AVR5ms
+        // process_naginata(NG_DOT, record); // ら // AVR5ms
         // // キー上げ
         // process_naginata(NG_E, &release);
         // process_naginata(NG_F, &release);
         // process_naginata(NG_J, &release);
         // process_naginata(NG_I, &release);
-        // process_naginata(NG_DOT, &release);  // AVR3ms,RP2ms
-// 漁夫の利 // AVR20ms,RP17ms
+        // process_naginata(NG_DOT, &release);  // AVR3ms
+// 漁夫の利 // AVR20ms
         // process_naginata(NG_I, record); // ぎょ
         // process_naginata(NG_W, record);
-        // process_naginata(NG_J, record);  // AVR6ms,RP5ms
+        // process_naginata(NG_J, record);  // AVR6ms
         // process_naginata(NG_SHFT, record);  // ふ
-        // process_naginata(NG_SCLN, record);  // AVR5ms,RP3ms
+        // process_naginata(NG_SCLN, record);  // AVR5ms
         // process_naginata(NG_J, &release);    // の
-        // process_naginata(NG_J, record); // AVR5ms,RP3ms
-        // process_naginata(NG_E, record);  // り  // AVR5ms,RP3ms
+        // process_naginata(NG_J, record); // AVR5ms
+        // process_naginata(NG_E, record);  // り  // AVR5ms
         // // キー上げ
         // process_naginata(NG_I, &release);
         // process_naginata(NG_J, &release);
@@ -275,7 +274,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // process_naginata(NG_SHFT, &release);
         // process_naginata(NG_SCLN, &release);
         // process_naginata(NG_E, &release);
-// 近所においしいおそば屋さんがあります // AVR69ms,RP65ms
+// 近所においしいおそば屋さんがあります // AVR69ms
         // process_naginata(NG_W, record); // き
         // process_naginata(NG_W, &release);
         // process_naginata(NG_COMM, record); // ん

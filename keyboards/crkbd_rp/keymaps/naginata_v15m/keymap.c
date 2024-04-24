@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // 薙刀式
 #include "naginata.h"
-NGKEYS naginata_keys;
 #ifdef OLED_ENABLE
   bool update_oled = true;
   bool ng_state = false;

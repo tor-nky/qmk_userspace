@@ -35,39 +35,33 @@
 #   include "bmp_custom_keycodes.h" // For BLE Miro Pro new firmware(>=1.0.0)
 #endif
 
-void naginata_clear(void);
-
-bool process_modifier(uint16_t, keyrecord_t *);
+void set_naginata(uint8_t, uint16_t *, uint16_t *);
 
 void naginata_on(void);
 void naginata_off(void);
 bool naginata_state(void);
-
 void switchOS(uint8_t);
-void ng_set_unicode_mode(uint8_t);
-void ng_show_os(void);
-void ng_send_unicode_string_P(const char *);
 void mac_live_conversion_toggle(void);
 void tategaki_toggle(void);
+void tategaki_on(void);
+void tategaki_off(void);
 void kouchi_shift_toggle(void);
+void ng_show_os(void);
+
+void ng_send_unicode_string_P(const char *);
 
 bool process_naginata(uint16_t, keyrecord_t *);
-// void set_naginata(uint8_t);
-void set_naginata(uint8_t, uint16_t *, uint16_t *);
 
-typedef struct {
-  uint16_t keycode;
-  uint16_t pressTime;
-  uint16_t releaseTime;
-} Keystroke;
+// typedef struct {
+//   uint16_t keycode;
+//   uint16_t pressTime;
+//   uint16_t releaseTime;
+// } Keystroke;
 
 // 同時押し等の状態を示す、各ビットがキーに対応する型
 typedef uint32_t Ngkey;
 // かな定義配列 ngmap[] の添字の型
 typedef uint_fast16_t Ngmap_num;
-
-bool naginata_type(uint16_t, keyrecord_t *);
-void end_repeating_key(void);
 
 void ng_space_or_enter(void);
 void ng_backspace_with_repeat(void);  // {BS}
@@ -91,8 +85,6 @@ void ng_saihenkan(void);
 void ng_eof(void);
 void ng_ime_cancel(void);
 void ng_ime_complete(void);
-void dic_send_string(const char *);
-void dic_send_string_with_cut_paste(const char *);
 
 #ifndef QK_NG
 #   define QK_NG QK_USER
@@ -138,15 +130,15 @@ typedef enum naginata_keycodes {
   NG_SHFT,
   NG_SHFT2,
 
+#ifndef NG_BMP
   NG_ON,
   NG_OFF,
-#ifndef NG_BMP
   NG_CLR,
 #endif
   NGSW_WIN,
   NGSW_MAC,
   NGSW_LNX,
-#ifdef NG_BMP
+#if defined(NG_BMP)
   NGSW_IOS,
 #else
   NG_MLV,
