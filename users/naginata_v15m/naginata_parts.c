@@ -1490,7 +1490,7 @@ void ng_edit_maru(void) { // 〇{改行}
 #endif
 }
 void ng_edit_tatebou(void) { // ｜{改行}
-#ifndef NG_BMP
+#if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("｜"));
 #else
     switch (naginata_config.os) {

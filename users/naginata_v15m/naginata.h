@@ -86,7 +86,7 @@ void ng_eof(void);
 void ng_ime_cancel(void);
 void ng_ime_complete(void);
 
-#ifndef QK_NG
+#if !defined(QK_NG)
 #   define QK_NG QK_USER
 #endif
 
@@ -130,7 +130,7 @@ typedef enum naginata_keycodes {
   NG_SHFT,
   NG_SHFT2,
 
-#ifndef NG_BMP
+#if !defined(NG_BMP)
   NG_ON,
   NG_OFF,
   NG_CLR,
