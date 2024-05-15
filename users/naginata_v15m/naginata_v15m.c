@@ -131,7 +131,7 @@ typedef struct {
 #define NGMAP_COUNT (sizeof ngmap / sizeof ngmap[0])
 
 // かな定義
-// 3キー同時 → 2キー同時 → センターシフト → 単打 の順を推奨(単打の後の定義にはシフト復活が起きない)
+// 3キー同時 → 2キー同時 → センターシフト → 単打 の順を推奨(単打の後に置いた定義はシフト復活が起きない)
 // シフト復活判定は、3キー同時と2キー同時の順序で決まる
 // 同じ key の定義が複数ある時は、早期出力がうまくいかない
 const PROGMEM naginata_keymap ngmap[] = {
@@ -655,16 +655,16 @@ void ng_send_unicode_string_P(const char *str) {
 
 // Shift+英字 で IMEオフ
 static bool process_shifted_alphabet(uint16_t keycode, keyrecord_t *record) {
-  uint8_t basic_keycode = QK_MODS_GET_BASIC_KEYCODE(keycode);
-  if (record->event.pressed && basic_keycode >= KC_A && basic_keycode <= KC_Z) {
-    uint8_t mods = get_mods();
-    if (mods == MOD_BIT(KC_LEFT_SHIFT) || mods == MOD_BIT(KC_RIGHT_SHIFT)) {
-      clear_mods();
-      naginata_type(KC_NO, record); // 未出力キーを処理
-      naginata_off();
-      set_mods(mods);
-      return true;
-    }
+  uint8_t mods = get_mods();
+  // 装飾キーにシフトだけを押していて、アルファベットが押されたとき
+  if ((mods & (MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT)))
+      && ~(mods & ~(MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT)))
+      && record->event.pressed && keycode >= KC_A && keycode <= KC_Z) {
+    clear_mods();
+    naginata_type(KC_NO, record); // 未出力キーを処理
+    naginata_off();
+    set_mods(mods);
+    return true;
   }
   return false;
 }
