@@ -14,4 +14,4 @@ RING_BUFFERED_6KRO_REPORT_ENABLE = yes
 	# are pressed, the oldest key is released and the new key is pressed.
 DEBOUNCE_TYPE = sym_defer_pk	# debouncing per key.
 
-# CONSOLE_ENABLE = yes
+# CONSOLE_ENABLE = yes		# キースキャンにかかる時間を測定するには、さらに config.h へ #define DEBUG_MATRIX_SCAN_RATE を追加する

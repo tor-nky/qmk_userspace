@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Defines names for use in layer keycodes and the keymap
 enum keymap_layers {
   _QWERTY,
+//   _WORKMAN,
 // 薙刀式
   _NAGINATA, // 薙刀式入力レイヤー
 // 薙刀式
@@ -81,6 +82,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                           KC_LGUI,  LOW_BS,  LS_SPC,     RS_SPC, RAI_ENT, KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
+
+//   [_WORKMAN] = LAYOUT_split_3x6_3(
+//   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+//        OP_ESC,    KC_Q,    KC_D,    KC_R,    KC_W,    KC_B,                         KC_J,    KC_F,    KC_U,    KC_P, KC_SCLN,  KC_MINS,
+//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+//       CTL_TAB,    KC_A,    KC_S,    KC_H,    KC_T,    KC_G,                         KC_Y,    KC_N,    KC_E,    KC_O,    KC_I, KC_QUOT,
+//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+//       KC_LSFT,    KC_Z,    KC_X,    KC_M,    KC_C,    KC_V,                         KC_K,    KC_L, KC_COMM,  KC_DOT, KC_SLSH, SFT_DEL,
+//   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+//                                           KC_LGUI,  LOW_BS,  LS_SPC,     RS_SPC, RAI_ENT, KC_RALT
+//                                       //`--------------------------'  `--------------------------'
+//   ),
 
   [_LOWER] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -164,6 +177,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static bool is_us2jis = false;
 #ifdef CONSOLE_ENABLE
   const uint16_t key_timer = timer_read();  // 時間測定開始;
+  uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %i, time: %u, interrupt: %i, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
   const bool pressed = record->event.pressed;
   bool cont = true;
