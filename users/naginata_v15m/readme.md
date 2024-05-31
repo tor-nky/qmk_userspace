@@ -26,7 +26,7 @@ IMEのキー設定
 キーボードが日本語/英語どちらの設定でも動きます。
 
 IM にかわせみを使用する場合は、コード入力に Option+Shift+B が設定されているか確認してください。  
-（config.h の中に ``#define NG_USE_KAWASEMI`` を書き加えてコンパイルします）
+（config.h の中に ``#define NG_USE_KAWASEMI`` と ``#define UNICODE_KEY_MAC KC_NO`` を書き加えてコンパイルします）
 
 また、「キーボード設定を開く...」から「入力ソース」に英語「U.S.」を加えます。  
 「英数」キーでIMをオフにしたとき「U.S.」になるようにしてください。

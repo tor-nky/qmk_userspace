@@ -123,3 +123,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #define NG_USE_KAWASEMI // Mac汎用 → かわせみ専用
+#define UNICODE_KEY_MAC KC_NO   // Keycodes used for starting Unicode input on different platforms
