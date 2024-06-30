@@ -197,26 +197,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       cont = false;
       break;
-    case KC_PEQL:
-      if (naginata_config.os == NG_MAC)
-        break;
-      if (pressed) {
-        if (is_us2jis)
-          tap_code16(LSFT(KC_MINS));
-        else
-          tap_code(KC_EQL);
-      }
-      cont = false;
-      break;
-    case KC_PCMM:
-      if (naginata_config.os == NG_MAC && is_us2jis)
-        break;
-      // JISキーボード設定のMacでないなら、「,」を出力する
-      if (pressed) {
-        tap_code(KC_COMM);
-      }
-      cont = false;
-      break;
 // 薙刀式 OLEDを使う場合
 #ifdef OLED_ENABLE
     case NGSW_WIN...NG_KOTI:
