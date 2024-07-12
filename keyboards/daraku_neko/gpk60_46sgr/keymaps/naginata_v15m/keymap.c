@@ -145,21 +145,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // 薙刀式
 };
 
-#if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
-layer_state_t layer_state_set_user(layer_state_t state) {
-  if (naginata_state()) {
-    if (naginata_config.tategaki) {
-      rgblight_sethsv_noeeprom(HSV_RED);
-    } else {
-      rgblight_sethsv_noeeprom(HSV_CYAN);
-    }
-  } else {
-    rgblight_sethsv(HSV_GOLD);
-  }
-  return state;
-}
-#endif
-
 void matrix_init_user(void) {
   // 薙刀式
   uint16_t ngonkeys[] = {KC_H, KC_J};
@@ -242,6 +227,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // 薙刀式
   if (cont) {
     cont = process_naginata(keycode, record);
+#if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
+    if (!cont) {
+      if (naginata_state()) {
+        if (naginata_config.tategaki) {
+          rgblight_sethsv_noeeprom(HSV_RED);
+        } else {
+          rgblight_sethsv_noeeprom(HSV_CYAN);
+        }
+      } else {
+        rgblight_sethsv(HSV_GOLD);
+      }
+    }
+#endif
   }
   // 薙刀式
 
