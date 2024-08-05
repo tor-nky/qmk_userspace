@@ -116,12 +116,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //  (from qmk_firmware/docs/squeezing_avr.md)
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
-#define NO_ACTION_ONESHOT   // 600 bytes (v0.23.6)
+#define NO_ACTION_ONESHOT   // 598 bytes (v0.25.17)
 // #define NO_ACTION_TAPPING
 #define NO_MUSIC_MODE
-#define LAYER_STATE_8BIT    // 96 bytes (v0.23.6)
+#define LAYER_STATE_8BIT    // 102 bytes (v0.25.17)
 
 
+#define OLED_NOUSE_DEFAULT  // デフォルトのOLED表示を使わない   // 196 bytes (v0.25.17)
 #define NG_USE_KAWASEMI // Mac汎用 → かわせみ専用
 #define UNICODE_KEY_MAC KC_NO   // Keycodes used for starting Unicode input on different platforms
 

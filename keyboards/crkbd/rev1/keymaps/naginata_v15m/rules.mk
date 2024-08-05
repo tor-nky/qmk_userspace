@@ -1,4 +1,4 @@
-#BOOTMAGIC_ENABLE = yes	# Enable Bootmagic Lite				# 56 bytes (v0.25.9)
+BOOTMAGIC_ENABLE = no	# Enable Bootmagic Lite				# 52 bytes (v0.25.17)
 #MOUSEKEY_ENABLE = yes	# Mouse keys						# 1292 bytes (v0.25.9)
 #EXTRAKEY_ENABLE = yes	# Audio control and System control	# 564 bytes (v0.25.9)
 NKRO_ENABLE = no		# Enable N-Key Rollover				# 342 bytes (v0.25.9)
