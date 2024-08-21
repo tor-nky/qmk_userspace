@@ -471,7 +471,7 @@ void naginata_off(void) {
       tap_code(KC_GRAVE); // 半角/全角
       break;
     case NG_MAC:
-      tap_code16_delay(KC_LANGUAGE_2, 8);   // (Mac)英数
+      tap_code_delay(KC_LANGUAGE_2, 8); // (Mac)英数
       break;
 #else
     case NG_WIN_BMP:
@@ -483,7 +483,7 @@ void naginata_off(void) {
       break;
     case NG_MAC_BMP:
     case NG_IOS_BMP:
-      tap_code16_delay(KC_LANGUAGE_2, 8);   // (Mac)英数
+      tap_code_delay(KC_LANGUAGE_2, 8); // (Mac)英数
       break;
 #endif
   }
