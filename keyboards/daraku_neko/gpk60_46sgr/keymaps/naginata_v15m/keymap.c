@@ -227,19 +227,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // 薙刀式
   if (cont) {
     cont = process_naginata(keycode, record);
-#if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
-    if (!cont) {
-      if (naginata_state()) {
-        if (naginata_config.tategaki) {
-          rgblight_sethsv_noeeprom(HSV_RED);
-        } else {
-          rgblight_sethsv_noeeprom(HSV_CYAN);
-        }
-      } else {
-        rgblight_sethsv(HSV_GOLD);
-      }
-    }
-#endif
   }
   // 薙刀式
 
@@ -247,6 +234,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (cont && is_us2jis) {
     cont = twpair_on_jis(keycode, record);
   }
+
+#if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
+  if (naginata_state()) {
+    if (naginata_config.tategaki) {
+      rgblight_sethsv_noeeprom(HSV_RED);
+    } else {
+      rgblight_sethsv_noeeprom(HSV_CYAN);
+    }
+  } else {
+    rgblight_sethsv(HSV_GOLD);
+  }
+#endif
 
 #ifdef CONSOLE_ENABLE
   uprintf("%c%ums\n", pressed ? '*' : ' ', timer_elapsed(key_timer));  // 経過時間表示
