@@ -661,7 +661,6 @@ static bool process_shifted_alphabet(uint16_t keycode, keyrecord_t *record) {
       && ~(mods & ~(MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT)))
       && record->event.pressed && keycode >= KC_A && keycode <= KC_Z) {
     clear_mods();
-    naginata_type(KC_NO, record); // 未出力キーを処理
     naginata_off();
     set_mods(mods);
     return true;
@@ -801,6 +800,12 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
   }
   if (!is_naginata)
     return enable_naginata(keycode, record);
+
+  // シフトを押したとき
+  if (record->event.pressed
+      && (keycode == KC_LEFT_SHIFT || keycode == KC_RIGHT_SHIFT)) {
+    naginata_type(KC_NO, record); // 未出力キーを処理
+  }
 
   if (process_shifted_alphabet(keycode, record))
     return true;
