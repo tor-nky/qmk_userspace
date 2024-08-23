@@ -734,7 +734,6 @@ static bool enable_naginata(uint16_t keycode, keyrecord_t *record) {
 
 // バッファをクリアする
 static void naginata_clear(void) {
-  end_repeating_key();  // キーリピート解除
   n_modifier = 0;
   fghj_buf = 0;
 }
@@ -758,7 +757,13 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
         naginata_on();
         return false;
       case NG_OFF:
-        naginata_off();
+        {
+          uint8_t mods = get_mods();
+          clear_mods();
+          naginata_type(KC_NO, record); // 未出力キーを処理
+          naginata_off();
+          set_mods(mods);
+        }
         return false;
       case NG_CLR:
         naginata_clear();
