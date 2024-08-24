@@ -25,7 +25,6 @@
 #include <string.h>
 
 static void ng_set_unicode_mode(uint8_t);
-static void naginata_clear(void);
 static void end_repeating_key(void);
 static bool naginata_type(uint16_t, keyrecord_t *);
 
@@ -424,72 +423,6 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
   ng_set_unicode_mode(naginata_config.os);
 }
 
-// 薙刀式をオン
-void naginata_on(void) {
-  is_naginata = true;
-  layer_on(naginata_layer);
-
-  switch (naginata_config.os) {
-#if !defined(NG_BMP)
-    case NG_WIN:
-    case NG_LINUX:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_INTERNATIONAL_2);
-      break;
-    case NG_MAC:
-      tap_code(KC_LANGUAGE_1);      // (Mac)かな
-      break;
-#else
-    case NG_WIN_BMP:
-    case NG_LINUX_BMP:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_INTERNATIONAL_2);
-      break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
-      tap_code(KC_LANGUAGE_1);      // (Mac)かな
-      break;
-#endif
-  }
-}
-
-// 薙刀式をオフ
-void naginata_off(void) {
-  is_naginata = false;
-  pressed_key = 0;
-  center_shift_count = 0;
-  naginata_clear();
-  layer_off(naginata_layer);
-  wait_ms(8); // キーを出力してから確定やIME操作までに、間を空ける
-
-  switch (naginata_config.os) {
-#if !defined(NG_BMP)
-    case NG_WIN:
-    case NG_LINUX:
-      // 確定→ひらがな→半角/全角
-      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8);  // Shift+Ctrl+変換
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_GRAVE); // 半角/全角
-      break;
-    case NG_MAC:
-      tap_code(KC_LANGUAGE_2);  // (Mac)英数
-      break;
-#else
-    case NG_WIN_BMP:
-    case NG_LINUX_BMP:
-      // 確定→ひらがな→半角/全角
-      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8);  // Shift+Ctrl+変換
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_GRAVE); // 半角/全角
-      break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
-      tap_code(KC_LANGUAGE_2);  // (Mac)英数
-      break;
-#endif
-  }
-}
-
 // 薙刀式のon/off状態を返す
 bool naginata_state(void) {
   return is_naginata;
@@ -661,10 +594,7 @@ static bool process_shifted_alphabet(uint16_t keycode, keyrecord_t *record) {
   if ((mods & (MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT)))
       && ~(mods & ~(MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT)))
       && record->event.pressed && keycode >= KC_A && keycode <= KC_Z) {
-    clear_mods();
-    naginata_type(KC_NO, record); // 未出力キーを処理
     naginata_off();
-    set_mods(mods);
     return true;
   }
   return false;
@@ -677,6 +607,7 @@ static int8_t n_modifier = 0;
 static bool process_modifier(uint16_t keycode, keyrecord_t *record) {
   if (IS_MODIFIER_KEYCODE(keycode) || IS_QK_MOD_TAP(keycode)) {
     if (record->event.pressed) {
+      naginata_type(KC_NO, record); // 未出力キーを処理
       n_modifier++;
       layer_off(naginata_layer);
     } else {
@@ -732,10 +663,74 @@ static bool enable_naginata(uint16_t keycode, keyrecord_t *record) {
   return true;  // QMKにまかせる
 }
 
-// バッファをクリアする
-static void naginata_clear(void) {
+// 薙刀式をオン
+void naginata_on(void) {
+  is_naginata = true;
+  fghj_buf = KC_NO;
   n_modifier = 0;
-  fghj_buf = 0;
+  layer_on(naginata_layer);
+
+  switch (naginata_config.os) {
+#if !defined(NG_BMP)
+    case NG_WIN:
+    case NG_LINUX:
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      tap_code(KC_INTERNATIONAL_2);
+      break;
+    case NG_MAC:
+      tap_code(KC_LANGUAGE_1);      // (Mac)かな
+      break;
+#else
+    case NG_WIN_BMP:
+    case NG_LINUX_BMP:
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      tap_code(KC_INTERNATIONAL_2);
+      break;
+    case NG_MAC_BMP:
+    case NG_IOS_BMP:
+      tap_code(KC_LANGUAGE_1);      // (Mac)かな
+      break;
+#endif
+  }
+}
+
+// 薙刀式をオフ
+void naginata_off(void) {
+  is_naginata = false;
+  pressed_key = 0;
+  center_shift_count = 0;
+  layer_off(naginata_layer);
+  wait_ms(8); // キーを出力してから確定やIME操作までに、間を空ける
+
+  uint8_t mods = get_mods();
+  clear_mods();
+  switch (naginata_config.os) {
+#if !defined(NG_BMP)
+    case NG_WIN:
+    case NG_LINUX:
+      // 確定→ひらがな→半角/全角
+      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8);  // Shift+Ctrl+変換
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      tap_code(KC_GRAVE); // 半角/全角
+      break;
+    case NG_MAC:
+      tap_code(KC_LANGUAGE_2);  // (Mac)英数
+      break;
+#else
+    case NG_WIN_BMP:
+    case NG_LINUX_BMP:
+      // 確定→ひらがな→半角/全角
+      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8);  // Shift+Ctrl+変換
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      tap_code(KC_GRAVE); // 半角/全角
+      break;
+    case NG_MAC_BMP:
+    case NG_IOS_BMP:
+      tap_code(KC_LANGUAGE_2);  // (Mac)英数
+      break;
+#endif
+  }
+  set_mods(mods);
 }
 
 // #define LOG_PROCESS_NAGINATA
@@ -757,17 +752,12 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
         naginata_on();
         return false;
       case NG_OFF:
-        {
-          uint8_t mods = get_mods();
-          clear_mods();
-          naginata_type(KC_NO, record); // 未出力キーを処理
-          naginata_off();
-          set_mods(mods);
-        }
+        naginata_type(KC_NO, record); // 未出力キーを処理
+        naginata_off();
         return false;
-      case NG_CLR:
-        naginata_clear();
-        return false;
+      // case NG_CLR: // コメントアウトしておいても未出力キーの処理が行われる
+      //   naginata_type(KC_NO, record); // 未出力キーを処理
+      //   return false;
       case NGSW_WIN:
         switchOS(NG_WIN);
         return false;
