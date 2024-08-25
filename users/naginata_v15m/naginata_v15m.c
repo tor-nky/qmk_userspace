@@ -593,7 +593,7 @@ static bool process_shifted_alphabet(uint16_t keycode, keyrecord_t *record) {
   uint8_t mods = get_mods();
   // 装飾キーにシフトだけを押していて、アルファベットが押されたとき
   if ((mods & (MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT)))
-      && ~(mods & ~(MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT)))
+      && !(mods & ~(MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT)))
       && record->event.pressed && keycode >= KC_A && keycode <= KC_Z) {
     naginata_off();
     return true;
