@@ -555,6 +555,7 @@ void ng_send_unicode_string_P(const char *str) {
       tap_code(KC_ENTER);
       break;
     case NG_LINUX:
+      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       tap_code(KC_GRAVE);
       send_unicode_string_P(str);
       tap_code(KC_INTERNATIONAL_2);
