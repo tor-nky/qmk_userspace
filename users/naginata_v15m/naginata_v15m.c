@@ -1009,13 +1009,13 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
           }
           // 変換候補を数える
           int_fast8_t nc = number_of_candidates(searching_key);
+          // 組み合わせをしぼれない = 2: 変換しない
+          if (nc > 1) {
+            break;
           // 組み合わせがない = 0: 変換を開始する
-          if (nc == 0) {
+          } else if (nc == 0 && searching_count > 1) {
             searching_count--;  // 最後のキーを減らして検索
             continue;
-          // 組み合わせをしぼれない = 2: 変換しない
-          } else if (nc != 1) {
-            break;
           }
         // キーを離した時は、そのキーが関わるところまで出力する
         // (薙刀式以外のキーを離したのなら出力しない)
