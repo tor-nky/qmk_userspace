@@ -867,10 +867,10 @@ static int_fast8_t number_of_candidates(Ngkey search) {
 #endif
     // search を含む。前置シフト限定ならセンターシフトも一致している
     if ((key & search) == search && (naginata_config.kouchi_shift || (key & B_SHFT) == (search & B_SHFT))) {
-      c++;
-      if (key != search || c > 1) {
+      if (key != search) {
         return 2;
       }
+      c = 1;
     }
   }
   return c;
