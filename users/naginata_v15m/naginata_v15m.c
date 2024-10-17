@@ -745,6 +745,11 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 #if !defined(NG_BMP)
       case NG_ON:
+        // 起動判定中のキーを出力
+        if (fghj_buf != KC_NO) {
+          tap_code(fghj_buf);
+          fghj_buf = KC_NO;
+        }
         naginata_on();
         return false;
       case NG_OFF:
