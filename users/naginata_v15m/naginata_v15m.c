@@ -1181,17 +1181,11 @@ void ng_paste() {
   switch (naginata_config.os) {
 #if !defined(NG_BMP)
     case NG_WIN:
-      tap_code16(LCTL(KC_V));
-      break;
     case NG_LINUX:
       tap_code16_delay(LCTL(KC_V), LINUX_WAIT_MS);
       break;
     case NG_MAC:
-      register_code(KC_LCMD);
-      wait_ms(100);
-      tap_code_delay(KC_V, 100);
-      unregister_code(KC_LCMD);
-      wait_ms(100);
+      tap_code16_delay(LCMD(KC_V), 135);
       break;
 #else
     case NG_WIN_BMP:
