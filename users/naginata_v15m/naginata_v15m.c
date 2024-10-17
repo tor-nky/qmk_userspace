@@ -630,14 +630,14 @@ static bool enable_naginata(uint16_t keycode, keyrecord_t *record) {
       // ２キー目、１キー目、両方ともかなオンキー
       if ((keycode == ngon_keys[0] && fghj_buf == ngon_keys[1]) ||
           (keycode == ngon_keys[1] && fghj_buf == ngon_keys[0])) {
-        naginata_on();
         fghj_buf = KC_NO;
+        naginata_on();
         return false;
       // ２キー目、１キー目、両方ともかなオフキー
       } else if ((keycode == ngoff_keys[0] && fghj_buf == ngoff_keys[1]) ||
           (keycode == ngoff_keys[1] && fghj_buf == ngoff_keys[0])) {
-        naginata_off();
         fghj_buf = KC_NO;
+        naginata_off();
         return false;
       }
       // どちらでもなければ、1キー目を出力
@@ -663,7 +663,6 @@ static bool enable_naginata(uint16_t keycode, keyrecord_t *record) {
 // 薙刀式をオン
 void naginata_on(void) {
   is_naginata = true;
-  fghj_buf = KC_NO;
   n_modifier = 0;
   layer_on(naginata_layer);
 
