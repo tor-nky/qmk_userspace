@@ -7,7 +7,7 @@
 //#define USB_MAX_POWER_CONSUMPTION 100
 
 #ifdef RGBLIGHT_ENABLE
-    #define LED_MATRIX_SLEEP // turn off effects when suspended
+    #define RGB_MATRIX_SLEEP // turn off effects when suspended
 #endif
 
 #ifdef RGB_MATRIX_ENABLE

@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define USB_MAX_POWER_CONSUMPTION 100
 
 #ifdef RGBLIGHT_ENABLE
-    #define LED_MATRIX_SLEEP // turn off effects when suspended
+    #define RGB_MATRIX_SLEEP // turn off effects when suspended
     #undef RGBLIGHT_ANIMATIONS
     #undef RGBLIGHT_EFFECT_BREATHING
     #undef RGBLIGHT_EFFECT_RAINBOW_MOOD
