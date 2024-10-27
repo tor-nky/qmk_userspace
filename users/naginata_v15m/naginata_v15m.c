@@ -572,7 +572,7 @@ void ng_send_unicode_string_P(const char *str) {
       tap_code(KC_NUM_LOCK);  // IME Cancel
 #else
       // かわせみ専用
-      tap_code16(LCTL(KC_F20));
+      tap_code16(MEH(KC_LANGUAGE_1));   // Control+Option+Shift+(Mac)かな
       send_unicode_string_P(str);
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
 #endif
@@ -1592,7 +1592,7 @@ void ng_ime_complete() {
       tap_code16(LSFT(KC_LANGUAGE_1));  // Shift+(Mac)かな
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
 # else
-      tap_code16(LCTL(KC_F20));
+      tap_code16(MEH(KC_LANGUAGE_1));   // Control+Option+Shift+(Mac)かな
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
 # endif
       break;
