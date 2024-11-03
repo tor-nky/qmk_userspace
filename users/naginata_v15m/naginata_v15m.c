@@ -954,10 +954,11 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 #if defined(NG_KOUCHI_SHIFT_MS)
     // センターシフト(前置シフト限定か制限時間外の後置シフトの場合)
     if (recent_key == B_SHFT && (!naginata_config.kouchi_shift
-        || (uint16_t)(record->event.time - previous_pressed_time) > (NG_KOUCHI_SHIFT_MS))) {
+        || (uint16_t)(record->event.time - previous_pressed_time) > (NG_KOUCHI_SHIFT_MS)
+        || center_shift_count > 1)) {
 #else
     // センターシフト(前置シフト限定)
-    if (recent_key == B_SHFT && !naginata_config.kouchi_shift) {
+    if (recent_key == B_SHFT && (!naginata_config.kouchi_shift || center_shift_count > 1)) {
 #endif
       store_key_later = true;
     } else if (recent_key) {
