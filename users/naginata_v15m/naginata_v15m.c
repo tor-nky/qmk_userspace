@@ -944,6 +944,9 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       break;
   }
 
+  // センターシフトの連続用
+  Ngkey contains_center_shift = pressed_key;
+
   // 薙刀式のキーを押した
   if (pressing) {
     pressed_key |= recent_key;  // キーを加える
@@ -976,10 +979,7 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     uint_fast8_t searching_count = waiting_count;
     while (searching_count) {
       // バッファ内のキーを組み合わせる
-      Ngkey searching_key = 0;
-      if (center_shift_count) {
-        searching_key |= B_SHFT;
-      }
+      Ngkey searching_key = contains_center_shift & B_SHFT; // センターキー
       for (uint_fast8_t i = 0; i < searching_count; i++) {
         searching_key |= waiting_keys[i];
       }
@@ -1028,6 +1028,9 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // かな定義を探して出力する
       // 1キーで何も定義がないキーもここで配列から取り除く
       if (ng_search_and_send(searching_key) || searching_count == 1) {
+        // センターシフトの連続用
+        // (センターシフト+2キー以上同時押しの定義がある時に、シフトの引き継ぎ落としを防ぐ)
+        contains_center_shift = searching_key; // 薙刀式v15では不要
         // 1回出力したらシフト復活は終わり
         if (rest_shift_state == Once) {
           rest_shift_state = Stop;
