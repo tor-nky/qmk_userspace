@@ -905,6 +905,9 @@ void end_repeating_key(void) {
 }
 
 static uint8_t ng_center_keycode = KC_NO;
+#if defined(NG_KOUCHI_SHIFT_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
+  static uint16_t previous_pressed_time = 0;
+#endif
 enum RestShiftState { Stop, Checking, Once };
 
 // キー入力を文字に変換して出力する
@@ -913,9 +916,6 @@ enum RestShiftState { Stop, Checking, Once };
 static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   static Ngkey waiting_keys[NKEYS];  // 各ビットがキーに対応する
   static Ngkey repeating_key = 0;
-#if defined(NG_KOUCHI_SHIFT_MS)
-  static uint16_t previous_pressed_time = 0;
-#endif
   static uint_fast8_t waiting_count = 0; // 文字キーを数える
   static enum RestShiftState rest_shift_state = Stop;
 
@@ -965,7 +965,7 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // 配列に押したキーを保存
       waiting_keys[waiting_count++] = recent_key;
     }
-#if defined(NG_KOUCHI_SHIFT_MS)
+#if defined(NG_KOUCHI_SHIFT_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
     previous_pressed_time = record->event.time;
 #endif
   }
@@ -1083,7 +1083,11 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 }
 
 void ng_space_or_enter(void) {
+#if defined (SHIFT_ALONE_TIMEOUT_MS)
+  if (ng_center_keycode == KC_NO || timer_elapsed(previous_pressed_time) >= (SHIFT_ALONE_TIMEOUT_MS)) return;
+#else
   if (ng_center_keycode == KC_NO) return;
+#endif
 #if !defined(NG_BMP)
   if (center_shift_count) {
     tap_code16(LSFT(ng_center_keycode));
