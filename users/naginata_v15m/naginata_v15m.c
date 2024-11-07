@@ -1089,7 +1089,7 @@ void ng_space_or_enter(void) {
   if (ng_center_keycode == KC_NO) return;
 #endif
 #if !defined(NG_BMP)
-  if (center_shift_count) {
+  if (center_shift_count > 1) {
     tap_code16(LSFT(ng_center_keycode));
   } else {
     tap_code(ng_center_keycode);
