@@ -914,10 +914,11 @@ enum RestShiftState { Stop, Checking, Once };
 // 薙刀式のキー入力だったなら false を返す
 // そうでない時は未出力を全て出力、true を返してQMKにまかせる
 static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
-  static Ngkey waiting_keys[NKEYS];  // 各ビットがキーに対応する
+  static Ngkey waiting_keys[NKEYS]; // 各ビットがキーに対応する
   static Ngkey repeating_key = 0;
   static uint_fast8_t waiting_count = 0; // 文字キーを数える
   static enum RestShiftState rest_shift_state = Stop;
+  static bool center_shift = false; // センターシフトの連続用
 
   Ngkey recent_key = 0;  // 各ビットがキーに対応する
   const bool pressing = record->event.pressed;
@@ -944,13 +945,14 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       break;
   }
 
-  // センターシフトの連続用
-  Ngkey contains_center_shift = pressed_key;
+  // センターシフトを押していなければ解除
+  if (!(pressed_key & B_SHFT)) {
+    center_shift = false;
+  }
 
   // 薙刀式のキーを押した
   if (pressing) {
     pressed_key |= recent_key;  // キーを加える
-
 #if defined(NG_KOUCHI_SHIFT_MS)
     // センターシフト(前置シフト限定か制限時間外の後置シフトの場合)
     if (recent_key == B_SHFT && (!naginata_config.kouchi_shift
@@ -969,6 +971,7 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     previous_pressed_time = record->event.time;
 #endif
   }
+
   // 何かキーを押したか、リピート中のキーを離した時
   if (pressing || (repeating_key & recent_key)) {
     end_repeating_key();  // キーリピート解除
@@ -979,7 +982,10 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     uint_fast8_t searching_count = waiting_count;
     while (searching_count) {
       // バッファ内のキーを組み合わせる
-      Ngkey searching_key = contains_center_shift & B_SHFT; // センターキー
+      Ngkey searching_key = 0;
+      if (center_shift) {
+        searching_key |= B_SHFT; // センターキー
+      }
       for (uint_fast8_t i = 0; i < searching_count; i++) {
         searching_key |= waiting_keys[i];
       }
@@ -1029,8 +1035,7 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // 1キーで何も定義がないキーもここで配列から取り除く
       if (ng_search_and_send(searching_key) || searching_count == 1) {
         // センターシフトの連続用
-        // (センターシフト+2キー以上同時押しの定義がある時に、シフトの引き継ぎ落としを防ぐ)
-        contains_center_shift = searching_key; // 薙刀式v15では不要
+        center_shift = (bool)(searching_key & B_SHFT);
         // 1回出力したらシフト復活は終わり
         if (rest_shift_state == Once) {
           rest_shift_state = Stop;
