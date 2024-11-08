@@ -753,11 +753,11 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
         naginata_on();
         return false;
       case NG_OFF:
-        naginata_type(KC_NO, record); // 未出力キーを処理
+        naginata_type(keycode, record); // キーリピート解除、未出力キーを処理
         naginata_off();
         return false;
       // case NG_CLR: // コメントアウトしておいても未出力キーの処理が行われる
-      //   naginata_type(KC_NO, record); // 未出力キーを処理
+      //   naginata_type(keycode, record);  // キーリピート解除、未出力キーを処理
       //   return false;
       case NGSW_WIN:
         switchOS(NG_WIN);
