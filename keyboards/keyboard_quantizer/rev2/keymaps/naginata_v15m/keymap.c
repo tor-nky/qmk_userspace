@@ -173,6 +173,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+// 全ての QMK 処理の最後に、次の繰り返しを開始する前に呼び出される関数
+void housekeeping_task_user(void) {
+  // 薙刀式
+  // 後置シフト待ち処理
+  kouchi_shift_loop();
+  // 薙刀式
+}
+
 // 薙刀式 OLED表示
 #ifdef OLED_ENABLE
 

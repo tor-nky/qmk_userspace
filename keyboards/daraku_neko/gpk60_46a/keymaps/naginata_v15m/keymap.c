@@ -250,3 +250,11 @@ void keyboard_post_init_user(void) {
   //debug_mouse=true;
 }
 #endif
+
+// 全ての QMK 処理の最後に、次の繰り返しを開始する前に呼び出される関数
+void housekeeping_task_user(void) {
+  // 薙刀式
+  // 後置シフト待ち処理
+  kouchi_shift_loop();
+  // 薙刀式
+}

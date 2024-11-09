@@ -54,6 +54,8 @@ void ng_show_os(void);
 void ng_send_unicode_string_P(const char *);
 
 bool process_naginata(uint16_t, keyrecord_t *);
+bool naginata_type(uint16_t, keyrecord_t *);
+void kouchi_shift_loop(void);
 
 // typedef struct {
 //   uint16_t keycode;

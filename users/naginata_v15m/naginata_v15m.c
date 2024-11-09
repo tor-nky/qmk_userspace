@@ -25,8 +25,6 @@
 #include <string.h>
 
 static void ng_set_unicode_mode(uint8_t);
-static void end_repeating_key(void);
-static bool naginata_type(uint16_t, keyrecord_t *);
 
 static bool is_naginata = false; // 薙刀式がオンかオフか
 static uint8_t naginata_layer = 0; // NG_*を配置しているレイヤー番号
@@ -853,11 +851,12 @@ static Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pressed_key)
   return num;
 }
 
-// 組み合わせをしぼれない = 2: 変換しない
-// 組み合わせが一つしかない = 1: 変換を開始する
-// 組み合わせがない = 0: 変換を開始する
-static int_fast8_t number_of_candidates(Ngkey search) {
-  int_fast8_t c = 0;
+// 変換できるか調べる
+// None: なし, One: 一つしかない, Multipul: しぼれない, Wait: 時限後置シフトを待つ
+enum TransState { None, One, Multipul, Wait };
+
+static enum TransState which_trans_state(Ngkey search) {
+  enum TransState state = None;
   for (Ngmap_num i = 0; i < NGMAP_COUNT; i++) {
     Ngkey key;
 #if defined(__AVR__)
@@ -866,14 +865,28 @@ static int_fast8_t number_of_candidates(Ngkey search) {
     key = ngmap[i].key;
 #endif
     // search を含む。前置シフト限定ならセンターシフトも一致している
-    if ((key & search) == search && (naginata_config.kouchi_shift || (key & B_SHFT) == (search & B_SHFT))) {
-      if (key != search) {
-        return 2;
+    if ((key & search) == search) { // && (naginata_config.kouchi_shift || (key & B_SHFT) == (search & B_SHFT))) {
+      switch (key ^ search) {
+        case 0:
+          if (state != Wait) {
+            state = One;
+          }
+          break;
+#if defined (NG_KOUCHI_SHIFT_MS)  // 後置シフトの時間制限あり
+        case B_SHFT:
+          if (naginata_config.kouchi_shift) {
+            state = Wait;
+          } else {
+            return Multipul;
+          }
+          break;
+#endif
+        default:
+          return Multipul;
       }
-      c = 1;
     }
   }
-  return c;
+  return state;
 }
 
 // リピート中を示す変数
@@ -883,7 +896,7 @@ static struct {
 } repeating = { KC_NO, KC_NO };
 
 // キーリピート解除
-void end_repeating_key(void) {
+static void end_repeating_key(void) {
 #if !defined(NG_BMP)
   if (repeating.code != KC_NO) {
     unregister_code(repeating.code);
@@ -904,16 +917,19 @@ void end_repeating_key(void) {
   repeating.code = repeating.mod = KC_NO;
 }
 
-static uint8_t ng_center_keycode = KC_NO;
 #if defined(NG_KOUCHI_SHIFT_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
-  static uint16_t previous_pressed_time = 0;
+  uint16_t ng_last_pressed_ms = 0;    // 薙刀式のキーを最後に押した時間
 #endif
+#if defined (NG_KOUCHI_SHIFT_MS)
+  bool wait_kouchi_shift = false; // 後置シフト待ち
+#endif
+static uint8_t ng_center_keycode = KC_NO;
 enum RestShiftState { Stop, Checking, Once };
 
 // キー入力を文字に変換して出力する
 // 薙刀式のキー入力だったなら false を返す
 // そうでない時は未出力を全て出力、true を返してQMKにまかせる
-static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
+bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   static Ngkey waiting_keys[NKEYS]; // 各ビットがキーに対応する
   static Ngkey repeating_key = 0;
   static uint_fast8_t waiting_count = 0; // 文字キーを数える
@@ -923,6 +939,10 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   Ngkey recent_key = 0;  // 各ビットがキーに対応する
   const bool pressing = record->event.pressed;
   bool store_key_later = false;
+
+#if defined (NG_KOUCHI_SHIFT_MS)
+    wait_kouchi_shift = false;  // 後置シフト待ちを解除
+#endif
 
   switch (keycode) {
     case NG_Q ... NG_SLSH:
@@ -956,7 +976,7 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 #if defined(NG_KOUCHI_SHIFT_MS)
     // センターシフト(前置シフト限定か制限時間外の後置シフトの場合)
     if (recent_key == B_SHFT && (!naginata_config.kouchi_shift
-        || (uint16_t)(record->event.time - previous_pressed_time) > (NG_KOUCHI_SHIFT_MS)
+        || record->event.time - ng_last_pressed_ms > (NG_KOUCHI_SHIFT_MS)
         || center_shift_count > 1)) {
 #else
     // センターシフト(前置シフト限定)
@@ -968,7 +988,7 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       waiting_keys[waiting_count++] = recent_key;
     }
 #if defined(NG_KOUCHI_SHIFT_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
-    previous_pressed_time = record->event.time;
+    ng_last_pressed_ms = record->event.time;
 #endif
   }
 
@@ -1015,12 +1035,17 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
             continue;
           }
           // 変換候補を数える
-          int_fast8_t nc = number_of_candidates(searching_key);
-          // 組み合わせをしぼれない = 2: 変換しない
-          if (nc > 1) {
+          enum TransState state = which_trans_state(searching_key);
+          // 組み合わせをしぼれない = 変換しない
+          if (state == Multipul) {
             break;
-          // 組み合わせがない = 0: 変換を開始する
-          } else if (nc == 0 && searching_count > 1) {
+#if defined (NG_KOUCHI_SHIFT_MS)
+          } else if (state == Wait) {
+            wait_kouchi_shift = true;  // 時間まで後置シフトを待つ
+            break;
+#endif
+          // 組み合わせがない = 変換を開始する
+          } else if (state == None && searching_count > 1) {
             searching_count--;  // 最後のキーを減らして検索
             continue;
           }
@@ -1087,9 +1112,22 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   return (recent_key == 0);
 }
 
+// 後置シフト待ち処理
+void kouchi_shift_loop(void) {
+#if defined (NG_KOUCHI_SHIFT_MS)
+  // 後置シフトを待ったが時間切れ
+  if (wait_kouchi_shift && timer_elapsed(ng_last_pressed_ms) >= (NG_KOUCHI_SHIFT_MS)) {
+    keyrecord_t record;
+    record.event.pressed = true;
+    record.event.time = timer_read();
+    naginata_type(KC_NO, &record); // 未出力キーを処理
+  }
+#endif
+}
+
 void ng_space_or_enter(void) {
 #if defined (SHIFT_ALONE_TIMEOUT_MS)
-  if (ng_center_keycode == KC_NO || timer_elapsed(previous_pressed_time) >= (SHIFT_ALONE_TIMEOUT_MS)) return;
+  if (ng_center_keycode == KC_NO || timer_elapsed(ng_last_pressed_ms) >= (SHIFT_ALONE_TIMEOUT_MS)) return;
 #else
   if (ng_center_keycode == KC_NO) return;
 #endif
