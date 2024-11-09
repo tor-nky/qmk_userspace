@@ -851,7 +851,7 @@ static Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pressed_key)
   return num;
 }
 
-// 変換できるか調べる
+// 変換してよいか調べる
 // None: なし, One: 一つしかない, Multipul: しぼれない, Wait: 時限後置シフトを待つ
 enum TransState { None, One, Multipul, Wait };
 
@@ -864,11 +864,11 @@ static enum TransState which_trans_state(Ngkey search) {
 #else
     key = ngmap[i].key;
 #endif
-    // search を含む。前置シフト限定ならセンターシフトも一致している
-    if ((key & search) == search) { // && (naginata_config.kouchi_shift || (key & B_SHFT) == (search & B_SHFT))) {
+    // search を含む
+    if ((key & search) == search) {
       switch (key ^ search) {
         case 0:
-          if (state != Wait) {
+          if (state == None) {
             state = One;
           }
           break;
@@ -918,10 +918,10 @@ static void end_repeating_key(void) {
 }
 
 #if defined(NG_KOUCHI_SHIFT_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
-  uint16_t ng_last_pressed_ms = 0;    // 薙刀式のキーを最後に押した時間
+  static uint16_t ng_last_pressed_ms = 0; // 薙刀式のキーを最後に押した時間
 #endif
 #if defined (NG_KOUCHI_SHIFT_MS)
-  bool wait_kouchi_shift = false; // 後置シフト待ち
+  static bool wait_kouchi_shift = false;  // 後置シフト待ち
 #endif
 static uint8_t ng_center_keycode = KC_NO;
 enum RestShiftState { Stop, Checking, Once };
@@ -1034,7 +1034,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
             rest_shift_state = Once;
             continue;
           }
-          // 変換候補を数える
+          // 変換してよいか調べる
           enum TransState state = which_trans_state(searching_key);
           // 組み合わせをしぼれない = 変換しない
           if (state == Multipul) {
