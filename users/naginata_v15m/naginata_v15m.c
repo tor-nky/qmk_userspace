@@ -876,13 +876,17 @@ static enum TransState which_trans_state(Ngkey search) {
         case B_SHFT:
           if (naginata_config.kouchi_shift) {
             state = Wait;
-          } else {
+          }
+          break;
+        default:
+          return Multipul;
+#else
+        default:
+          if (naginata_config.kouchi_shift || !(key & B_SHFT)) {
             return Multipul;
           }
           break;
 #endif
-        default:
-          return Multipul;
       }
     }
   }
