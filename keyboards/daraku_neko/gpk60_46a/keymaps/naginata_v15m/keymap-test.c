@@ -221,23 +221,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // こりゃ (かりょ)  // AVR12ms
         process_naginata(NG_V, record); // こ
         process_naginata(NG_H, record); // りゃ
-        process_naginata(NG_E, record); // AVR11ms
+        process_naginata(NG_E, record); // AVR12ms
         process_naginata(NG_V, &release);
         process_naginata(NG_H, &release);
         process_naginata(NG_E, &release);
-// ある情報 // AVR21ms
+// ある情報 // AVR20ms
         // process_naginata(NG_J, record); // あ
         // process_naginata(NG_I, record); // る
         // process_naginata(NG_I, &release); // AVR6ms
         // process_naginata(NG_I, record); // じょ
-        // process_naginata(NG_R, record); // AVR5ms
+        // process_naginata(NG_R, record); // AVR6ms
         // process_naginata(NG_L, record); // う
         // process_naginata(NG_R, &release);
         // process_naginata(NG_I, &release);
         // process_naginata(NG_J, &release);
         // process_naginata(NG_L, &release);
         // process_naginata(NG_Z, record); // ほ
-        // process_naginata(NG_L, record); // う // AVR4ms
+        // process_naginata(NG_L, record); // う // AVR5ms
         // process_naginata(NG_Z, &release);
         // process_naginata(NG_L, &release);
 // 姶良カルデラ // AVR29ms
@@ -250,7 +250,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // process_naginata(NG_DOT, &release); // AVR4ms
         // process_naginata(NG_I, record); // る
         // process_naginata(NG_J, record); // で // AVR6ms
-        // process_naginata(NG_E, record); // AVR5ms
+        // process_naginata(NG_E, record); // AVR6ms
         // process_naginata(NG_DOT, record); // ら // AVR5ms
         // // キー上げ
         // process_naginata(NG_E, &release);
