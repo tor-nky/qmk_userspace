@@ -115,7 +115,7 @@ const Ngkey ng_key[] = {
   [NG_SHFT2 - NG_Q] = B_SHFT,
 };
 
-#define NKEYS 3 // 組み合わせにある同時押しするキーの数、薙刀式なら3
+#define NKEYS 4 // 組み合わせにある同時押しするキーの数、薙刀式なら3
                 // (最大何キーまでバッファに貯めるか)
 
 // カナ変換テーブル
@@ -131,6 +131,85 @@ typedef struct {
 // 3キー同時 → 2キー同時 → センターシフト → 単打 の順を推奨(単打の後に置いた定義はシフト復活が起きない)
 // シフト復活判定は、3キー同時と2キー同時の順序で決まる
 const PROGMEM naginata_keymap ngmap[] = {
+  // ********** Sp+3キー同時 **********
+  // 拗音、外来音
+  {.key = B_SHFT|B_J|B_W|B_H    , .func = ng_send_gya   },  // ぎゃ
+  {.key = B_SHFT|B_J|B_R|B_H    , .func = ng_send_ja    },  // じゃ
+  {.key = B_SHFT|B_J|B_G|B_H    , .func = ng_send_dya   },  // ぢゃ
+  {.key = B_SHFT|B_J|B_X|B_H    , .func = ng_send_bya   },  // びゃ
+  {.key = B_SHFT|B_J|B_W|B_P    , .func = ng_send_gyu   },  // ぎゅ
+  {.key = B_SHFT|B_J|B_R|B_P    , .func = ng_send_ju    },  // じゅ
+  {.key = B_SHFT|B_J|B_G|B_P    , .func = ng_send_dyu   },  // ぢゅ
+  {.key = B_SHFT|B_J|B_X|B_P    , .func = ng_send_byu   },  // びゅ
+  {.key = B_SHFT|B_J|B_W|B_I    , .func = ng_send_gyo   },  // ぎょ
+  {.key = B_SHFT|B_J|B_R|B_I    , .func = ng_send_jo    },  // じょ
+  {.key = B_SHFT|B_J|B_G|B_I    , .func = ng_send_dyo   },  // ぢょ
+  {.key = B_SHFT|B_J|B_X|B_I    , .func = ng_send_byo   },  // びょ
+  {.key = B_SHFT|B_M|B_X|B_I    , .func = ng_send_pyo   },  // ぴょ
+  {.key = B_SHFT|B_M|B_X|B_P    , .func = ng_send_pyu   },  // ぴゅ
+  {.key = B_SHFT|B_M|B_X|B_H    , .func = ng_send_pya   },  // ぴゃ
+
+  // 編集モード
+  {.key = B_SHFT|B_D|B_F|B_Y    , .func = ng_home}, // {Home}
+  {.key = B_SHFT|B_D|B_F|B_H    , .func = ng_edit_kakutei_end}, // {Enter}{End}
+  {.key = B_SHFT|B_D|B_F|B_N    , .func = ng_end}, // {End}
+  {.key = B_SHFT|B_D|B_F|B_U    , .func = ng_edit_delete_to_end}, // +{End}{BS}
+  {.key = B_SHFT|B_D|B_F|B_J    , .func = ng_edit_1_up}, // {↑}
+  {.key = B_SHFT|B_D|B_F|B_M    , .func = ng_edit_1_down}, // {↓}
+  {.key = B_SHFT|B_D|B_F|B_I    , .func = ng_saihenkan}, // {vk1Csc079}
+  {.key = B_SHFT|B_D|B_F|B_K    , .func = ng_edit_s1_up}, // +{↑}
+  {.key = B_SHFT|B_D|B_F|B_COMM , .func = ng_edit_s1_down}, // +{↓}
+  {.key = B_SHFT|B_D|B_F|B_O    , .func = ng_delete_with_repeat}, // {Del}
+  {.key = B_SHFT|B_D|B_F|B_L    , .func = ng_edit_s7_up}, // +{↑ 7}
+  {.key = B_SHFT|B_D|B_F|B_DOT  , .func = ng_edit_s7_down}, // +{↓ 7}
+  {.key = B_SHFT|B_D|B_F|B_P    , .func = ng_ime_cancel}, // {Esc 3}
+  {.key = B_SHFT|B_D|B_F|B_SCLN , .func = ng_katakana}, // ^i
+  {.key = B_SHFT|B_D|B_F|B_SLSH , .func = ng_hiragana}, // ^u
+  {.key = B_SHFT|B_J|B_K|B_Q    , .func = ng_eof}, // ^{End}
+  {.key = B_SHFT|B_J|B_K|B_A    , .func = ng_edit_tenten}, // ……{改行}
+  {.key = B_SHFT|B_J|B_K|B_Z    , .func = ng_edit_yokobou}, // ――{改行}
+  {.key = B_SHFT|B_J|B_K|B_W    , .func = ng_edit_nijuu_yama_gakko}, // 『』{改行}{↑}
+  {.key = B_SHFT|B_J|B_K|B_S    , .func = ng_edit_maru_kakko}, // (){改行}{↑}
+  {.key = B_SHFT|B_J|B_K|B_X    , .func = ng_edit_sumituki_kakko}, // 【】{改行}{↑}
+  {.key = B_SHFT|B_J|B_K|B_D    , .func = ng_edit_question}, // ？{改行}
+  {.key = B_SHFT|B_J|B_K|B_C    , .func = ng_edit_exclaim}, // ！{改行}
+  {.key = B_SHFT|B_J|B_K|B_R    , .func = ng_save}, // ^s
+  {.key = B_SHFT|B_J|B_K|B_F    , .func = ng_edit_kagi_kakko}, // 「」{改行}{↑}
+  {.key = B_SHFT|B_J|B_K|B_V    , .func = ng_edit_kakutei_down}, // {改行}{↓}
+  {.key = B_SHFT|B_J|B_K|B_T    , .func = ng_symbol_chuuten}, // ・
+  {.key = B_SHFT|B_J|B_K|B_G    , .func = ng_edit_nijuu_yama_kakko}, // 《》{改行}{↑}
+  {.key = B_SHFT|B_J|B_K|B_B    , .func = ng_edit_kakutei_left}, // {改行}{←}
+  {.key = B_SHFT|B_C|B_V|B_Y    , .func = ng_edit_s_home}, // +{Home}
+  {.key = B_SHFT|B_C|B_V|B_H    , .func = ng_copy}, // ^c
+  {.key = B_SHFT|B_C|B_V|B_N    , .func = ng_edit_s_end}, // +{End}
+  {.key = B_SHFT|B_C|B_V|B_U    , .func = ng_cut}, // ^x
+  {.key = B_SHFT|B_C|B_V|B_J    , .func = ng_edit_1_right}, // {→}
+  {.key = B_SHFT|B_C|B_V|B_M    , .func = ng_edit_1_left}, // {←}
+  {.key = B_SHFT|B_C|B_V|B_I    , .func = ng_paste}, // ^v
+  {.key = B_SHFT|B_C|B_V|B_K    , .func = ng_edit_s1_right}, // +{→}
+  {.key = B_SHFT|B_C|B_V|B_COMM , .func = ng_edit_s1_left}, // +{←}
+  {.key = B_SHFT|B_C|B_V|B_O    , .func = ng_redo}, // ^y
+  {.key = B_SHFT|B_C|B_V|B_L    , .func = ng_edit_s5_right}, // +{→ 5}
+  {.key = B_SHFT|B_C|B_V|B_DOT  , .func = ng_edit_s5_left}, // +{← 5}
+  {.key = B_SHFT|B_C|B_V|B_P    , .func = ng_undo}, // ^z
+  {.key = B_SHFT|B_C|B_V|B_SCLN , .func = ng_edit_s20_right}, // +{→ 20}
+  {.key = B_SHFT|B_C|B_V|B_SLSH , .func = ng_edit_s20_left}, // +{← 20}
+  {.key = B_SHFT|B_M|B_COMM|B_Q , .func = ng_edit_togaki_zengyo}, // {Home}{→}{End}{Del 4}{←}
+  {.key = B_SHFT|B_M|B_COMM|B_A , .func = ng_edit_serifu_zengyo}, // {Home}{→}{End}{Del 2}{←}
+  {.key = B_SHFT|B_M|B_COMM|B_Z , .func = ng_edit_separate_line}, // 　　　×　　　×　　　×{改行 2}
+  {.key = B_SHFT|B_M|B_COMM|B_W , .func = ng_edit_surround_nijuu_yama_gakko}, // ^x『^v』{改行}{Space}+{↑}^x
+  {.key = B_SHFT|B_M|B_COMM|B_S , .func = ng_edit_surround_maru_kakko}, // ^x(^v){改行}{Space}+{↑}^x
+  {.key = B_SHFT|B_M|B_COMM|B_X , .func = ng_edit_surround_sumituki_kakko}, // ^x【^v】{改行}{Space}+{↑}^x
+  {.key = B_SHFT|B_M|B_COMM|B_E , .func = ng_edit_togaki}, // {Home}{改行}{Space 3}{←}
+  {.key = B_SHFT|B_M|B_COMM|B_D , .func = ng_edit_serifu}, // {Home}{改行}{Space 1}{←}
+  {.key = B_SHFT|B_M|B_COMM|B_C , .func = ng_edit_slash}, // ／{改行}
+  {.key = B_SHFT|B_M|B_COMM|B_R , .func = ng_edit_3_space}, // {Space 3}
+  {.key = B_SHFT|B_M|B_COMM|B_F , .func = ng_edit_surround_kagi_kakko}, // ^x「^v」{改行}{Space}+{↑}^x
+  {.key = B_SHFT|B_M|B_COMM|B_V , .func = ng_edit_next_line_kagi_kakko}, // {改行}{End}{改行}「」{改行}{↑}
+  {.key = B_SHFT|B_M|B_COMM|B_T , .func = ng_edit_maru}, // 〇{改行}
+  {.key = B_SHFT|B_M|B_COMM|B_G , .func = ng_edit_surround_ruby}, // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
+  {.key = B_SHFT|B_M|B_COMM|B_B , .func = ng_edit_next_line_space}, // {改行}{End}{改行}{Space}
+
   // ********** 3キー同時 **********
   // 拗音、外来音
   {.key = B_J|B_W|B_H   , .func = ng_send_gya   },  // ぎゃ
@@ -246,6 +325,62 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_M|B_COMM|B_T, .func = ng_edit_maru}, // 〇{改行}
   {.key = B_M|B_COMM|B_G, .func = ng_edit_surround_ruby}, // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_B, .func = ng_edit_next_line_space}, // {改行}{End}{改行}{Space}
+
+  // ********** Sp+2キー同時 **********
+  // 濁音
+  {.key = B_SHFT|B_F|B_U    , .func = ng_send_za    },  // ざ
+  {.key = B_SHFT|B_F|B_O    , .func = ng_send_zu    },  // ず
+  {.key = B_SHFT|B_F|B_P    , .func = ng_send_be    },  // べ
+  {.key = B_SHFT|B_F|B_H    , .func = ng_send_gu    },  // ぐ
+  {.key = B_SHFT|B_F|B_L    , .func = ng_send_du    },  // づ
+  {.key = B_SHFT|B_F|B_SCLN , .func = ng_send_bu    },  // ぶ
+  {.key = B_SHFT|B_F|B_N    , .func = ng_send_da    },  // だ
+  {.key = B_SHFT|B_J|B_W    , .func = ng_send_gi    },  // ぎ
+  {.key = B_SHFT|B_J|B_E    , .func = ng_send_de    },  // で
+  {.key = B_SHFT|B_J|B_R    , .func = ng_send_zi    },  // じ
+  {.key = B_SHFT|B_J|B_A    , .func = ng_send_ze    },  // ぜ
+  {.key = B_SHFT|B_J|B_S    , .func = ng_send_ge    },  // げ
+  {.key = B_SHFT|B_J|B_D    , .func = ng_send_do    },  // ど
+  {.key = B_SHFT|B_J|B_F    , .func = ng_send_ga    },  // が
+  {.key = B_SHFT|B_J|B_G    , .func = ng_send_di    },  // ぢ
+  {.key = B_SHFT|B_J|B_Z    , .func = ng_send_bo    },  // ぼ
+  {.key = B_SHFT|B_J|B_X    , .func = ng_send_bi    },  // び
+  {.key = B_SHFT|B_J|B_C    , .func = ng_send_ba    },  // ば
+  {.key = B_SHFT|B_J|B_V    , .func = ng_send_go    },  // ご
+  {.key = B_SHFT|B_J|B_B    , .func = ng_send_zo    },  // ぞ
+
+  // 半濁音
+  {.key = B_SHFT|B_V|B_P    , .func = ng_send_pe    },  // ぺ
+  {.key = B_SHFT|B_V|B_SCLN , .func = ng_send_pu    },  // ぷ
+  {.key = B_SHFT|B_M|B_Z    , .func = ng_send_po    },  // ぽ
+  {.key = B_SHFT|B_M|B_X    , .func = ng_send_pi    },  // ぴ
+  {.key = B_SHFT|B_M|B_C    , .func = ng_send_pa    },  // ぱ
+
+  // 拗音、外来音
+  {.key = B_SHFT|B_W|B_H    , .func = ng_send_kya   },  // きゃ
+  {.key = B_SHFT|B_E|B_H    , .func = ng_send_rya   },  // りゃ
+  {.key = B_SHFT|B_R|B_H    , .func = ng_send_sya   },  // しゃ
+  {.key = B_SHFT|B_D|B_H    , .func = ng_send_nya   },  // にゃ
+  {.key = B_SHFT|B_G|B_H    , .func = ng_send_tya   },  // ちゃ
+  {.key = B_SHFT|B_X|B_H    , .func = ng_send_hya   },  // ひゃ
+  {.key = B_SHFT|B_B|B_H    , .func = ng_send_mya   },  // みゃ
+  {.key = B_SHFT|B_W|B_P    , .func = ng_send_kyu   },  // きゅ
+  {.key = B_SHFT|B_E|B_P    , .func = ng_send_ryu   },  // りゅ
+  {.key = B_SHFT|B_R|B_P    , .func = ng_send_syu   },  // しゅ
+  {.key = B_SHFT|B_D|B_P    , .func = ng_send_nyu   },  // にゅ
+  {.key = B_SHFT|B_G|B_P    , .func = ng_send_tyu   },  // ちゅ
+  {.key = B_SHFT|B_X|B_P    , .func = ng_send_hyu   },  // ひゅ
+  {.key = B_SHFT|B_B|B_P    , .func = ng_send_myu   },  // みゅ
+  {.key = B_SHFT|B_W|B_I    , .func = ng_send_kyo   },  // きょ
+  {.key = B_SHFT|B_E|B_I    , .func = ng_send_ryo   },  // りょ
+  {.key = B_SHFT|B_R|B_I    , .func = ng_send_syo   },  // しょ
+  {.key = B_SHFT|B_D|B_I    , .func = ng_send_nyo   },  // にょ
+  {.key = B_SHFT|B_G|B_I    , .func = ng_send_tyo   },  // ちょ
+  {.key = B_SHFT|B_X|B_I    , .func = ng_send_hyo   },  // ひょ
+  {.key = B_SHFT|B_B|B_I    , .func = ng_send_myo   },  // みょ
+
+  // 機能部分
+  {.key = B_SHFT|B_V|B_M    , .func = ng_enter},
 
   // ********** 2キー同時 **********
   // 濁音
