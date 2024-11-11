@@ -1040,18 +1040,13 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
           }
           // 変換してよいか調べる
           enum TransState state = which_trans_state(searching_key);
-          // 組み合わせをしぼれない = 変換しない
-          if (state == Multipul) {
-            break;
-#if defined (NG_KOUCHI_SHIFT_MS)
-          } else if (state == Wait) {
-            wait_kouchi_shift = true;  // 時間まで後置シフトを待つ
-            break;
-#endif
-          // 組み合わせがない = 変換を開始する
-          } else if (state == None && searching_count > 1) {
+          // 組み合わせがなくなった
+          if (state == None && searching_count > 1) {
             searching_count--;  // 最後のキーを減らして検索
             continue;
+          // まだ変換できない
+          } else if (!(state == None || state == One)) {
+            break;
           }
         // キーを離した時は、そのキーが関わるところまで出力する
         // (薙刀式以外のキーを離したのなら出力しない)
