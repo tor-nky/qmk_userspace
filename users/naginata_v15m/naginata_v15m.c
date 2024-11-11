@@ -1189,21 +1189,13 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
           }
           // 変換してよいか調べる
           trans_state = which_trans_state(searching_key);
-          // 組み合わせをしぼれない = 変換しない
-          if (trans_state == Multipul) {
-            break;
-#if defined (NG_KOUCHI_SHIFT_MS)
-          } else if (trans_state == WaitShift) {
-            break;
-#endif
-#if defined (NG_SHIFTED_DOUJI_MS)
-          } else if (trans_state == WaitDouji) {
-            break;
-#endif
-          // 組み合わせがない = 変換を開始する
-          } else if (trans_state == None && searching_count > 1) {
+          // 組み合わせがなくなった
+          if (trans_state == None && searching_count > 1) {
             searching_count--;  // 最後のキーを減らして検索
             continue;
+          // まだ変換できない
+          } else if (!(trans_state == None || trans_state == One)) {
+            break;
           }
         // キーを離した時は、そのキーが関わるところまで出力する
         // (薙刀式以外のキーを離したのなら出力しない)
