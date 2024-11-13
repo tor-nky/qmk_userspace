@@ -191,14 +191,14 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_D|B_F|B_H   , .func = ng_edit_kakutei_end}, // {Enter}{End}
   {.key = B_D|B_F|B_N   , .func = ng_end}, // {End}
   {.key = B_D|B_F|B_U   , .func = ng_edit_delete_to_end}, // +{End}{BS}
-  {.key = B_D|B_F|B_J   , .func = ng_edit_1_up}, // {↑}
-  {.key = B_D|B_F|B_M   , .func = ng_edit_1_down}, // {↓}
+  {.key = B_D|B_F|B_J   , .func = ng_1_back_cursor_r}, // {↑}
+  {.key = B_D|B_F|B_M   , .func = ng_1_forward_cursor_r}, // {↓}
   {.key = B_D|B_F|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
-  {.key = B_D|B_F|B_K   , .func = ng_edit_s1_up}, // +{↑}
-  {.key = B_D|B_F|B_COMM, .func = ng_edit_s1_down}, // +{↓}
+  {.key = B_D|B_F|B_K   , .func = ng_s1_back_cursor_r}, // +{↑}
+  {.key = B_D|B_F|B_COMM, .func = ng_s1_forward_cursor_r}, // +{↓}
   {.key = B_D|B_F|B_O   , .func = ng_delete_with_repeat}, // {Del}
-  {.key = B_D|B_F|B_L   , .func = ng_edit_s7_up}, // +{↑ 7}
-  {.key = B_D|B_F|B_DOT , .func = ng_edit_s7_down}, // +{↓ 7}
+  {.key = B_D|B_F|B_L   , .func = ng_s7_back_cursor_r}, // +{↑ 7}
+  {.key = B_D|B_F|B_DOT , .func = ng_s7_forward_cursor_r}, // +{↓ 7}
   {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // {Esc 3}
   {.key = B_D|B_F|B_SCLN, .func = ng_katakana}, // ^i
   {.key = B_D|B_F|B_SLSH, .func = ng_hiragana}, // ^u
@@ -220,17 +220,17 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_C|B_V|B_H   , .func = ng_copy}, // ^c
   {.key = B_C|B_V|B_N   , .func = ng_edit_s_end}, // +{End}
   {.key = B_C|B_V|B_U   , .func = ng_cut}, // ^x
-  {.key = B_C|B_V|B_J   , .func = ng_edit_1_right}, // {→}
-  {.key = B_C|B_V|B_M   , .func = ng_edit_1_left}, // {←}
+  {.key = B_C|B_V|B_J   , .func = ng_1_previous_line_r}, // {→}
+  {.key = B_C|B_V|B_M   , .func = ng_1_next_line_r}, // {←}
   {.key = B_C|B_V|B_I   , .func = ng_paste}, // ^v
-  {.key = B_C|B_V|B_K   , .func = ng_edit_s1_right}, // +{→}
-  {.key = B_C|B_V|B_COMM, .func = ng_edit_s1_left}, // +{←}
+  {.key = B_C|B_V|B_K   , .func = ng_s1_previous_line_r}, // +{→}
+  {.key = B_C|B_V|B_COMM, .func = ng_s1_next_line_r}, // +{←}
   {.key = B_C|B_V|B_O   , .func = ng_redo}, // ^y
-  {.key = B_C|B_V|B_L   , .func = ng_edit_s5_right}, // +{→ 5}
-  {.key = B_C|B_V|B_DOT , .func = ng_edit_s5_left}, // +{← 5}
+  {.key = B_C|B_V|B_L   , .func = ng_s5_previous_line_r}, // +{→ 5}
+  {.key = B_C|B_V|B_DOT , .func = ng_s5_next_line_r}, // +{← 5}
   {.key = B_C|B_V|B_P   , .func = ng_undo}, // ^z
-  {.key = B_C|B_V|B_SCLN, .func = ng_edit_s20_right}, // +{→ 20}
-  {.key = B_C|B_V|B_SLSH, .func = ng_edit_s20_left}, // +{← 20}
+  {.key = B_C|B_V|B_SCLN, .func = ng_s20_previous_line_r}, // +{→ 20}
+  {.key = B_C|B_V|B_SLSH, .func = ng_s20_next_line_r}, // +{← 20}
   {.key = B_M|B_COMM|B_Q, .func = ng_edit_togaki_zengyo}, // {Home}{→}{End}{Del 4}{←}
   {.key = B_M|B_COMM|B_A, .func = ng_edit_serifu_zengyo}, // {Home}{→}{End}{Del 2}{←}
   {.key = B_M|B_COMM|B_Z, .func = ng_edit_separate_line}, // 　　　×　　　×　　　×{改行 2}
@@ -323,8 +323,8 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_SHFT|B_W    , .func = ng_send_nu    },  // ぬ
   {.key = B_SHFT|B_E    , .func = ng_send_ri    },  // り
   {.key = B_SHFT|B_R    , .func = ng_send_ne    },  // ね
-  {.key = B_SHFT|B_T    , .func = ng_edit_s1_left}, // +{←}
-  {.key = B_SHFT|B_Y    , .func = ng_edit_s1_right}, // +{→}
+  {.key = B_SHFT|B_T    , .func = ng_s1_next_line_r}, // +{←}
+  {.key = B_SHFT|B_Y    , .func = ng_s1_previous_line_r}, // +{→}
   {.key = B_SHFT|B_U    , .func = ng_send_sa    },  // さ
   {.key = B_SHFT|B_I    , .func = ng_send_yo    },  // よ
   {.key = B_SHFT|B_O    , .func = ng_send_e     },  // え
@@ -356,8 +356,8 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_W           , .func = ng_send_ki    },  // き
   {.key = B_E           , .func = ng_send_te    },  // て
   {.key = B_R           , .func = ng_send_si    },  // し
-  {.key = B_T           , .func = ng_edit_1_left},  // {←}
-  {.key = B_Y           , .func = ng_edit_1_right}, // {→}
+  {.key = B_T           , .func = ng_1_next_line_r},  // {←}
+  {.key = B_Y           , .func = ng_1_previous_line_r}, // {→}
   {.key = B_U           , .func = ng_backspace_with_repeat  },  // {BS}
   {.key = B_I           , .func = ng_send_ru    },  // る
   {.key = B_O           , .func = ng_send_su    },  // す
@@ -1257,6 +1257,19 @@ void ng_paste() {
   }
 }
 
+static uint8_t convert_ty(uint8_t code) {
+  if (!naginata_config.tategaki) {
+    switch (code) {
+      case KC_LEFT:   code = KC_DOWN;   break;
+      case KC_DOWN:   code = KC_RIGHT;  break;
+      case KC_RIGHT:  code = KC_UP;     break;
+      case KC_UP:     code = KC_LEFT;   break;
+      default:    break;
+    }
+  }
+  return code;
+}
+
 // リピート対応の方向キー移動
 // リピート中を示す変数を更新
 void ng_move_cursor_with_repeat(bool shift, uint8_t code, uint8_t count) {
@@ -1269,111 +1282,44 @@ void ng_move_cursor_with_repeat(bool shift, uint8_t code, uint8_t count) {
 #endif
   }
   repeating.code = code;
-  if (!naginata_config.tategaki) {
-    switch (code) {
-      case KC_LEFT:   repeating.code = KC_DOWN;   break;
-      case KC_DOWN:   repeating.code = KC_RIGHT;  break;
-      case KC_RIGHT:  repeating.code = KC_UP;     break;
-      case KC_UP:     repeating.code = KC_LEFT;   break;
-      default:    break;
-    }
-  }
   for (uint8_t i = count; i > 1; i--) {
 #if !defined(NG_BMP)
-    tap_code(repeating.code);
+    tap_code(code);
 #else
     char str[4] = "\1\1\0\0";
-    str[2] = repeating.code;
-    bmp_send_string(str); // SS_TAP(repeating.code)
+    str[2] = code;
+    bmp_send_string(str); // SS_TAP(code)
 #endif
   }
 #if !defined(NG_BMP)
-  register_code(repeating.code);
+  register_code(code);
 #else
   char str[4] = "\1\2\0\0";
-  str[2] = repeating.code;
-  bmp_send_string(str); // SS_DOWN(repeating.code)
+  str[2] = code;
+  bmp_send_string(str); // SS_DOWN(code)
 #endif
 }
 
-void ng_up(uint8_t c) {
-#if !defined(NG_BMP)
-  for (uint8_t i = 0; i < c; i++) { // サイズ削減
-    if (naginata_config.tategaki) {
-      tap_code(KC_UP);
-    } else {
-      tap_code(KC_LEFT);
-    }
-  }
-#else
-  for (uint8_t i = 0; i < c; i++) { // サイズ削減
-    if (naginata_config.tategaki) {
-      bmp_send_string(SS_TAP(X_UP));
-    } else {
-      bmp_send_string(SS_TAP(X_LEFT));
-    }
-  }
-#endif
+// リピート対応の縦横変換を伴う方向キー移動
+void ng_move_cursor_with_ty_repeat(bool shift, uint8_t code, uint8_t count) {
+  ng_move_cursor_with_repeat(shift, convert_ty(code), count);
 }
 
-void ng_down(uint8_t c) {
-#if !defined(NG_BMP)
-  for (uint8_t i = 0; i < c; i++) {
-    if (naginata_config.tategaki) {
-      tap_code(KC_DOWN);
-    } else {
-      tap_code(KC_RIGHT);
-    }
-  }
-#else
-  for (uint8_t i = 0; i < c; i++) { // サイズ削減
-    if (naginata_config.tategaki) {
-      bmp_send_string(SS_TAP(X_DOWN));
-    } else {
-      bmp_send_string(SS_TAP(X_RIGHT));
-    }
-  }
-#endif
+void ng_back_cursor(void) {
+  ng_1_back_cursor_r();
+  end_repeating_key();
 }
-
-void ng_left(uint8_t c) {
-#if !defined(NG_BMP)
-  for (uint8_t i = 0; i < c; i++) {
-    if (naginata_config.tategaki) {
-      tap_code(KC_LEFT);
-    } else {
-      tap_code(KC_DOWN);
-    }
-  }
-#else
-  for (uint8_t i = 0; i < c; i++) { // サイズ削減
-    if (naginata_config.tategaki) {
-      bmp_send_string(SS_TAP(X_LEFT));
-    } else {
-      bmp_send_string(SS_TAP(X_DOWN));
-    }
-  }
-#endif
+void ng_forward_cursor(void) {
+  ng_1_forward_cursor_r();
+  end_repeating_key();
 }
-
-void ng_right(uint8_t c) {
-#if !defined(NG_BMP)
-  for (uint8_t i = 0; i < c; i++) {
-    if (naginata_config.tategaki) {
-      tap_code(KC_RIGHT);
-    } else {
-      tap_code(KC_UP);
-    }
-  }
-#else
-  for (uint8_t i = 0; i < c; i++) { // サイズ削減
-    if (naginata_config.tategaki) {
-      bmp_send_string(SS_TAP(X_RIGHT));
-    } else {
-      bmp_send_string(SS_TAP(X_UP));
-    }
-  }
-#endif
+void ng_next_line(void) {
+  ng_1_next_line_r();
+  end_repeating_key();
+}
+void ng_previous_line(void) {
+  ng_1_previous_line_r();
+  end_repeating_key();
 }
 
 void ng_home() {

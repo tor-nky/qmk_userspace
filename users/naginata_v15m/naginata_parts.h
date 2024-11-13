@@ -226,20 +226,20 @@ void ng_edit_tenten(void); // ……{改行}
 void ng_edit_yokobou(void); // ――{改行}
 void ng_edit_separate_line(void); // 　　　×　　　×　　　×{改行 2}
 
-void ng_edit_1_up(void); // {↑}
-void ng_edit_s1_up(void); // +{↑}
-void ng_edit_s7_up(void); // +{↑ 7}
-void ng_edit_1_down(void); // {↓}
-void ng_edit_s1_down(void); // +{↓}
-void ng_edit_s7_down(void); // +{↓ 7}
-void ng_edit_1_right(void); // {→}
-void ng_edit_s1_right(void); // +{→}
-void ng_edit_s5_right(void); // +{→ 5}
-void ng_edit_s20_right(void); // +{→ 20}
-void ng_edit_1_left(void); // {←}
-void ng_edit_s1_left(void); // +{←}
-void ng_edit_s5_left(void); // +{← 5}
-void ng_edit_s20_left(void); // +{← 20}
+void ng_1_back_cursor_r(void); // {↑}
+void ng_s1_back_cursor_r(void); // +{↑}
+void ng_s7_back_cursor_r(void); // +{↑ 7}
+void ng_1_forward_cursor_r(void); // {↓}
+void ng_s1_forward_cursor_r(void); // +{↓}
+void ng_s7_forward_cursor_r(void); // +{↓ 7}
+void ng_1_previous_line_r(void); // {→}
+void ng_s1_previous_line_r(void); // +{→}
+void ng_s5_previous_line_r(void); // +{→ 5}
+void ng_s20_previous_line_r(void); // +{→ 20}
+void ng_1_next_line_r(void); // {←}
+void ng_s1_next_line_r(void); // +{←}
+void ng_s5_next_line_r(void); // +{← 5}
+void ng_s20_next_line_r(void); // +{← 20}
 void ng_edit_kakutei_down(void); // {改行}{↓}
 void ng_edit_kakutei_left(void); // {改行}{←}
 void ng_edit_kakutei_end(void); // {Enter}{End}
