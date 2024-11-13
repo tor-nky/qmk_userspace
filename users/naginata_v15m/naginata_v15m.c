@@ -852,11 +852,16 @@ static Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pressed_key)
 }
 
 // 変換してよいか調べる
-// None: なし, One: 一つしかない, Multipul: しぼれない, Wait: 時限後置シフトを待つ
-enum TransState { None, One, Multipul, Wait };
+// None: なし, One: 一つしかない, Multipul: しぼれない,
+// WaitShift: 時限後置シフトを待つ, WaitDouji: センターシフトを押しながらの同時押しの制限時間を待つ
+enum TransState { None, One, Multipul, WaitShift, WaitDouji };
 
 static enum TransState which_trans_state(Ngkey search) {
   enum TransState state = None;
+#if defined (NG_SHIFTED_DOUJI_MS)
+  bool shifted = (search & B_SHFT) && search != B_SHFT;
+#endif
+
   for (Ngmap_num i = 0; i < NGMAP_COUNT; i++) {
     Ngkey key;
 #if defined(__AVR__)
@@ -866,28 +871,41 @@ static enum TransState which_trans_state(Ngkey search) {
 #endif
     // search を含む
     if ((key & search) == search) {
-      switch (key ^ search) {
-        case 0:
-          if (state == None) {
-            state = One;
-          }
-          break;
-#if defined (NG_KOUCHI_SHIFT_MS)  // 後置シフトの時間制限あり
-        case B_SHFT:
-          if (naginata_config.kouchi_shift) {
-            state = Wait;
-          }
-          break;
-        default:
-          return Multipul;
-#else
-        default:
-          if (naginata_config.kouchi_shift || !(key & B_SHFT)) {
-            return Multipul;
-          }
-          break;
+#if defined (NG_SHIFTED_DOUJI_MS)
+      // センターシフトを押しながらの同時押しの判定
+      if (shifted) {
+        if (key == search) {
+          state = One;
+        } else {
+          return WaitDouji;
+        }
+      } else {
 #endif
+        switch (key ^ search) {
+          case 0:
+            if (state == None) {
+              state = One;
+            }
+            break;
+#if defined (NG_KOUCHI_SHIFT_MS)  // 後置シフトの時間制限あり
+          case B_SHFT:
+            if (naginata_config.kouchi_shift) {
+              state = WaitShift;
+            }
+            break;
+          default:
+            return Multipul;
+#else
+          default:
+            if (naginata_config.kouchi_shift || !(key & B_SHFT)) {
+              return Multipul;
+            }
+            break;
+#endif
+        }
+#if defined (NG_SHIFTED_DOUJI_MS)
       }
+#endif
     }
   }
   return state;
@@ -921,12 +939,10 @@ static void end_repeating_key(void) {
   repeating.code = repeating.mod = KC_NO;
 }
 
-#if defined(NG_KOUCHI_SHIFT_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
+#if defined(NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
   static uint16_t ng_last_pressed_ms = 0; // 薙刀式のキーを最後に押した時間
 #endif
-#if defined (NG_KOUCHI_SHIFT_MS)
-  static bool wait_kouchi_shift = false;  // 後置シフト待ち
-#endif
+static enum TransState trans_state = None;
 static uint8_t ng_center_keycode = KC_NO;
 enum RestShiftState { Stop, Checking, Once };
 
@@ -944,9 +960,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   const bool pressing = record->event.pressed;
   bool store_key_later = false;
 
-#if defined (NG_KOUCHI_SHIFT_MS)
-    wait_kouchi_shift = false;  // 後置シフト待ちを解除
-#endif
+  trans_state = None;  // キー待ちを解除
 
   switch (keycode) {
     case NG_Q ... NG_SLSH:
@@ -991,7 +1005,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // 配列に押したキーを保存
       waiting_keys[waiting_count++] = recent_key;
     }
-#if defined(NG_KOUCHI_SHIFT_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
+#if defined(NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
     ng_last_pressed_ms = record->event.time;
 #endif
   }
@@ -1039,13 +1053,13 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
             continue;
           }
           // 変換してよいか調べる
-          enum TransState state = which_trans_state(searching_key);
+          trans_state = which_trans_state(searching_key);
           // 組み合わせがなくなった
-          if (state == None && searching_count > 1) {
+          if (trans_state == None && searching_count > 1) {
             searching_count--;  // 最後のキーを減らして検索
             continue;
           // まだ変換できない
-          } else if (!(state == None || state == One)) {
+          } else if (!(trans_state == None || trans_state == One)) {
             break;
           }
         // キーを離した時は、そのキーが関わるところまで出力する
@@ -1113,13 +1127,23 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 
 // 後置シフト待ち処理
 void kouchi_shift_loop(void) {
-#if defined (NG_KOUCHI_SHIFT_MS)
+#if defined (NG_KOUCHI_SHIFT_MS) && defined (NG_SHIFTED_DOUJI_MS)
   // 後置シフトを待ったが時間切れ
-  if (wait_kouchi_shift && timer_elapsed(ng_last_pressed_ms) >= (NG_KOUCHI_SHIFT_MS)) {
+  // センターシフトを押しながらの同時押しの制限時間を待ったが時間切れ
+  if ((trans_state == WaitShift && timer_elapsed(ng_last_pressed_ms) >= (NG_KOUCHI_SHIFT_MS))
+      || (trans_state == WaitDouji && timer_elapsed(ng_last_pressed_ms) >= (NG_SHIFTED_DOUJI_MS))) {
+#elif defined (NG_KOUCHI_SHIFT_MS)
+  // 後置シフトを待ったが時間切れ
+  if (trans_state == WaitShift && timer_elapsed(ng_last_pressed_ms) >= (NG_KOUCHI_SHIFT_MS)) {
+#elif defined (NG_SHIFTED_DOUJI_MS)
+  // センターシフトを押しながらの同時押しの制限時間を待ったが時間切れ
+  if (trans_state == WaitDouji && timer_elapsed(ng_last_pressed_ms) >= (NG_SHIFTED_DOUJI_MS)) {
+#endif
     keyrecord_t record;
     record.event.pressed = true;
     record.event.time = timer_read();
     naginata_type(KC_NO, &record); // 未出力キーを処理
+#if defined (NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS)
   }
 #endif
 }
