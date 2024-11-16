@@ -61,7 +61,7 @@ IMEのキー設定
 |○|なぎまる|__なぎ__ なたしき __まる__|
 
 次のソースコードには改造が必要です。
-* keyboards/ble_micro_pro/ble_micro_pro.c
+* ~~keyboards/ble_micro_pro/ble_micro_pro.c~~
 ### Windows辞書式(BMP専用)の場合
 キーボード設定を日本語106キーボードにする。
 
@@ -130,7 +130,7 @@ F+G を押さなくても 左右シフト＋英字 で IMEオフになるので�
 | 後置シフト            | ON/OFFトグル   | NG_KOTI  | kouchi_shift_toggle()  | 
 | 現在設定の出力        |   | NG_SHOS   | ng_show_os()  | 
 
-本家のDvorakJ版薙刀式は前置シフトですが、
+本家のDvorakJ版薙刀式は前置シフトのみですが、
 時間制限付き後置シフトも有効にできます。
 naginata.h 内の `#define NG_KOUCHI_SHIFT_MS 60` にミリ秒単位で設定し、コンパイルします。
 
@@ -152,6 +152,7 @@ config.h の中に ``#define NG_BMP`` を書き加えてコンパイルします
 * Windows の秀丸エディタでは、入力が速すぎると表示が乱れたりクラッシュすることがあります。
 * 薙刀式オン(H+JまたはNG_ON)を押した後、シフトなどの装飾キーは一度離してください。
 ## DvorakJ版、Hachikuとの違い
+DvorakJでは、押しているキーが少ないときにどれかキーを離すと残りが出力されますが、本方式とHachikuでは出力済みのキーを離してもなにもしません。
 ### 文字キーを押し、未出力のままスペースを押し離す
 |DvorakJ|Hachiku|naginata_v15m|
 |---|---|---|

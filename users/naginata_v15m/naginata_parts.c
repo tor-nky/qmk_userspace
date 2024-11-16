@@ -1426,14 +1426,14 @@ void ng_enter(void) { // {Enter}
 }
 
 // 編集モード
-void ng_symbol_chuuten(void) { // ・
+void ng_middle_dot(void) { // ・
 #if !defined(NG_BMP)
     tap_code(KC_SLASH);
 #else
     bmp_send_string("/");
 #endif
 }
-void ng_edit_question(void) { // ？{改行}
+void ng_question_mark(void) { // ？{改行}
 #if !defined(NG_BMP)
     tap_code16(LSFT(KC_SLASH));
     tap_code(KC_ENTER);
@@ -1449,7 +1449,7 @@ void ng_edit_question(void) { // ？{改行}
     }
 #endif
 }
-void ng_edit_exclaim(void) { // ！{改行}
+void ng_exclamation_mark(void) { // ！{改行}
 #if !defined(NG_BMP)
     tap_code16(LSFT(KC_1));
     tap_code(KC_ENTER);
@@ -1465,7 +1465,7 @@ void ng_edit_exclaim(void) { // ！{改行}
     }
 #endif
 }
-void ng_edit_slash(void) { // ／{改行}
+void ng_solidus(void) { // ／{改行}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("／"));
 #else
@@ -1481,7 +1481,7 @@ void ng_edit_slash(void) { // ／{改行}
     }
 #endif
 }
-void ng_edit_maru(void) { // 〇{改行}
+void ng_white_circle(void) { // 〇{改行}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("〇"));
 #else
@@ -1489,7 +1489,7 @@ void ng_edit_maru(void) { // 〇{改行}
     dic_send_string("nagimaru"); // "〇"
 #endif
 }
-void ng_edit_tatebou(void) { // ｜{改行}
+void ng_vertical_line(void) { // ｜{改行}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("｜"));
 #else
@@ -1505,7 +1505,7 @@ void ng_edit_tatebou(void) { // ｜{改行}
     }
 #endif
 }
-void ng_edit_tenten(void) { // ……{改行}
+void ng_ellipsis(void) { // ……{改行}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("……"));
 #else
@@ -1521,7 +1521,7 @@ void ng_edit_tenten(void) { // ……{改行}
     }
 #endif
 }
-void ng_edit_yokobou(void) { // ――{改行}
+void ng_bar(void) { // ――{改行}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("──"));
 #else
@@ -1582,6 +1582,44 @@ void ng_s5_next_line_r(void) { // +{← 5}
 void ng_s20_next_line_r(void) { // +{← 20}
     ng_move_cursor_with_ty_repeat(true, KC_LEFT, 20);
 }
+
+void ng_1_up(void) { // {↑}
+    ng_move_cursor_with_repeat(false, KC_UP, 1);
+}
+void ng_s1_up(void) { // +{↑}
+    ng_move_cursor_with_repeat(true, KC_UP, 1);
+}
+void ng_s7_up(void) { // +{↑ 7}
+    ng_move_cursor_with_repeat(true, KC_UP, 7);
+}
+void ng_1_down(void) { // {↓}
+    ng_move_cursor_with_repeat(false, KC_DOWN, 1);
+}
+void ng_s1_down(void) { // +{↓}
+    ng_move_cursor_with_repeat(true, KC_DOWN, 1);
+}
+void ng_s7_down(void) { // +{↓ 7}
+    ng_move_cursor_with_repeat(true, KC_DOWN, 7);
+}
+void ng_1_right(void) { // {→}
+    ng_move_cursor_with_repeat(false, KC_RIGHT, 1);
+}
+void ng_s1_right(void) { // +{→}
+    ng_move_cursor_with_repeat(true, KC_RIGHT, 1);
+}
+void ng_s7_right(void) { // +{→ 7}
+    ng_move_cursor_with_repeat(true, KC_RIGHT, 7);
+}
+void ng_1_left(void) { // {←}
+    ng_move_cursor_with_repeat(false, KC_LEFT, 1);
+}
+void ng_s1_left(void) { // +{←}
+    ng_move_cursor_with_repeat(true, KC_LEFT, 1);
+}
+void ng_s7_left(void) { // +{← 7}
+    ng_move_cursor_with_repeat(true, KC_LEFT, 7);
+}
+
 void ng_edit_kakutei_down(void) { // {改行}{↓}
     ng_ime_complete();
     ng_forward_cursor();
@@ -1718,7 +1756,7 @@ void ng_edit_serifu_zengyo(void) { // {Home}{→}{End}{Del 2}{←}
 #endif
 }
 
-void ng_edit_maru_kakko(void) { // (){改行}{↑}
+void ng_parenthesis(void) { // (){改行}{↑}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("（）"));
     ng_back_cursor();
@@ -1736,7 +1774,7 @@ void ng_edit_maru_kakko(void) { // (){改行}{↑}
     }
 #endif
 }
-void ng_edit_kagi_kakko(void) { // 「」{改行}{↑}
+void ng_corner_bracket(void) { // 「」{改行}{↑}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("「」"));
     ng_back_cursor();
@@ -1754,7 +1792,7 @@ void ng_edit_kagi_kakko(void) { // 「」{改行}{↑}
     }
 #endif
 }
-void ng_edit_nijuu_yama_gakko(void) { // 『』{改行}{↑}
+void ng_white_corner_bracket(void) { // 『』{改行}{↑}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("『』"));
     ng_back_cursor();
@@ -1773,7 +1811,7 @@ void ng_edit_nijuu_yama_gakko(void) { // 『』{改行}{↑}
     }
 #endif
 }
-void ng_edit_sumituki_kakko(void) { // 【】{改行}{↑}
+void ng_black_lenticular_bracket(void) { // 【】{改行}{↑}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("【】"));
     ng_back_cursor();
@@ -1783,7 +1821,7 @@ void ng_edit_sumituki_kakko(void) { // 【】{改行}{↑}
     ng_back_cursor();
 #endif
 }
-void ng_edit_nijuu_yama_kakko(void) { // 《》{改行}{↑}
+void ng_double_angle_bracket(void) { // 《》{改行}{↑}
 #if !defined(NG_BMP)
     ng_send_unicode_string_P(PSTR("《》"));
     ng_back_cursor();
@@ -1793,30 +1831,11 @@ void ng_edit_nijuu_yama_kakko(void) { // 《》{改行}{↑}
     ng_back_cursor();
 #endif
 }
-void ng_edit_next_line_kagi_kakko(void) { // {改行}{End}{改行}「」{改行}{↑}
-#if !defined(NG_BMP)
+void ng_edit_next_line_corner_bracket(void) { // {改行}{End}{改行}「」{改行}{↑}
     ng_ime_complete();
     ng_end();
     tap_code(KC_ENTER);
-    ng_send_unicode_string_P(PSTR("「」"));
-    ng_back_cursor();
-#else
-    switch (naginata_config.os) {
-    case NG_IOS_BMP:
-        ng_ime_complete();
-        ng_end();
-        bmp_send_string("\n]"SS_TAP(X_NUHS));   // for JIS Keyboard
-        ng_ime_complete();
-        ng_back_cursor();
-        break;
-    default:
-        ng_ime_complete();
-        ng_end();
-        bmp_send_string("\n]"SS_TAP(X_NUHS)"\n");   // for JIS Keyboard
-        ng_back_cursor();
-        break;
-    }
-#endif
+    ng_corner_bracket(); // 「」{改行}{↑}
 }
 void ng_edit_next_line_space(void) { // {改行}{End}{改行}{Space}
 #if !defined(NG_BMP)
@@ -1831,7 +1850,7 @@ void ng_edit_next_line_space(void) { // {改行}{End}{改行}{Space}
 #endif
 }
 
-void ng_edit_surround_maru_kakko(void) { // ^x(^v){改行}{Space}+{↑}^x
+void ng_edit_surround_parenthesis(void) { // ^x(^v){改行}{Space}+{↑}^x
 #if !defined(NG_BMP)
     ng_cut();
     ng_send_unicode_string_P(PSTR("（"));
@@ -1839,28 +1858,14 @@ void ng_edit_surround_maru_kakko(void) { // ^x(^v){改行}{Space}+{↑}^x
     ng_send_unicode_string_P(PSTR("）"));
     copy_spc_to_clipboard();
 #else
-    switch (naginata_config.os) {
-    case NG_IOS_BMP:
-        ng_cut();
-        bmp_send_string(SS_LSFT("89")); // for JIS Keyboard
-        ng_ime_complete();
-        ng_back_cursor();
-        ng_paste();
-        ng_forward_cursor();
-        copy_spc_to_clipboard();
-        break;
-    default:
-        ng_cut();
-        bmp_send_string(SS_LSFT("89")"\n"); // for JIS Keyboard
-        ng_back_cursor();
-        ng_paste();
-        ng_forward_cursor();
-        copy_spc_to_clipboard();
-        break;
-    }
+    ng_cut();
+    ng_parenthesis(); // (){改行}{↑}
+    ng_paste();
+    ng_forward_cursor();
+    copy_spc_to_clipboard();
 #endif
 }
-void ng_edit_surround_kagi_kakko(void) { // ^x「^v」{改行}{Space}+{↑}^x
+void ng_edit_surround_corner_bracket(void) { // ^x「^v」{改行}{Space}+{↑}^x
 #if !defined(NG_BMP)
     ng_cut();
     ng_send_unicode_string_P(PSTR("「"));
@@ -1868,28 +1873,14 @@ void ng_edit_surround_kagi_kakko(void) { // ^x「^v」{改行}{Space}+{↑}^x
     ng_send_unicode_string_P(PSTR("」"));
     copy_spc_to_clipboard();
 #else
-    switch (naginata_config.os) {
-    case NG_IOS_BMP:
-        ng_cut();
-        bmp_send_string("]"SS_TAP(X_NUHS)); // for JIS Keyboard
-        ng_ime_complete();
-        ng_back_cursor();
-        ng_paste();
-        ng_forward_cursor();
-        copy_spc_to_clipboard();
-        break;
-    default:
-        ng_cut();
-        bmp_send_string("]"SS_TAP(X_NUHS)"\n"); // for JIS Keyboard
-        ng_back_cursor();
-        ng_paste();
-        ng_forward_cursor();
-        copy_spc_to_clipboard();
-        break;
-    }
+    ng_cut();
+    ng_corner_bracket(); // 「」{改行}{↑}
+    ng_paste();
+    ng_forward_cursor();
+    copy_spc_to_clipboard();
 #endif
 }
-void ng_edit_surround_nijuu_yama_gakko(void) { // ^x『^v』{改行}{Space}+{↑}^x
+void ng_edit_surround_white_corner_bracket(void) { // ^x『^v』{改行}{Space}+{↑}^x
 #if !defined(NG_BMP)
     ng_cut();
     ng_send_unicode_string_P(PSTR("『"));
@@ -1900,9 +1891,7 @@ void ng_edit_surround_nijuu_yama_gakko(void) { // ^x『^v』{改行}{Space}+{↑
     switch (naginata_config.os) {
     case NG_IOS_BMP:
         ng_cut();
-        bmp_send_string(SS_LSFT("]"SS_TAP(X_NUHS)));    // for JIS Keyboard
-        ng_ime_complete();
-        ng_back_cursor();
+        ng_white_corner_bracket(); // 『』{改行}{↑}
         ng_paste();
         ng_forward_cursor();
         copy_spc_to_clipboard();
@@ -1913,7 +1902,7 @@ void ng_edit_surround_nijuu_yama_gakko(void) { // ^x『^v』{改行}{Space}+{↑
     }
 #endif
 }
-void ng_edit_surround_sumituki_kakko(void) { // ^x【^v】{改行}{Space}+{↑}^x
+void ng_edit_surround_black_lenticular_bracket(void) { // ^x【^v】{改行}{Space}+{↑}^x
 #if !defined(NG_BMP)
     ng_cut();
     ng_send_unicode_string_P(PSTR("【"));
@@ -1931,12 +1920,12 @@ void ng_edit_surround_ruby(void) { // ^x｜{改行}^v《》{改行}{↑}{Space}+
     ng_send_unicode_string_P(PSTR("｜"));
     ng_paste();
     copy_spc_to_clipboard();    // 最後に持っていくと失敗する
-    ng_edit_nijuu_yama_kakko(); // 《》{改行}{↑}
+    ng_double_angle_bracket(); // 《》{改行}{↑}
 #else
     ng_cut();
-    ng_edit_tatebou();  // "｜"
+    ng_vertical_line();  // "｜"
     ng_paste();
     copy_spc_to_clipboard();
-    ng_edit_nijuu_yama_kakko(); // 《》{改行}{↑}
+    ng_double_angle_bracket(); // 《》{改行}{↑}
 #endif
 }

@@ -216,14 +216,14 @@ void ng_edit_kuten(void);   // 。
 void ng_enter(void);        // {Enter}
 
 // 編集モード
-void ng_symbol_chuuten(void); // ・
-void ng_edit_question(void); // ？{改行}
-void ng_edit_exclaim(void); // ！{改行}
-void ng_edit_slash(void); // ／{改行}
-void ng_edit_maru(void); // 〇{改行}
-void ng_edit_tatebou(void); // ｜{改行}
-void ng_edit_tenten(void); // ……{改行}
-void ng_edit_yokobou(void); // ――{改行}
+void ng_middle_dot(void); // ・
+void ng_question_mark(void); // ？{改行}
+void ng_exclamation_mark(void); // ！{改行}
+void ng_solidus(void); // ／{改行}
+void ng_white_circle(void); // 〇{改行}
+void ng_vertical_line(void); // ｜{改行}
+void ng_ellipsis(void); // ……{改行}
+void ng_bar(void); // ――{改行}
 void ng_edit_separate_line(void); // 　　　×　　　×　　　×{改行 2}
 
 void ng_1_back_cursor_r(void); // {↑}
@@ -240,6 +240,18 @@ void ng_1_next_line_r(void); // {←}
 void ng_s1_next_line_r(void); // +{←}
 void ng_s5_next_line_r(void); // +{← 5}
 void ng_s20_next_line_r(void); // +{← 20}
+void ng_1_up(void); // {↑}
+void ng_s1_up(void); // +{↑}
+void ng_s7_up(void); // +{↑ 7}
+void ng_1_down(void); // {↓}
+void ng_s1_down(void); // +{↓}
+void ng_s7_down(void); // +{↓ 7}
+void ng_1_right(void); // {→}
+void ng_s1_right(void); // +{→}
+void ng_s7_right(void); // +{→ 7}
+void ng_1_left(void); // {←}
+void ng_s1_left(void); // +{←}
+void ng_s7_left(void); // +{← 7}
 void ng_edit_kakutei_down(void); // {改行}{↓}
 void ng_edit_kakutei_left(void); // {改行}{←}
 void ng_edit_kakutei_end(void); // {Enter}{End}
@@ -253,16 +265,16 @@ void ng_edit_serifu(void); // {Home}{改行}{Space 1}{←}
 void ng_edit_togaki_zengyo(void); // {Home}{→}{End}{Del 4}{←}
 void ng_edit_serifu_zengyo(void); // {Home}{→}{End}{Del 2}{←}
 
-void ng_edit_maru_kakko(void); // (){改行}{↑}
-void ng_edit_kagi_kakko(void); // 「」{改行}{↑}
-void ng_edit_nijuu_yama_gakko(void); // 『』{改行}{↑}
-void ng_edit_sumituki_kakko(void); // 【】{改行}{↑}
-void ng_edit_nijuu_yama_kakko(void); // 《》{改行}{↑}
-void ng_edit_next_line_kagi_kakko(void); // {改行}{End}{改行}「」{改行}{↑}
+void ng_parenthesis(void); // (){改行}{↑}
+void ng_corner_bracket(void); // 「」{改行}{↑}
+void ng_white_corner_bracket(void); // 『』{改行}{↑}
+void ng_black_lenticular_bracket(void); // 【】{改行}{↑}
+void ng_double_angle_bracket(void); // 《》{改行}{↑}
+void ng_edit_next_line_corner_bracket(void); // {改行}{End}{改行}「」{改行}{↑}
 void ng_edit_next_line_space(void); // {改行}{End}{改行}{Space}
 
-void ng_edit_surround_maru_kakko(void); // ^x(^v){改行}{Space}+{↑}^x
-void ng_edit_surround_kagi_kakko(void); // ^x「^v」{改行}{Space}+{↑}^x
-void ng_edit_surround_nijuu_yama_gakko(void); // ^x『^v』{改行}{Space}+{↑}^x
-void ng_edit_surround_sumituki_kakko(void); // ^x【^v】{改行}{Space}+{↑}^x
+void ng_edit_surround_parenthesis(void); // ^x(^v){改行}{Space}+{↑}^x
+void ng_edit_surround_corner_bracket(void); // ^x「^v」{改行}{Space}+{↑}^x
+void ng_edit_surround_white_corner_bracket(void); // ^x『^v』{改行}{Space}+{↑}^x
+void ng_edit_surround_black_lenticular_bracket(void); // ^x【^v】{改行}{Space}+{↑}^x
 void ng_edit_surround_ruby(void); // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x

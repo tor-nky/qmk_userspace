@@ -203,18 +203,18 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_D|B_F|B_SCLN, .func = ng_katakana}, // ^i
   {.key = B_D|B_F|B_SLSH, .func = ng_hiragana}, // ^u
   {.key = B_J|B_K|B_Q   , .func = ng_eof}, // ^{End}
-  {.key = B_J|B_K|B_A   , .func = ng_edit_tenten}, // ……{改行}
-  {.key = B_J|B_K|B_Z   , .func = ng_edit_yokobou}, // ――{改行}
-  {.key = B_J|B_K|B_W   , .func = ng_edit_nijuu_yama_gakko}, // 『』{改行}{↑}
-  {.key = B_J|B_K|B_S   , .func = ng_edit_maru_kakko}, // (){改行}{↑}
-  {.key = B_J|B_K|B_X   , .func = ng_edit_sumituki_kakko}, // 【】{改行}{↑}
-  {.key = B_J|B_K|B_D   , .func = ng_edit_question}, // ？{改行}
-  {.key = B_J|B_K|B_C   , .func = ng_edit_exclaim}, // ！{改行}
+  {.key = B_J|B_K|B_A   , .func = ng_ellipsis}, // ……{改行}
+  {.key = B_J|B_K|B_Z   , .func = ng_bar}, // ――{改行}
+  {.key = B_J|B_K|B_W   , .func = ng_white_corner_bracket}, // 『』{改行}{↑}
+  {.key = B_J|B_K|B_S   , .func = ng_parenthesis}, // (){改行}{↑}
+  {.key = B_J|B_K|B_X   , .func = ng_black_lenticular_bracket}, // 【】{改行}{↑}
+  {.key = B_J|B_K|B_D   , .func = ng_question_mark}, // ？{改行}
+  {.key = B_J|B_K|B_C   , .func = ng_exclamation_mark}, // ！{改行}
   {.key = B_J|B_K|B_R   , .func = ng_save}, // ^s
-  {.key = B_J|B_K|B_F   , .func = ng_edit_kagi_kakko}, // 「」{改行}{↑}
+  {.key = B_J|B_K|B_F   , .func = ng_corner_bracket}, // 「」{改行}{↑}
   {.key = B_J|B_K|B_V   , .func = ng_edit_kakutei_down}, // {改行}{↓}
-  {.key = B_J|B_K|B_T   , .func = ng_symbol_chuuten}, // ・
-  {.key = B_J|B_K|B_G   , .func = ng_edit_nijuu_yama_kakko}, // 《》{改行}{↑}
+  {.key = B_J|B_K|B_T   , .func = ng_middle_dot}, // ・
+  {.key = B_J|B_K|B_G   , .func = ng_double_angle_bracket}, // 《》{改行}{↑}
   {.key = B_J|B_K|B_B   , .func = ng_edit_kakutei_left}, // {改行}{←}
   {.key = B_C|B_V|B_Y   , .func = ng_edit_s_home}, // +{Home}
   {.key = B_C|B_V|B_H   , .func = ng_copy}, // ^c
@@ -234,16 +234,16 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_M|B_COMM|B_Q, .func = ng_edit_togaki_zengyo}, // {Home}{→}{End}{Del 4}{←}
   {.key = B_M|B_COMM|B_A, .func = ng_edit_serifu_zengyo}, // {Home}{→}{End}{Del 2}{←}
   {.key = B_M|B_COMM|B_Z, .func = ng_edit_separate_line}, // 　　　×　　　×　　　×{改行 2}
-  {.key = B_M|B_COMM|B_W, .func = ng_edit_surround_nijuu_yama_gakko}, // ^x『^v』{改行}{Space}+{↑}^x
-  {.key = B_M|B_COMM|B_S, .func = ng_edit_surround_maru_kakko}, // ^x(^v){改行}{Space}+{↑}^x
-  {.key = B_M|B_COMM|B_X, .func = ng_edit_surround_sumituki_kakko}, // ^x【^v】{改行}{Space}+{↑}^x
+  {.key = B_M|B_COMM|B_W, .func = ng_edit_surround_white_corner_bracket}, // ^x『^v』{改行}{Space}+{↑}^x
+  {.key = B_M|B_COMM|B_S, .func = ng_edit_surround_parenthesis}, // ^x(^v){改行}{Space}+{↑}^x
+  {.key = B_M|B_COMM|B_X, .func = ng_edit_surround_black_lenticular_bracket}, // ^x【^v】{改行}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_E, .func = ng_edit_togaki}, // {Home}{改行}{Space 3}{←}
   {.key = B_M|B_COMM|B_D, .func = ng_edit_serifu}, // {Home}{改行}{Space 1}{←}
-  {.key = B_M|B_COMM|B_C, .func = ng_edit_slash}, // ／{改行}
+  {.key = B_M|B_COMM|B_C, .func = ng_solidus}, // ／{改行}
   {.key = B_M|B_COMM|B_R, .func = ng_edit_3_space}, // {Space 3}
-  {.key = B_M|B_COMM|B_F, .func = ng_edit_surround_kagi_kakko}, // ^x「^v」{改行}{Space}+{↑}^x
-  {.key = B_M|B_COMM|B_V, .func = ng_edit_next_line_kagi_kakko}, // {改行}{End}{改行}「」{改行}{↑}
-  {.key = B_M|B_COMM|B_T, .func = ng_edit_maru}, // 〇{改行}
+  {.key = B_M|B_COMM|B_F, .func = ng_edit_surround_corner_bracket}, // ^x「^v」{改行}{Space}+{↑}^x
+  {.key = B_M|B_COMM|B_V, .func = ng_edit_next_line_corner_bracket}, // {改行}{End}{改行}「」{改行}{↑}
+  {.key = B_M|B_COMM|B_T, .func = ng_white_circle}, // 〇{改行}
   {.key = B_M|B_COMM|B_G, .func = ng_edit_surround_ruby}, // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_B, .func = ng_edit_next_line_space}, // {改行}{End}{改行}{Space}
 
