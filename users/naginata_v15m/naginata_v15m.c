@@ -881,7 +881,7 @@ static enum TransState which_trans_state(Ngkey search) {
         }
       } else {
 #endif
-        switch (key ^ search) {
+        switch (key ^= search) {
           case 0:
             if (state == None) {
               state = One;
@@ -1139,11 +1139,11 @@ void kouchi_shift_loop(void) {
   // センターシフトを押しながらの同時押しの制限時間を待ったが時間切れ
   if (trans_state == WaitDouji && timer_elapsed(ng_last_pressed_ms) >= (NG_SHIFTED_DOUJI_MS)) {
 #endif
+#if defined (NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS)
     keyrecord_t record;
     record.event.pressed = true;
     record.event.time = timer_read();
     naginata_type(KC_NO, &record); // 未出力キーを処理
-#if defined (NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS)
   }
 #endif
 }
