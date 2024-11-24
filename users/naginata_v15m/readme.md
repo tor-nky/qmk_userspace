@@ -1,18 +1,21 @@
 このソースは eswaiさんの [naginata_v15](https://github.com/eswai/qmk_firmware/tree/master/users/naginata_v15) を元に作成しています。
-
 # 薙刀式カナ配列キーマップ
-
 薙刀式カナ配列による入力をQMKで実現します。薙刀式v15に準拠しています。
 編集モードも実装していますが、
 編集モードでの記号入力方式がOSによって異なるので、
 使用するOS(Windows、MacOS、Linux)によって切り替える必要があります。
 切り替えは再コンパイル不要で、動的に切り替えられます。
-
 ## 薙刀式とは
-
 【薙刀式】v15fix版、発表
 http://oookaworks.seesaa.net/article/500180437.html#gsc.tab=0
-## OSの設定 (BLE Micro Pro以外)
+## QMK Firmware　への組み込み方
+1. qmk_userspace/users/naginata_v15m/ フォルダの内容を、各自の同様のフォルダを作りコピーする。
+1. 各自の qmk_****/keyboards/%キーボード名%/keymaps/naginata_v15m/ フォルダに keymap.c を作成する。
+1. qmk_userspace/keyboards/tor_nky/coconut42/keymaps/naginata_v15m/keymap.c などを参考に、2つの `// 薙刀式` で囲まれた部分を付け加える。  
+OLED を使わなければ4番目と8番目は不要です。
+1. コンパイルする `qmk compile -kb %キーボード名% -km naginata_v15m`
+1. キーボードに書き込む
+## OSの設定 (BLE Micro Proでなく、辞書を使わない場合)
 ### Windowsの場合
 キーボード設定を日本語106キーボードにする。
 [WinCompose](http://wincompose.info/)をインストールする。
@@ -34,7 +37,7 @@ IM にかわせみを使用する場合は、コード入力に Control+Option+S
 かわせみを使わない場合は下の設定も必要です。
 
 [Karabiner-Elements](https://karabiner-elements.pqrs.org/)をインストールします。  
-ファイル unicode_hex_input_switcher.json をフォルダ ~/.config/karabiner/assets/complex_modification にコピーし、  
+ファイル unicode_hex_input_switcher.json をフォルダ ~/.config/karabiner/assets/complex_modification/ にコピーし、  
 Karabiner-Elements に Unicode Hex Input Switcher を登録してください。
 
 念のため、Karabiner-Elements の設定 Device で、本ファームウェアが入ったキーボードが有効になっているか確認してください。
@@ -48,7 +51,10 @@ IMEのキー設定
 |変換中|〃|__〃__|
 |変換前入力中|Ctrl Shift Muhenkan|__キャンセル__|
 |変換中|〃|__〃__|
-## OSの設定とIMへの単語の登録 (BLE Micro Pro)
+## OSなどの設定 (辞書使用の場合とBLE Micro Pro)
+辞書使用の場合、config.h の中に ``#define NG_USE_DIC`` を書き加えてコンパイルします。
+BLE Micro Pro の場合、フォルダ vial-qmk/keyboards/ble_micro_pro/keymaps/naginata_v15m/ と、フォルダ vial/ との違いをお調べ下さい。
+
 下表のものを __辞書登録__ してください。
 |単語|読み|参考|
 |---|---|---|
@@ -59,10 +65,7 @@ IMEのキー設定
 |『』|なぎにか|__なぎ__ なたしき __に__ じゅう __か__ ぎかっこ|
 |×　　　×　　　×|なぎばつ|__なぎ__ なたしき __ばつ__|
 |○|なぎまる|__なぎ__ なたしき __まる__|
-
-次のソースコードには改造が必要です。
-* ~~keyboards/ble_micro_pro/ble_micro_pro.c~~
-### Windows辞書式(BMP専用)の場合
+### Windows辞書式の場合
 キーボード設定を日本語106キーボードにする。
 
 IMEのキー設定
@@ -70,15 +73,15 @@ IMEのキー設定
 |---|:---:|:---:|
 |Ctrl+Shift+無変換| - |全消去|
 |Ctrl+Shift+変換| - |全確定|
-### Mac辞書式(BMP専用)の場合
-キーボードが日本語/英語どちらの設定でも動きます。
+### Mac辞書式の場合
+キーボードをJIS(日本)の設定にします。
 
 また、「キーボード設定を開く...」から「入力ソース」に英語「U.S.」を加えます。  
 「英数」キーでIMをオフにしたとき「U.S.」になるようにしてください。
 
 日本語IMのライブ変換を使用中に M+Comma+Z を押すと、「　　　×　　　×　　　×」が入力できなくなります。
 ライブ変換をやめ、変換学習をリセットすると入力できるようになります。
-### Linux辞書式(BMP専用)の場合
+### Linux辞書式の場合
 キーボード設定を日本語106キーボードにする。
 
 IMEのキー設定
@@ -116,19 +119,19 @@ F+G を押さなくても 左右シフト＋英字 で IMEオフになるので�
 以下の機能を動的に切り替えることができます。
 設定内容をEEPROMに記録することができます。
 
-| 設定項目 | 設定 | キーコード | 関数呼び出し | 
+| 設定項目 | 設定 | キーコード | 関数呼び出し |
 |---|---|---|---|
-| OS切り替え            | Windows  | NGSW_WIN  | switchOS(NG_WIN)  | 
-|                      | MacOS    | NGSW_MAC  | switchOS(NG_MAC)  | 
-|                      | Linux    | NGSW_LNX  | switchOS(NG_LNX)  | 
-|                      | Windows(BMP専用) | NGSW_WIN  | switchOS(NG_WIN_BMP)  | 
-|                      | Mac(BMP専用)     | NGSW_MAC  | switchOS(NG_MAC_BMP)  | 
-|                      | Linux(BMP専用)   | NGSW_LNX  | switchOS(NG_LNX_BMP)  | 
-|                      | iOS(BMP専用) | NGSW_IOS  | switchOS(NG_IOS_BMP)  | 
-| MacOSのライブ変換対応(BMPにはなし) | ON/OFFトグル   | NG_MLV   | mac_live_conversion_toggle()  | 
-| 縦書き、横書き        | ON/OFFトグル   | NG_TAYO    | tategaki_toggle()  | 
-| 後置シフト            | ON/OFFトグル   | NG_KOTI  | kouchi_shift_toggle()  | 
-| 現在設定の出力        |   | NG_SHOS   | ng_show_os()  | 
+| OS切り替え            | Windows  | NGSW_WIN  | switchOS(NG_WIN)  |
+|                      | MacOS    | NGSW_MAC  | switchOS(NG_MAC)  |
+|                      | Linux    | NGSW_LNX  | switchOS(NG_LNX)  |
+|                      | Windows(BMP専用) | NGSW_WIN  | switchOS(NG_WIN_BMP)  |
+|                      | Mac(BMP専用)     | NGSW_MAC  | switchOS(NG_MAC_BMP)  |
+|                      | Linux(BMP専用)   | NGSW_LNX  | switchOS(NG_LNX_BMP)  |
+|                      | iOS(BMP専用) | NGSW_IOS  | switchOS(NG_IOS_BMP)  |
+| MacOSのライブ変換対応(BMPにはなし) | ON/OFFトグル   | NG_MLV   | mac_live_conversion_toggle()  |
+| 縦書き、横書き        | ON/OFFトグル   | NG_TAYO    | tategaki_toggle()  |
+| 後置シフト            | ON/OFFトグル   | NG_KOTI  | kouchi_shift_toggle()  |
+| 現在設定の出力        |   | NG_SHOS   | ng_show_os()  |
 
 本家のDvorakJ版薙刀式は前置シフトのみですが、
 時間制限付き後置シフトも有効にできます。
