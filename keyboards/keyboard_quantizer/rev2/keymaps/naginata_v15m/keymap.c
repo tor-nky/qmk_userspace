@@ -21,20 +21,20 @@
 #   include "os_detection.h"
 #endif
 
-// 薙刀式
+// 薙刀式 begin 1
 #include "naginata.h"
 #ifdef OLED_ENABLE
     bool update_oled = true;
     bool ng_state = false;
 #endif
-// 薙刀式
+// 薙刀式 end 1
 
 // Defines names for use in layer keycodes and the keymap
 enum keymap_layers {
     _BASE,
-// 薙刀式
+// 薙刀式 begin 2
     _NAGINATA, // 薙刀式入力レイヤー
-// 薙刀式
+// 薙刀式 end 2
     _LOWER,
     _RAISE,
     _ADJUST,
@@ -96,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX,XXXXXXX,   XXXXXXX,    XXXXXXX,         XXXXXXX,       XXXXXXX,   XXXXXXX,   XXXXXXX,  XXXXXXX,XXXXXXX,  XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,        XXXXXXX
     ),
 
-// 薙刀式
+// 薙刀式 begin 3
     [_NAGINATA] =  LAYOUT(
         _______, _______,_______,_______,_______,  _______,_______,_______,_______,  _______,_______,_______,_______,  _______,_______,_______,
         _______, _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,  _______,_______,_______,  _______,_______,_______,_______,
@@ -105,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,       NG_Z,   NG_X,   NG_C,   NG_V,   NG_B,   NG_N,   NG_M,NG_COMM, NG_DOT,NG_SLSH,_______,             _______,          _______,          _______,_______,_______,_______,
         _______,_______,   _______,    _______,         NG_SHFT,       _______,   _______,   _______,  _______,_______,  _______,  _______,_______,_______,  _______,        _______
     ),
-// 薙刀式
+// 薙刀式 end 3
 
     // [*****] = LAYOUT(
     //     _______, _______,_______,_______,_______,  _______,_______,_______,_______,  _______,_______,_______,_______,  _______,_______,_______,
@@ -117,12 +117,48 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // ),
 };
 
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case JP_ZKHK:
+      if (record->event.pressed) {
+        if (naginata_state()) {
+          naginata_off();
+        } else {
+          naginata_on();
+        }
+      }
+      return false;
+// 薙刀式 begin 4 -- OLEDを使う場合
+#ifdef OLED_ENABLE
+    case NGSW_WIN...NG_KOTI:
+      if (record->event.pressed)
+        update_oled = true; // 設定をOLED表示に反映する
+      break;
+#endif
+// 薙刀式 end 4
+  }
+
+  // 薙刀式 begin 5
+  if (!process_naginata(keycode, record))
+    return false;
+  // 薙刀式 end 5
+
+  return true;
+}
+
+// 全ての QMK 処理の最後に、次の繰り返しを開始する前に呼び出される関数
+void housekeeping_task_user(void) {
+  // 薙刀式 begin 6
+  // 後置シフト待ち処理
+  kouchi_shift_loop();
+  // 薙刀式 end 6
+}
+
 void matrix_init_user(void) {
-  // 薙刀式
+  // 薙刀式 begin 7
   uint16_t ngonkeys[] = {KC_H, KC_J};
   uint16_t ngoffkeys[] = {KC_F, KC_G};
   set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
-  // 薙刀式
 
   // 自動でOSによってレイヤーや薙刀式の設定を切り替える
 #ifdef OS_DETECTION_ENABLE
@@ -142,46 +178,10 @@ void matrix_init_user(void) {
       break;
   }
 #endif
+  // 薙刀式 end 7
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case JP_ZKHK:
-      if (record->event.pressed) {
-        if (naginata_state()) {
-          naginata_off();
-        } else {
-          naginata_on();
-        }
-      }
-      return false;
-// 薙刀式 OLEDを使う場合
-#ifdef OLED_ENABLE
-    case NGSW_WIN...NG_KOTI:
-      if (record->event.pressed)
-        update_oled = true; // 設定をOLED表示に反映する
-      break;
-#endif
-// 薙刀式
-  }
-
-  // 薙刀式
-  if (!process_naginata(keycode, record))
-    return false;
-  // 薙刀式
-
-  return true;
-}
-
-// 全ての QMK 処理の最後に、次の繰り返しを開始する前に呼び出される関数
-void housekeeping_task_user(void) {
-  // 薙刀式
-  // 後置シフト待ち処理
-  kouchi_shift_loop();
-  // 薙刀式
-}
-
-// 薙刀式 OLED表示
+// 薙刀式 begin 8 -- OLED表示
 #ifdef OLED_ENABLE
 
 // oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -362,3 +362,4 @@ bool oled_task_user(void) {
   return false;
 }
 #endif
+// 薙刀式 end 8
