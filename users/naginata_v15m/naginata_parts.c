@@ -1509,12 +1509,10 @@ void ng_vertical_line(void) { // ｜{改行}
         ng_ime_complete();
         break;
     default:
-        ng_ime_complete();
         bmp_send_string(SS_LSFT(SS_TAP(X_INTERNATIONAL_3))"\n");    // for JIS Keyboard
         break;
     }
 #elif defined(NG_USE_DIC)
-    ng_ime_complete();
     tap_code16(LSFT(KC_INTERNATIONAL_3));   // for JIS Keyboard
     tap_code(KC_ENTER);
 #else
@@ -1952,17 +1950,9 @@ void ng_edit_surround_black_lenticular_bracket(void) { // ^x【^v】{改行}{Spa
 #endif
 }
 void ng_edit_surround_ruby(void) { // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
-#if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_cut();
     ng_vertical_line();  // "｜"
     ng_paste();
     copy_spc_to_clipboard();
     ng_double_angle_bracket(); // 《》{改行}{↑}
-#else
-    ng_cut();
-    ng_send_unicode_string_P(PSTR("｜"));
-    ng_paste();
-    copy_spc_to_clipboard();    // 最後に持っていくと失敗する
-    ng_double_angle_bracket(); // 《》{改行}{↑}
-#endif
 }
