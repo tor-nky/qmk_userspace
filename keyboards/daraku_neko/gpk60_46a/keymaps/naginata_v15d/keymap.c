@@ -21,21 +21,21 @@
 #   include "os_detection.h"
 #endif
 
-// 薙刀式
+// 薙刀式 begin 1
 #include "naginata.h"
 #ifdef OLED_ENABLE
   bool update_oled = true;
   bool ng_state = false;
 #endif
-// 薙刀式
+// 薙刀式 end 1
 #include "twpair_on_jis.h"
 
 // Defines names for use in layer keycodes and the keymap
 enum layer_names {
   _QWERTY,
-// 薙刀式
+// 薙刀式 begin 2
   _NAGINATA, // 薙刀式入力レイヤー
-// 薙刀式
+// 薙刀式 end 2
   _NUMPAD,
   _LOWER,
   _RAISE,
@@ -130,10 +130,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //`--------'                 `--------+--------+--------'      `--------------------------'                 `--------'
   ),
 
-// 薙刀式
+// 薙刀式 begin 3
   [_NAGINATA] = LAYOUT(
   //,-----------------------------------------------------.      ,--------------------------------------------------------------.
-      _______,    NG_Q,    NG_W,    NG_E,    NG_R,    NG_T,           NG_Y,    NG_U,    NG_I,    NG_O,    NG_P, _______,  KC_OUT,
+      _______,    NG_Q,    NG_W,    NG_E,    NG_R,    NG_T,           NG_Y,    NG_U,    NG_I,    NG_O,    NG_P, _______, _______,
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------+--------|
       _______,    NG_A,    NG_S,    NG_D,    NG_F,    NG_G,           NG_H,    NG_J,    NG_K,    NG_L, NG_SCLN, _______, _______,
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------+--------|
@@ -142,38 +142,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______,                   _______, _______, NG_SHFT,        NG_SHFT, _______, _______,                   _______
   //`--------'                 `--------+--------+--------'      `--------------------------'                 `--------'
   ),
-// 薙刀式
+// 薙刀式 end 3
 };
 
-void matrix_init_user(void) {
-  // 薙刀式
-  uint16_t ngonkeys[] = {KC_H, KC_J};
-  uint16_t ngoffkeys[] = {KC_F, KC_G};
-  set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
-  // 薙刀式
-
-  // 自動でOSによってレイヤーや薙刀式の設定を切り替える
-#ifdef OS_DETECTION_ENABLE
-  wait_ms(400);
-  switch (detected_host_os()) {
-    case OS_WINDOWS:
-      switchOS(NG_WIN);
-      break;
-    case OS_MACOS:
-    case OS_IOS:
-      switchOS(NG_MAC);
-      break;
-    case OS_LINUX:
-      switchOS(NG_LINUX);
-      break;
-    default:
-      break;
-  }
-#endif
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static bool is_us2jis = false;
+  static bool is_us2jis = true;
 #ifdef CONSOLE_ENABLE
   const uint16_t key_timer = timer_read();  // 時間測定開始;
 #endif
@@ -213,126 +186,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       cont = false;
       break;
-#ifdef CONSOLE_ENABLE
-    case KC_OUT:
-      if (pressed) {
-        keyrecord_t release;
-        release.event.pressed = false;
-// こりゃ (かりょ)  // AVR12ms
-        process_naginata(NG_V, record); // こ
-        process_naginata(NG_H, record); // りゃ
-        process_naginata(NG_E, record); // AVR12ms
-        process_naginata(NG_V, &release);
-        process_naginata(NG_H, &release);
-        process_naginata(NG_E, &release);
-// ある情報 // AVR20ms
-        // process_naginata(NG_J, record); // あ
-        // process_naginata(NG_I, record); // る
-        // process_naginata(NG_I, &release); // AVR6ms
-        // process_naginata(NG_I, record); // じょ
-        // process_naginata(NG_R, record); // AVR6ms
-        // process_naginata(NG_L, record); // う
-        // process_naginata(NG_R, &release);
-        // process_naginata(NG_I, &release);
-        // process_naginata(NG_J, &release);
-        // process_naginata(NG_L, &release);
-        // process_naginata(NG_Z, record); // ほ
-        // process_naginata(NG_L, record); // う // AVR5ms
-        // process_naginata(NG_Z, &release);
-        // process_naginata(NG_L, &release);
-// 姶良カルデラ // AVR29ms
-        // process_naginata(NG_J, record); // あ
-        // process_naginata(NG_K, record); // い
-        // process_naginata(NG_DOT, record); // ら // AVR6ms
-        // process_naginata(NG_F, record);  // か
-        // process_naginata(NG_J, &release);
-        // process_naginata(NG_K, &release);
-        // process_naginata(NG_DOT, &release); // AVR4ms
-        // process_naginata(NG_I, record); // る
-        // process_naginata(NG_J, record); // で // AVR6ms
-        // process_naginata(NG_E, record); // AVR6ms
-        // process_naginata(NG_DOT, record); // ら // AVR5ms
-        // // キー上げ
-        // process_naginata(NG_E, &release);
-        // process_naginata(NG_F, &release);
-        // process_naginata(NG_J, &release);
-        // process_naginata(NG_I, &release);
-        // process_naginata(NG_DOT, &release);  // AVR3ms
-// 漁夫の利 // AVR20ms
-        // process_naginata(NG_I, record); // ぎょ
-        // process_naginata(NG_W, record);
-        // process_naginata(NG_J, record);  // AVR6ms
-        // process_naginata(NG_SHFT, record);  // ふ
-        // process_naginata(NG_SCLN, record);  // AVR5ms
-        // process_naginata(NG_J, &release);    // の
-        // process_naginata(NG_J, record); // AVR5ms
-        // process_naginata(NG_E, record);  // り  // AVR5ms
-        // // キー上げ
-        // process_naginata(NG_I, &release);
-        // process_naginata(NG_J, &release);
-        // process_naginata(NG_W, &release);
-        // process_naginata(NG_SHFT, &release);
-        // process_naginata(NG_SCLN, &release);
-        // process_naginata(NG_E, &release);
-// 近所においしいおそば屋さんがあります // AVR69ms
-        // process_naginata(NG_W, record); // き
-        // process_naginata(NG_W, &release);
-        // process_naginata(NG_COMM, record); // ん
-        // process_naginata(NG_COMM, &release);
-        // process_naginata(NG_R, record); // じょ
-        // process_naginata(NG_J, record);
-        // process_naginata(NG_I, record);
-        // process_naginata(NG_I, &release);
-        // process_naginata(NG_J, &release);
-        // process_naginata(NG_R, &release);
-        // process_naginata(NG_SHFT, record);  // に
-        // process_naginata(NG_D, record);
-        // process_naginata(NG_D, &release);
-        // process_naginata(NG_N, record); // お
-        // process_naginata(NG_N, &release);
-        // process_naginata(NG_SHFT, &release);
-        // process_naginata(NG_K, record); // い
-        // process_naginata(NG_K, &release);
-        // process_naginata(NG_R, record); // し
-        // process_naginata(NG_R, &release);
-        // process_naginata(NG_K, record); // い
-        // process_naginata(NG_K, &release);
-        // process_naginata(NG_SHFT, record);  // お
-        // process_naginata(NG_N, record);
-        // process_naginata(NG_N, &release);
-        // process_naginata(NG_SHFT, &release);
-        // process_naginata(NG_B, record); // そ
-        // process_naginata(NG_B, &release);
-        // process_naginata(NG_C, record); // ば
-        // process_naginata(NG_J, record);
-        // process_naginata(NG_J, &release);
-        // process_naginata(NG_C, &release);
-        // process_naginata(NG_SHFT, record);  // や
-        // process_naginata(NG_H, record);
-        // process_naginata(NG_H, &release);
-        // process_naginata(NG_U, record); // さ
-        // process_naginata(NG_U, &release);
-        // process_naginata(NG_SHFT, &release);
-        // process_naginata(NG_COMM, record);  // ん
-        // process_naginata(NG_COMM, &release);
-        // process_naginata(NG_J, record); // が
-        // process_naginata(NG_F, record);
-        // process_naginata(NG_J, &release);
-        // process_naginata(NG_F, &release);
-        // process_naginata(NG_J, record); // あ
-        // process_naginata(NG_J, &release);
-        // process_naginata(NG_SHFT, record);  // り
-        // process_naginata(NG_E, record);
-        // process_naginata(NG_E, &release);
-        // process_naginata(NG_F, record); // ま
-        // process_naginata(NG_F, &release);
-        // process_naginata(NG_SHFT, &release);
-        // process_naginata(NG_O, record); // す
-        // process_naginata(NG_O, &release);
-      }
-      cont = false;
-#endif  // CONSOLE_ENABLE
-// 薙刀式 OLEDを使う場合
+// 薙刀式 begin 4 -- OLEDを使う場合
 #ifdef OLED_ENABLE
     case NGSW_WIN...NG_KOTI:
       if (pressed) {
@@ -340,14 +194,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
 #endif
-// 薙刀式
+// 薙刀式 end 4
   }
 
-  // 薙刀式
+  // 薙刀式 begin 5
   if (cont) {
     cont = process_naginata(keycode, record);
   }
-  // 薙刀式
+  // 薙刀式 end 5
 
   // typewriter pairing on jis keyboard
   if (cont && is_us2jis) {
@@ -369,3 +223,38 @@ void keyboard_post_init_user(void) {
   //debug_mouse=true;
 }
 #endif
+
+// 全ての QMK 処理の最後に、次の繰り返しを開始する前に呼び出される関数
+void housekeeping_task_user(void) {
+  // 薙刀式 begin 6
+  // 後置シフト待ち処理
+  kouchi_shift_loop();
+  // 薙刀式 end 6
+}
+
+void matrix_init_user(void) {
+  // 薙刀式 begin 7
+  uint16_t ngonkeys[] = {KC_H, KC_J};
+  uint16_t ngoffkeys[] = {KC_F, KC_G};
+  set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
+
+  // 自動でOSによってレイヤーや薙刀式の設定を切り替える
+#ifdef OS_DETECTION_ENABLE
+  wait_ms(400);
+  switch (detected_host_os()) {
+    case OS_WINDOWS:
+      switchOS(NG_WIN);
+      break;
+    case OS_MACOS:
+    case OS_IOS:
+      switchOS(NG_MAC);
+      break;
+    case OS_LINUX:
+      switchOS(NG_LINUX);
+      break;
+    default:
+      break;
+  }
+#endif
+  // 薙刀式 end 7
+}

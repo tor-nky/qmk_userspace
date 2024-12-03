@@ -19,7 +19,7 @@
 #include "naginata_parts.h"
 #include "unicode_P.h"
 #if defined(NG_BMP)
-#   include "keyboards/ble_micro_pro/keymaps/naginata_v15m/bmp_send_string.h"
+#   include "keyboards/ble_micro_pro/keymaps/naginata_v15d/bmp_send_string.h"
 #endif
 
 #include <string.h>
@@ -548,7 +548,11 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
       break;
     default:
       naginata_config.os = NG_WIN;
+#   if defined(NG_USE_DIC)
+      naginata_config.live_conv = 0;
+#   else
       naginata_config.live_conv = 1;
+#   endif
       naginata_config.tategaki = 1;
       naginata_config.kouchi_shift = 0;
       break;
@@ -686,8 +690,13 @@ void ng_send_unicode_string_P(const char *str) {
 
   switch (naginata_config.os) {
     case NG_WIN:
+      ng_ime_complete();
+      tap_code16(LALT(KC_GRAVE));
+      send_unicode_string_P(str);
+      tap_code16(LALT(KC_GRAVE));
+      break;
     case NG_LINUX:
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
+      ng_ime_complete();
       tap_code(KC_GRAVE);
       send_unicode_string_P(str);
       tap_code(KC_INTERNATIONAL_2);
@@ -802,30 +811,9 @@ void naginata_on(void) {
   n_modifier = 0;
   layer_on(naginata_layer);
 
-#if defined(NG_BMP)
-  switch (naginata_config.os) {
-    case NG_WIN_BMP:
-    case NG_LINUX_BMP:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_INTERNATIONAL_2);
-      break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
-      tap_code(KC_LANGUAGE_1);      // (Mac)かな
-      break;
-  }
-#else
-  switch (naginata_config.os) {
-    case NG_WIN:
-    case NG_LINUX:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_INTERNATIONAL_2);
-      break;
-    case NG_MAC:
-      tap_code(KC_LANGUAGE_1);      // (Mac)かな
-      break;
-  }
-#endif
+  tap_code(KC_INTERNATIONAL_2); // ひらがな
+  tap_code(KC_INTERNATIONAL_2);
+  tap_code(KC_LANGUAGE_1);      // (Mac)かな
 }
 
 // 薙刀式をオフ
@@ -841,9 +829,11 @@ void naginata_off(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN_BMP:
+      tap_code(KC_INTERNATIONAL_5); // 無変換
+      tap_code(KC_LANGUAGE_2);  // (Mac)英数
+      break;
     case NG_LINUX_BMP:
-      // 確定→ひらがな→半角/全角
-      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8);  // Shift+Ctrl+変換
+      // ひらがな→半角/全角
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
       break;
@@ -855,9 +845,11 @@ void naginata_off(void) {
 #else
   switch (naginata_config.os) {
     case NG_WIN:
+      tap_code(KC_INTERNATIONAL_5); // 無変換
+      tap_code(KC_LANGUAGE_2);      // (Mac)英数
+      break;
     case NG_LINUX:
-      // 確定→ひらがな→半角/全角
-      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8);  // Shift+Ctrl+変換
+      // ひらがな→半角/全角
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
       break;
@@ -1697,7 +1689,6 @@ void ng_saihenkan() {
 }
 
 void ng_eof() {
-  ng_ime_complete();
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN_BMP:
@@ -1735,8 +1726,9 @@ void ng_ime_cancel() {
   switch (naginata_config.os) {
     case NG_WIN_BMP:
     case NG_LINUX_BMP:
-      // Shift+Ctrl+無変換x2
-      bmp_send_string(SS_LSFT(SS_LCTL(SS_TAP(X_INTERNATIONAL_5)SS_TAP(X_INTERNATIONAL_5))));
+      for (uint8_t c = 0; c < 4; c++) {
+        bmp_send_string(SS_TAP(X_ESCAPE));
+      }
       break;
     case NG_MAC_BMP:
       bmp_send_string(SS_TAP(X_NUM_LOCK));
@@ -1749,8 +1741,9 @@ void ng_ime_cancel() {
   switch (naginata_config.os) {
     case NG_WIN:
     case NG_LINUX:
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_5)));  // Shift+Ctrl+無変換x2
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_5)));
+      for (uint8_t c = 0; c < 4; c++) {
+        tap_code(KC_ESCAPE);
+      }
       break;
     case NG_MAC:
       tap_code(KC_NUM_LOCK);
@@ -1762,40 +1755,24 @@ void ng_ime_cancel() {
 void ng_ime_complete() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
-      // Shift+Ctrl+変換x2
-      bmp_send_string(SS_LSFT(SS_LCTL(SS_TAP(X_INTERNATIONAL_4)SS_TAP(X_INTERNATIONAL_4))));
-      break;
-    case NG_LINUX_BMP:
-      // Shift+Ctrl+変換
-      bmp_send_string(SS_LSFT(SS_LCTL(SS_TAP(X_INTERNATIONAL_4))));
-      break;
-    case NG_MAC_BMP:
-      // (Mac)英数 → Shift+(Mac)かな → (Mac)かな
-      bmp_send_string(SS_TAP(X_LANGUAGE_2)SS_LSFT(SS_TAP(X_LANGUAGE_2))SS_TAP(X_LANGUAGE_1));
-      break;
     case NG_IOS_BMP:
       // (Mac)英数 → (Mac)かな
       bmp_send_string(SS_TAP(X_LANGUAGE_2)SS_TAP(X_LANGUAGE_1));
       break;
+    case NG_LINUX_BMP:
+      bmp_send_string("/\n\b"SS_DELAY(LINUX_WAIT_MS));
+      break;
+    default:
+      bmp_send_string("/\n\b");
+      break;
   }
 #else
-  switch (naginata_config.os) {
-    case NG_WIN:
-    case NG_LINUX:
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
-      break;
-    case NG_MAC:
-# if !defined(NG_USE_KAWASEMI)
-      tap_code(KC_LANGUAGE_2);  // (Mac)英数
-      tap_code16(LSFT(KC_LANGUAGE_1));  // Shift+(Mac)かな
-      tap_code(KC_LANGUAGE_1);  // (Mac)かな
-# else
-      tap_code16(MEH(KC_LANGUAGE_1));   // Control+Option+Shift+(Mac)かな
-      tap_code(KC_LANGUAGE_1);  // (Mac)かな
-# endif
-      break;
+  tap_code(KC_SLASH);
+  tap_code(KC_ENTER);
+  if (naginata_config.os == NG_LINUX) {
+    tap_code_delay(KC_BACKSPACE, LINUX_WAIT_MS);
+  } else {
+    tap_code(KC_BACKSPACE);
   }
 #endif
 }

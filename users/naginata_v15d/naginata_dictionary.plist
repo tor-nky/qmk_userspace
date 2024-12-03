@@ -16,6 +16,18 @@
 	</dict>
 	<dict>
 		<key>phrase</key>
+		<string>（）</string>
+		<key>shortcut</key>
+		<string>なぎまか</string>
+	</dict>
+	<dict>
+		<key>phrase</key>
+		<string>「」</string>
+		<key>shortcut</key>
+		<string>なぎかか</string>
+	</dict>
+	<dict>
+		<key>phrase</key>
 		<string>《》</string>
 		<key>shortcut</key>
 		<string>なぎにや</string>

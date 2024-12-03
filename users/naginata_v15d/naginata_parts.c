@@ -19,7 +19,7 @@
 #include "naginata_parts.h"
 #if defined(NG_BMP)
 #   include "bmp_host_driver.h"
-#   include "keyboards/ble_micro_pro/keymaps/naginata_v15m/bmp_send_string.h"
+#   include "keyboards/ble_micro_pro/keymaps/naginata_v15d/bmp_send_string.h"
 #   define BMP_DELAY 40
 #endif
 
@@ -1644,15 +1644,27 @@ void ng_s7_left(void) { // +{← 7}
 }
 
 void ng_edit_kakutei_down(void) { // {改行}{↓}
-    ng_ime_complete();
+#if defined(NG_BMP)
+    bmp_send_string("\n");
+#else
+    tap_code(KC_ENTER);
+#endif
     ng_forward_cursor();
 }
 void ng_edit_kakutei_left(void) { // {改行}{←}
-    ng_ime_complete();
+#if defined(NG_BMP)
+    bmp_send_string("\n");
+#else
+    tap_code(KC_ENTER);
+#endif
     ng_next_line();
 }
 void ng_edit_kakutei_end(void) { // {Enter}{End}
-    ng_ime_complete();
+#if defined(NG_BMP)
+    bmp_send_string("\n");
+#else
+    tap_code(KC_ENTER);
+#endif
     ng_end();
 }
 void ng_edit_delete_to_end(void) { // +{End}{BS}
@@ -1780,20 +1792,9 @@ void ng_edit_serifu_zengyo(void) { // {Home}{→}{End}{Del 2}{←}
 }
 
 void ng_parenthesis(void) { // (){改行}{↑}
-#if defined(NG_BMP)
-    switch (naginata_config.os) {
-    case NG_IOS_BMP:
-        bmp_send_string(SS_LSFT("89")); // for JIS Keyboard
-        ng_ime_complete();
-        ng_back_cursor();
-        break;
-    default:
-        bmp_send_string(SS_LSFT("89")"\n"); // for JIS Keyboard
-        ng_back_cursor();
-        break;
-    }
-#elif defined(NG_USE_DIC)
-    send_string(SS_LSFT("89")"\n"); // for JIS Keyboard
+#if defined(NG_BMP) || defined(NG_USE_DIC)
+    ng_ime_complete();
+    dic_send_string("nagimaka"); // "（）"
     ng_back_cursor();
 #else
     ng_send_unicode_string_P(PSTR("（）"));
@@ -1801,20 +1802,9 @@ void ng_parenthesis(void) { // (){改行}{↑}
 #endif
 }
 void ng_corner_bracket(void) { // 「」{改行}{↑}
-#if defined(NG_BMP)
-    switch (naginata_config.os) {
-    case NG_IOS_BMP:
-        bmp_send_string("]"SS_TAP(X_NUHS)); // for JIS Keyboard
-        ng_ime_complete();
-        ng_back_cursor();
-        break;
-    default:
-        bmp_send_string("]"SS_TAP(X_NUHS)"\n"); // for JIS Keyboard
-        ng_back_cursor();
-        break;
-    }
-#elif defined(NG_USE_DIC)
-    send_string("]"SS_TAP(X_NUHS)"\n"); // for JIS Keyboard
+#if defined(NG_BMP) || defined(NG_USE_DIC)
+    ng_ime_complete();
+    dic_send_string("nagikaka"); // "「」"
     ng_back_cursor();
 #else
     ng_send_unicode_string_P(PSTR("「」"));
@@ -1865,18 +1855,25 @@ void ng_double_angle_bracket(void) { // 《》{改行}{↑}
 #endif
 }
 void ng_edit_next_line_corner_bracket(void) { // {改行}{End}{改行}「」{改行}{↑}
-    ng_ime_complete();
+#if defined(NG_BMP)
+    bmp_send_string("\n");
+    ng_end();
+    bmp_send_string("\n");
+    ng_corner_bracket(); // 「」{改行}{↑}
+#else
+    tap_code(KC_ENTER);
     ng_end();
     tap_code(KC_ENTER);
     ng_corner_bracket(); // 「」{改行}{↑}
+#endif
 }
 void ng_edit_next_line_space(void) { // {改行}{End}{改行}{Space}
 #if defined(NG_BMP)
-    ng_ime_complete();
+    bmp_send_string("\n");
     ng_end();
     bmp_send_string("\n ");
 #else
-    ng_ime_complete();
+    tap_code(KC_ENTER);
     ng_end();
     tap_code(KC_ENTER);
     tap_code(KC_SPACE);
