@@ -413,7 +413,11 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
       break;
     default:
       naginata_config.os = NG_WIN;
+#   if defined(NG_USE_DIC)
+      naginata_config.live_conv = 0;
+#   else
       naginata_config.live_conv = 1;
+#   endif
       naginata_config.tategaki = 1;
       naginata_config.kouchi_shift = 0;
       break;
