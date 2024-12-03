@@ -1865,10 +1865,17 @@ void ng_double_angle_bracket(void) { // 《》{改行}{↑}
 #endif
 }
 void ng_edit_next_line_corner_bracket(void) { // {改行}{End}{改行}「」{改行}{↑}
+#if defined(NG_BMP)
+    ng_ime_complete();
+    ng_end();
+    bmp_send_string("\n");
+    ng_corner_bracket(); // 「」{改行}{↑}
+#else
     ng_ime_complete();
     ng_end();
     tap_code(KC_ENTER);
     ng_corner_bracket(); // 「」{改行}{↑}
+#endif
 }
 void ng_edit_next_line_space(void) { // {改行}{End}{改行}{Space}
 #if defined(NG_BMP)
