@@ -829,8 +829,8 @@ void naginata_off(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN_BMP:
-      tap_code(KC_INTERNATIONAL_5); // 無変換
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
+      tap_code(KC_INTERNATIONAL_5); // 無変換
       break;
     case NG_LINUX_BMP:
       // ひらがな→半角/全角
@@ -845,8 +845,8 @@ void naginata_off(void) {
 #else
   switch (naginata_config.os) {
     case NG_WIN:
-      tap_code(KC_INTERNATIONAL_5); // 無変換
       tap_code(KC_LANGUAGE_2);      // (Mac)英数
+      tap_code(KC_INTERNATIONAL_5); // 無変換
       break;
     case NG_LINUX:
       // ひらがな→半角/全角
