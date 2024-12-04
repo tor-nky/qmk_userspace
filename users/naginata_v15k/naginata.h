@@ -28,7 +28,7 @@
 #define NG_KOUCHI_SHIFT_MS 60
 
 // センターシフトを押しながら2キー以上同時押しをする際の、普通キーの時間制限(ms) ※ 無効にすれば時間無制限
-#define NG_SHIFTED_DOUJI_MS 16
+// #define NG_SHIFTED_DOUJI_MS 50
 
 // センターシフトを単独で押し続けて無効になる時間(ミリ秒)
 // #define SHIFT_ALONE_TIMEOUT_MS 1000
