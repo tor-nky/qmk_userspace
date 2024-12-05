@@ -10,14 +10,14 @@ IMEへの辞書登録はするものの、なるべく設定がいらないよ�
 【薙刀式】v15fix版、発表
 http://oookaworks.seesaa.net/article/500180437.html#gsc.tab=0
 ## QMK Firmware　への組み込み方
-1. qmk_userspace/users/naginata_v15ms/ フォルダの内容を、各自の同様のフォルダを作りコピーする。
-1. 各自の qmk_****/keyboards/%キーボード名%/keymaps/naginata_v15ms/ フォルダに keymap.c を作成する。
-1. qmk_userspace/keyboards/tor_nky/coconut42/keymaps/naginata_v15ms/keymap.c などを参考に、2つの `// 薙刀式` で囲まれた部分を付け加える。  
+1. qmk_userspace/users/naginata_v15k/ フォルダの内容を、各自の同様のフォルダを作りコピーする。
+1. 各自の qmk_****/keyboards/%キーボード名%/keymaps/naginata_v15k/ フォルダに keymap.c を作成する。
+1. qmk_userspace/keyboards/tor_nky/coconut42/keymaps/naginata_v15k/keymap.c などを参考に、2つの `// 薙刀式` で囲まれた部分を付け加える。  
 OLED を使わなければ4番目と8番目は不要です。
-1. コンパイルする `qmk compile -kb %キーボード名% -km naginata_v15ms`
+1. コンパイルする `qmk compile -kb %キーボード名% -km naginata_v15k`
 1. キーボードに書き込む
 ## OSなどの設定
-BLE Micro Pro の場合、フォルダ vial-qmk/keyboards/ble_micro_pro/keymaps/naginata_v15ms/ と、フォルダ vial/ との違いをお調べ下さい。
+BLE Micro Pro の場合、フォルダ vial-qmk/keyboards/ble_micro_pro/keymaps/naginata_v15k/ と、フォルダ vial/ との違いをお調べ下さい。
 ### 共通
 下表のものを __辞書登録__ してください。
 |単語|読み|参考|
