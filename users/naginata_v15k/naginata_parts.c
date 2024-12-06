@@ -1502,19 +1502,9 @@ void ng_white_circle(void) { // 〇{改行}
 #endif
 }
 void ng_vertical_line(void) { // ｜{改行}
-#if defined(NG_BMP)
-    switch (naginata_config.os) {
-    case NG_IOS_BMP:
-        bmp_send_string(SS_LSFT(SS_TAP(X_INTERNATIONAL_3)));    // for JIS Keyboard
-        ng_ime_complete();
-        break;
-    default:
-        bmp_send_string(SS_LSFT(SS_TAP(X_INTERNATIONAL_3))"\n");    // for JIS Keyboard
-        break;
-    }
-#elif defined(NG_USE_DIC)
-    tap_code16(LSFT(KC_INTERNATIONAL_3));   // for JIS Keyboard
-    tap_code(KC_ENTER);
+#if defined(NG_BMP) || defined(NG_USE_DIC)
+    ng_ime_complete();
+    dic_send_string("nagitase"); // "｜"
 #else
     ng_send_unicode_string_P(PSTR("｜"));
 #endif
@@ -1800,20 +1790,7 @@ void ng_corner_bracket(void) { // 「」{改行}{↑}
 #endif
 }
 void ng_white_corner_bracket(void) { // 『』{改行}{↑}
-#if defined(NG_BMP)
-    switch (naginata_config.os) {
-    case NG_IOS_BMP:
-        bmp_send_string(SS_LSFT("]"SS_TAP(X_NUHS)));    // for JIS Keyboard
-        ng_ime_complete();
-        ng_back_cursor();
-        break;
-    default:
-        ng_ime_complete();
-        dic_send_string("naginika"); // "『』"
-        ng_back_cursor();
-        break;
-    }
-#elif defined(NG_USE_DIC)
+#if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
     dic_send_string("naginika"); // "『』"
     ng_back_cursor();
