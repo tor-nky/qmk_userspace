@@ -1548,13 +1548,11 @@ void ng_bar(void) { // ――{改行}
 }
 void ng_edit_separate_line(void) { // 　　　×　　　×　　　×{改行 2}
 #if defined(NG_BMP)
-    bmp_send_string("   ");
+    ng_edit_3_space();  // {Space 3}
     dic_send_string("nagibatu"); // "　　　×　　　×　　　×"
     bmp_send_string("\n");
 #elif defined(NG_USE_DIC)
-    tap_code(KC_SPACE);
-    tap_code(KC_SPACE);
-    tap_code(KC_SPACE);
+    ng_edit_3_space();  // {Space 3}
     dic_send_string("nagibatu"); // "　　　×　　　×　　　×"
     tap_code(KC_ENTER);
 #else
@@ -1693,8 +1691,10 @@ void ng_edit_s_end(void) { // +{End}
 
 void ng_edit_3_space(void) { // {Space 3}
 #if defined(NG_BMP)
+    ng_ime_complete();
     bmp_send_string("   ");
 #else
+    ng_ime_complete();
     tap_code(KC_SPACE);
     tap_code(KC_SPACE);
     tap_code(KC_SPACE);
