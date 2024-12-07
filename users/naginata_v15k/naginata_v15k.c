@@ -556,9 +556,9 @@ void ng_send_unicode_string_P(const char *str) {
   switch (naginata_config.os) {
     case NG_WIN:
       ng_ime_complete();
-      tap_code16(LALT(KC_GRAVE)); // 漢字
+      tap_code(KC_LANGUAGE_2);  // (Mac)英数
       send_unicode_string_P(str);
-      tap_code16(LALT(KC_GRAVE)); // 漢字
+      tap_code(KC_LANGUAGE_1);  // (Mac)かな
       break;
     case NG_LINUX:
       ng_ime_complete();
@@ -676,9 +676,18 @@ void naginata_on(void) {
   n_modifier = 0;
   layer_on(naginata_layer);
 
-  tap_code(KC_INTERNATIONAL_2); // ひらがな
-  tap_code(KC_INTERNATIONAL_2);
-  tap_code(KC_LANGUAGE_1);      // (Mac)かな
+  switch (naginata_config.os) {
+#if defined(NG_BMP)
+    case NG_LINUX_BMP:
+#else
+    case NG_LINUX:
+#endif
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      break;
+    default:
+      tap_code(KC_LANGUAGE_1);  // (Mac)かな
+      break;
+  }
 }
 
 // 薙刀式をオフ
@@ -691,38 +700,20 @@ void naginata_off(void) {
 
   uint8_t mods = get_mods();
   clear_mods();
+  switch (naginata_config.os) {
 #if defined(NG_BMP)
-  switch (naginata_config.os) {
-    case NG_WIN_BMP:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code16(LALT(KC_GRAVE)); // 漢字
-      break;
     case NG_LINUX_BMP:
-      // ひらがな→半角/全角
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_GRAVE); // 半角/全角
-      break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
-      tap_code(KC_LANGUAGE_2);  // (Mac)英数
-      break;
-  }
 #else
-  switch (naginata_config.os) {
-    case NG_WIN:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code16(LALT(KC_GRAVE)); // 漢字
-      break;
     case NG_LINUX:
+#endif
       // ひらがな→半角/全角
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
       break;
-    case NG_MAC:
+    default:
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
       break;
   }
-#endif
   set_mods(mods);
 }
 
