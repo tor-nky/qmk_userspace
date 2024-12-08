@@ -17,7 +17,7 @@ OLED を使わなければ4番目と8番目は不要です。
 1. コンパイルする `qmk compile -kb %キーボード名% -km naginata_v15k`
 1. キーボードに書き込む
 ## OSなどの設定
-BLE Micro Pro の場合、フォルダ vial-qmk/keyboards/ble_micro_pro/keymaps/naginata_v15k/ と、フォルダ vial/ との違いをお調べ下さい。
+BLE Micro Pro の場合、vial-qmk/keyboards/ble_micro_pro/keymaps/ 下の naginata_v15m/ と vial/ の内容の違いをお調べ下さい。
 ### 共通
 下表のものを __辞書登録__ してください。
 |単語|読み|参考|
