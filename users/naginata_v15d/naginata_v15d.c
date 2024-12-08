@@ -691,9 +691,9 @@ void ng_send_unicode_string_P(const char *str) {
   switch (naginata_config.os) {
     case NG_WIN:
       ng_ime_complete();
-      tap_code16(LALT(KC_GRAVE)); // 漢字
+      tap_code(KC_LANGUAGE_2);  // (Mac)英数
       send_unicode_string_P(str);
-      tap_code16(LALT(KC_GRAVE)); // 漢字
+      tap_code(KC_LANGUAGE_1);  // (Mac)かな
       break;
     case NG_LINUX:
       ng_ime_complete();
@@ -811,9 +811,25 @@ void naginata_on(void) {
   n_modifier = 0;
   layer_on(naginata_layer);
 
-  tap_code(KC_INTERNATIONAL_2); // ひらがな
-  tap_code(KC_INTERNATIONAL_2);
-  tap_code(KC_LANGUAGE_1);      // (Mac)かな
+#if defined(NG_BMP)
+  switch (naginata_config.os) {
+    case NG_LINUX_BMP:
+      bmp_send_string(SS_TAP(X_INTERNATIONAL_2)); // ひらがな
+      break;
+    default:
+      bmp_send_string(SS_TAP(X_LANGUAGE_1));  // (Mac)かな
+      break;
+  }
+#else
+  switch (naginata_config.os) {
+    case NG_LINUX:
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      break;
+    default:
+      tap_code(KC_LANGUAGE_1);  // (Mac)かな
+      break;
+  }
+#endif
 }
 
 // 薙刀式をオフ
@@ -828,32 +844,22 @@ void naginata_off(void) {
   clear_mods();
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code16(LALT(KC_GRAVE)); // 漢字
-      break;
     case NG_LINUX_BMP:
       // ひらがな→半角/全角
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_GRAVE); // 半角/全角
+      bmp_send_string(SS_TAP(X_INTERNATIONAL_2)SS_TAP(X_GRAVE));
       break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
-      tap_code(KC_LANGUAGE_2);  // (Mac)英数
+    default:
+      bmp_send_string(SS_TAP(X_LANGUAGE_2));  // (Mac)英数
       break;
   }
 #else
   switch (naginata_config.os) {
-    case NG_WIN:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code16(LALT(KC_GRAVE)); // 漢字
-      break;
     case NG_LINUX:
       // ひらがな→半角/全角
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
       break;
-    case NG_MAC:
+    default:
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
       break;
   }
