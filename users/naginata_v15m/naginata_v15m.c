@@ -675,12 +675,11 @@ void naginata_on(void) {
   switch (naginata_config.os) {
     case NG_WIN_BMP:
     case NG_LINUX_BMP:
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_INTERNATIONAL_2);
+      bmp_send_string(SS_TAP(X_INTERNATIONAL_2)SS_TAP(X_INTERNATIONAL_2)); // ひらがな
       break;
     case NG_MAC_BMP:
     case NG_IOS_BMP:
-      tap_code(KC_LANGUAGE_1);      // (Mac)かな
+      bmp_send_string(SS_TAP(X_LANGUAGE_1));  // (Mac)かな
       break;
   }
 #else
@@ -691,7 +690,7 @@ void naginata_on(void) {
       tap_code(KC_INTERNATIONAL_2);
       break;
     case NG_MAC:
-      tap_code(KC_LANGUAGE_1);      // (Mac)かな
+      tap_code(KC_LANGUAGE_1);  // (Mac)かな
       break;
   }
 #endif
@@ -712,13 +711,12 @@ void naginata_off(void) {
     case NG_WIN_BMP:
     case NG_LINUX_BMP:
       // 確定→ひらがな→半角/全角
-      tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8);  // Shift+Ctrl+変換
-      tap_code(KC_INTERNATIONAL_2); // ひらがな
-      tap_code(KC_GRAVE); // 半角/全角
+      bmp_send_string(SS_LSFT(SS_LCTL(SS_TAP(X_INTERNATIONAL_4))) \
+          SS_TAP(X_INTERNATIONAL_2)SS_TAP(X_GRAVE));  // BMP は TAP_CODE_DELAY が 8 なので途中の SS_DELAY(8) は不要
       break;
     case NG_MAC_BMP:
     case NG_IOS_BMP:
-      tap_code(KC_LANGUAGE_2);  // (Mac)英数
+      bmp_send_string(SS_TAP(X_LANGUAGE_2));  // (Mac)英数
       break;
   }
 #else

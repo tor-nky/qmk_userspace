@@ -676,18 +676,25 @@ void naginata_on(void) {
   n_modifier = 0;
   layer_on(naginata_layer);
 
-  switch (naginata_config.os) {
 #if defined(NG_BMP)
+  switch (naginata_config.os) {
     case NG_LINUX_BMP:
+      bmp_send_string(SS_TAP(X_INTERNATIONAL_2)); // ひらがな
+      break;
+    default:
+      bmp_send_string(SS_TAP(X_LANGUAGE_1));  // (Mac)かな
+      break;
+  }
 #else
+  switch (naginata_config.os) {
     case NG_LINUX:
-#endif
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     default:
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
       break;
   }
+#endif
 }
 
 // 薙刀式をオフ
@@ -700,12 +707,19 @@ void naginata_off(void) {
 
   uint8_t mods = get_mods();
   clear_mods();
-  switch (naginata_config.os) {
 #if defined(NG_BMP)
+  switch (naginata_config.os) {
     case NG_LINUX_BMP:
+      // ひらがな→半角/全角
+      bmp_send_string(SS_TAP(X_INTERNATIONAL_2)SS_TAP(X_GRAVE));
+      break;
+    default:
+      bmp_send_string(SS_TAP(X_LANGUAGE_2));  // (Mac)英数
+      break;
+  }
 #else
+  switch (naginata_config.os) {
     case NG_LINUX:
-#endif
       // ひらがな→半角/全角
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
@@ -714,6 +728,7 @@ void naginata_off(void) {
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
       break;
   }
+#endif
   set_mods(mods);
 }
 
