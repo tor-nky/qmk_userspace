@@ -1563,13 +1563,22 @@ void ng_eof() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN_BMP:
-    case NG_LINUX_BMP:
       bmp_send_string(SS_LCTL(SS_TAP(X_END)));
       break;
-    case NG_IOS_BMP:
-      ng_ime_complete();
-      // fallthrough;
+    case NG_LINUX_BMP:
+      bmp_send_string(SS_TAP(X_GRAVE)SS_LCTL(SS_TAP(X_END))SS_TAP(X_INTERNATIONAL_2));
+      break;
     case NG_MAC_BMP:
+      // (Mac)英数 → Shift+(Mac)かな → (Mac)かな
+      bmp_send_string(SS_TAP(X_LANGUAGE_2)SS_LSFT(SS_TAP(X_LANGUAGE_1))SS_TAP(X_LANGUAGE_1));
+      if (naginata_config.tategaki)
+        bmp_send_string(SS_LCMD(SS_TAP(X_LEFT)));
+      else
+        bmp_send_string(SS_LCMD(SS_TAP(X_DOWN)));
+      break;
+    case NG_IOS_BMP:
+      // (Mac)英数 → (Mac)かな
+      bmp_send_string(SS_TAP(X_LANGUAGE_2)SS_TAP(X_LANGUAGE_1));
       if (naginata_config.tategaki)
         bmp_send_string(SS_LCMD(SS_TAP(X_LEFT)));
       else
@@ -1582,9 +1591,14 @@ void ng_eof() {
       tap_code16(LCTL(KC_END));
       break;
     case NG_LINUX:
+      tap_code(KC_GRAVE);
       tap_code16_delay(LCTL(KC_END), LINUX_WAIT_MS);
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC:
+      tap_code(KC_LANGUAGE_2);  // (Mac)英数
+      tap_code16(LSFT(KC_LANGUAGE_1));  // Shift+(Mac)かな
+      tap_code(KC_LANGUAGE_1);  // (Mac)かな
       if (naginata_config.tategaki)
         tap_code16(LCMD(KC_LEFT));
       else
