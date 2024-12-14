@@ -1639,7 +1639,7 @@ void ng_ime_complete() {
       break;
     case NG_MAC_BMP:
       // (Mac)英数 → Shift+(Mac)かな → (Mac)かな
-      bmp_send_string(SS_TAP(X_LANGUAGE_2)SS_LSFT(SS_TAP(X_LANGUAGE_2))SS_TAP(X_LANGUAGE_1));
+      bmp_send_string(SS_TAP(X_LANGUAGE_2)SS_LSFT(SS_TAP(X_LANGUAGE_1))SS_TAP(X_LANGUAGE_1));
       break;
     case NG_IOS_BMP:
       // (Mac)英数 → (Mac)かな
