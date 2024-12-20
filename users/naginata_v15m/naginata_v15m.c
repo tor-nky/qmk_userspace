@@ -853,7 +853,7 @@ static Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pressed_key)
     key = ngmap[num].key;
 #endif
     // 押しているキーに全て含まれ、今回のキーを含み、スペースを押さない定義を探す
-    if ((pressed_key & key) == key && (key & searching_key) == searching_key && !(key & B_SHFT)) {
+    if (key != searching_key && (pressed_key & key) == key && (key & searching_key) == searching_key && !(key & B_SHFT)) {
       break;
     }
   }
@@ -963,6 +963,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   static Ngkey repeating_key = 0;
   static uint_fast8_t waiting_count = 0; // 文字キーを数える
   static enum RestShiftState rest_shift_state = Stop;
+  static Ngmap_num rest_shift_num = NGMAP_COUNT;
   static bool center_shift = false; // センターシフトの連続用
 
   Ngkey recent_key = 0;  // 各ビットがキーに対応する
@@ -1038,17 +1039,17 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       }
 
       // シフト復活処理
-      if (rest_shift_state == Once) {
-        Ngmap_num num = ng_search_with_rest_key(searching_key, pressed_key);
-        if (num < NGMAP_COUNT) {
+      if (rest_shift_state == Once && rest_shift_num == NGMAP_COUNT) {
+        rest_shift_num = ng_search_with_rest_key(searching_key, pressed_key);
+      }
+      if (rest_shift_num < NGMAP_COUNT) {
 #if defined(__AVR__)
-          Ngkey key;
-          memcpy_P(&key, &ngmap[num].key, sizeof(key));
-          searching_key |= key;
+        Ngkey key;
+        memcpy_P(&key, &ngmap[rest_shift_num].key, sizeof(key));
+        searching_key |= key;
 #else
-          searching_key |= ngmap[num].key;
+        searching_key |= ngmap[rest_shift_num].key;
 #endif
-        }
       }
 
       // バッファ内の全てのキーを組み合わせている場合
@@ -1086,6 +1087,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
         // 1回出力したらシフト復活は終わり
         if (rest_shift_state == Once) {
           rest_shift_state = Stop;
+          rest_shift_num = NGMAP_COUNT;
         }
         // 見つかった分のキーを配列から取り除く
         waiting_count -= searching_count;
