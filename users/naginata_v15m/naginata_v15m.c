@@ -953,7 +953,6 @@ static uint_fast8_t center_shift_count = 0;
 static uint8_t ng_center_keycode = KC_NO;
 static enum RestShiftState { Off, On, Run } rest_shift_state = Off;
 static Ngmap_num rest_shift_num = NGMAP_COUNT;
-static bool center_shift = false; // センターシフトの連続用
 
 // キー入力を文字に変換して出力する
 // 薙刀式のキー入力だったなら false を返す
@@ -961,6 +960,7 @@ static bool center_shift = false; // センターシフトの連続用
 bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   static Ngkey waiting_keys[NKEYS]; // 各ビットがキーに対応する
   static Ngkey repeating_key = 0;
+  static bool center_shift = false; // センターシフトの連続用
 
   Ngkey recent_key = 0;  // 各ビットがキーに対応する
   const bool pressing = record->event.pressed;
@@ -1162,7 +1162,6 @@ static void naginata_clear(void) {
   waiting_count = 0; // 文字キーを数える
   rest_shift_state = Off;
   rest_shift_num = NGMAP_COUNT;
-  center_shift = false; // センターシフトの連続用
 }
 
 void ng_space_or_enter(void) {
