@@ -78,7 +78,7 @@ void dic_send_string(const char *str) {
     switch (naginata_config.os) {
     case NG_IOS_BMP:
         bmp_send_string(str);
-        bmp_send_string(SS_DELAY(BMP_DELAY));
+        bmp_send_string(SS_DELAY(120));
         bmp_send_string(" ");
         ng_ime_complete();
         break;
