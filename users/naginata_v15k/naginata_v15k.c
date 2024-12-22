@@ -810,26 +810,32 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
   return naginata_type(keycode, record);
 }
 
+// ngmap[num].key を返す
+static Ngkey ngmap_key_sub(Ngmap_num num) {
+#if defined(__AVR__)
+  Ngkey key;
+  memcpy_P(&key, &ngmap[num].key, sizeof(key));
+  return key;
+#else
+  return ngmap[num].key;
+#endif
+}
+
 // かな定義を探し出力する
 // 成功すれば true を返す
 static bool ng_search_and_send(Ngkey searching_key) {
   // if (!searching_key)  return false;
   for (Ngmap_num num = NGMAP_COUNT; num-- > 0; ) {  // 逆順で検索
+    if (searching_key == ngmap_key_sub(num)) {
 #if defined(__AVR__)
-    Ngkey key;
-    memcpy_P(&key, &ngmap[num].key, sizeof(key));
-    if (searching_key == key) {
       void (*func)(void);
       memcpy_P(&func, &ngmap[num].func, sizeof(func));
       func();
-      return true;
-    }
 #else
-    if (searching_key == ngmap[num].key) {
       ngmap[num].func();
+#endif
       return true;
     }
-#endif
   }
   return false;
 }
@@ -840,14 +846,9 @@ static Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pressed_key)
   // if (!(searching_key && pressed_key))  return NGMAP_COUNT;
   Ngmap_num num = 0;
   for ( ; num < NGMAP_COUNT; num++) {
-    Ngkey key;
-#if defined(__AVR__)
-    memcpy_P(&key, &ngmap[num].key, sizeof(key));
-#else
-    key = ngmap[num].key;
-#endif
+    Ngkey key = ngmap_key_sub(num);
     // 押しているキーに全て含まれ、今回のキーを含み、スペースを押さない定義を探す
-    if (key != searching_key && (pressed_key & key) == key && (key & searching_key) == searching_key && !(key & B_SHFT)) {
+    if ((pressed_key & key) == key && (key & searching_key) == searching_key && !(key & B_SHFT)) {
       break;
     }
   }
@@ -865,13 +866,9 @@ static enum TransState which_trans_state(Ngkey search) {
   bool shifted = (search & B_SHFT) && search != B_SHFT;
 #endif
 
-  for (Ngmap_num i = 0; i < NGMAP_COUNT; i++) {
+  for (Ngmap_num num = 0; num < NGMAP_COUNT; num++) {
     Ngkey key;
-#if defined(__AVR__)
-    memcpy_P(&key, &ngmap[i].key, sizeof(key));
-#else
-    key = ngmap[i].key;
-#endif
+    key = ngmap_key_sub(num);
     // search を含む
     if ((key & search) == search) {
 #if defined (NG_SHIFTED_DOUJI_MS)
@@ -1034,17 +1031,15 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       }
 
       // シフト復活処理
-      if (rest_shift_state == Run && rest_shift_num == NGMAP_COUNT) {
-        rest_shift_num = ng_search_with_rest_key(searching_key, pressed_key);
-      }
       if (rest_shift_num < NGMAP_COUNT) {
-#if defined(__AVR__)
-        Ngkey key;
-        memcpy_P(&key, &ngmap[rest_shift_num].key, sizeof(key));
-        searching_key |= key;
-#else
-        searching_key |= ngmap[rest_shift_num].key;
-#endif
+        searching_key |= ngmap_key_sub(rest_shift_num);
+      }
+      if (rest_shift_state == Run) {
+        Ngmap_num num = ng_search_with_rest_key(searching_key, pressed_key);
+        if (num < NGMAP_COUNT) {
+          rest_shift_num = num;
+          searching_key |= ngmap_key_sub(rest_shift_num);
+        }
       }
 
       // バッファ内の全てのキーを組み合わせている場合
@@ -1286,10 +1281,10 @@ void ng_paste() {
         // 薙刀式の使用には問題ない
       break;
     case NG_MAC_BMP:
-      bmp_send_string(SS_DOWN(X_LCMD)SS_DELAY(100)SS_DOWN(X_V)SS_DELAY(100)SS_UP(X_V)SS_UP(X_LCMD)SS_DELAY(100));
+      bmp_send_string(SS_DOWN(X_LCMD)SS_DOWN(X_V)SS_DELAY(135)SS_UP(X_V)SS_UP(X_LCMD));
       break;
     case NG_IOS_BMP:
-      bmp_send_string(SS_LCMD("v")SS_DELAY(80));
+      bmp_send_string(SS_LCMD("v")SS_DELAY(220));
       break;
   }
 #else

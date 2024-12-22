@@ -852,7 +852,7 @@ static Ngmap_num ng_search_with_rest_key(Ngkey searching_key, Ngkey pressed_key)
   for ( ; num < NGMAP_COUNT; num++) {
     Ngkey key = ngmap_key_sub(num);
     // 押しているキーに全て含まれ、今回のキーを含み、スペースを押さない定義を探す
-    if (key != searching_key && (pressed_key & key) == key && (key & searching_key) == searching_key && !(key & B_SHFT)) {
+    if ((pressed_key & key) == key && (key & searching_key) == searching_key && !(key & B_SHFT)) {
       break;
     }
   }
@@ -1035,11 +1035,15 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       }
 
       // シフト復活処理
-      if (rest_shift_state == Run && rest_shift_num == NGMAP_COUNT) {
-        rest_shift_num = ng_search_with_rest_key(searching_key, pressed_key);
-      }
       if (rest_shift_num < NGMAP_COUNT) {
         searching_key |= ngmap_key_sub(rest_shift_num);
+      }
+      if (rest_shift_state == Run) {
+        Ngmap_num num = ng_search_with_rest_key(searching_key, pressed_key);
+        if (num < NGMAP_COUNT) {
+          rest_shift_num = num;
+          searching_key |= ngmap_key_sub(rest_shift_num);
+        }
       }
 
       // バッファ内の全てのキーを組み合わせている場合
