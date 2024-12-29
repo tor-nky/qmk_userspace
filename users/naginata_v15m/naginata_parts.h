@@ -265,6 +265,17 @@ void ng_edit_serifu(void); // {Home}{改行}{Space 1}{←}
 void ng_edit_togaki_zengyo(void); // {Home}{→}{End}{Del 4}{←}
 void ng_edit_serifu_zengyo(void); // {Home}{→}{End}{Del 2}{←}
 
+void ng_left_parenthesis(void); // ({改行}
+void ng_right_parenthesis(void); // ){改行}
+void ng_left_corner_bracket(void); // 「{改行}
+void ng_right_corner_bracket(void); // 」{改行}
+void ng_left_white_corner_bracket(void); // 『{改行}
+void ng_right_white_corner_bracket(void); // 』{改行}
+void ng_left_black_lenticular_bracket(void); // 【{改行}
+void ng_right_black_lenticular_bracket(void); // 】{改行}
+void ng_left_double_angle_bracket(void); // 《{改行}
+void ng_right_double_angle_bracket(void); // 》{改行}
+
 void ng_parenthesis(void); // (){改行}{↑}
 void ng_corner_bracket(void); // 「」{改行}{↑}
 void ng_white_corner_bracket(void); // 『』{改行}{↑}
