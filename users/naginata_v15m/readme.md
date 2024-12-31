@@ -1,10 +1,10 @@
 このソースは eswaiさんの [naginata_v15](https://github.com/eswai/qmk_firmware/tree/master/users/naginata_v15) を元に作成しています。
 
 次のようなバイナリを作成することができます。
-1. 現行のMS-IMEでも使用できる辞書登録式  
+* 現行のMS-IMEでも使用できる辞書登録式  
 WindowsとMacでは日本語キーボード、英語キーボードどちらでも使えます。
-1. できるだけIME設定をして好みに近づけた方式  
-1. BLE Micro Pro用(Bluetooth接続のiPhoneを含む)
+* できるだけIME設定をして好みに近づけた方式  
+* BLE Micro Pro用(Bluetooth接続のiPhoneを含む)
 Mac以外では日本語キーボード限定。MacはIMに「かわせみ」が必要。
 # 薙刀式カナ配列キーマップ
 薙刀式カナ配列による入力をQMKで実現します。薙刀式v15に準拠しています。
@@ -16,9 +16,9 @@ Mac以外では日本語キーボード限定。MacはIMに「かわせみ」が
 【薙刀式】v15fix版、発表
 http://oookaworks.seesaa.net/article/500180437.html#gsc.tab=0
 ## QMK Firmware　への組み込み方
-1. qmk_userspace/users/naginata_v15m/ フォルダの内容を、各自の同様のフォルダを作りコピーする。
+1. [qmk_userspace/users/naginata_v15m/](https://github.com/tor-nky/qmk_userspace/tree/main/users/naginata_v15m) フォルダの内容を、各自の同様のフォルダを作りコピーする。
 1. 各自の qmk_****/keyboards/%キーボード名%/keymaps/naginata_v15m/ フォルダに keymap.c を作成する。
-1. qmk_userspace/keyboards/tor_nky/coconut42/keymaps/naginata_v15m/keymap.c などを参考に、2つの `// 薙刀式` で囲まれた部分を付け加える。  
+1. こちらの [keymap.c](https://github.com/tor-nky/qmk_userspace/blob/main/keyboards/tor_nky/coconut42/keymaps/naginata_v15m/keymap.c) などを参考に、2つの `// 薙刀式` で囲まれた部分を付け加える。  
 OLED を使わなければ4番目と8番目は不要です。
 1. コンパイルする `qmk compile -kb %キーボード名% -km naginata_v15m`
 1. キーボードに書き込む
@@ -26,7 +26,7 @@ OLED を使わなければ4番目と8番目は不要です。
 IMEへの辞書登録が必要ですが、他の設定はいりません。そのため、現行のMS-IMEでも使えます。  
 辞書使用の場合、config.h の中に ``#define NG_USE_DIC`` を書き加えてコンパイルします。
 
-BLE Micro Pro の場合、vial-qmk/keyboards/ble_micro_pro/keymaps/ 下の naginata_v15m/ と vial/ の内容の違いをお調べ下さい。
+BLE Micro Pro の場合、vial-qmk/keyboards/ble_micro_pro/keymaps/ 下の [naginata_v15m/](https://github.com/tor-nky/vial-qmk/tree/kana/naginata/keyboards/ble_micro_pro/keymaps/naginata_v15m) と [vial/](https://github.com/tor-nky/vial-qmk/tree/kana/naginata/keyboards/ble_micro_pro/keymaps/vial) の内容の違いをお調べ下さい。
 ### 共通
 下表のものを __辞書登録__ してください。
 |単語|読み|参考|
