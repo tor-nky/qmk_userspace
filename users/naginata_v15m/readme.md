@@ -54,6 +54,12 @@ BLE Micro Pro の場合、vial-qmk/keyboards/ble_micro_pro/keymaps/ 下の [nagi
 
 ### Windows辞書式の場合
 古いIMEでは使えないかもしれません。
+
+また、可能であれば次の設定をすると、かな入力中でも JK+Q (文末へ) が効くようになります。
+IMEのキー設定
+|* キー|入力/変換済み文字なし|他|
+|---|:---:|:---:|
+|Ctrl+Shift+変換| - |全確定|
 ### Mac辞書式の場合
 日本語IMのライブ変換を使用中に M+Comma+Z を押すと、「　　　×　　　×　　　×」が入力できなくなります。
 ライブ変換をやめ、変換学習をリセットすると入力できるようになります。
@@ -77,20 +83,18 @@ IMEのキー設定
 |Ctrl+Shift+変換| - |全確定|
 ### Macの場合
 キーボードが日本語/英語どちらの設定でも動きます。
-
-IM にかわせみを使用する場合は、コード入力に Control+Option+Shift+かな を設定してください。  
-（config.h の中に ``#define NG_USE_KAWASEMI`` と ``#define UNICODE_KEY_MAC KC_NO`` を書き加えてコンパイルします）
-
-また、「キーボード設定を開く...」から「入力ソース」に英語「U.S.」を加えます。  
+#### IM に「かわせみ」を使わない場合
+「キーボード設定を開く...」から「入力ソース」に英語「U.S.」を加えます。
 「英数」キーでIMをオフにしたとき「U.S.」になるようにしてください。
 
-かわせみを使わない場合は下の設定も必要です。
-
-[Karabiner-Elements](https://karabiner-elements.pqrs.org/)をインストールします。  
-ファイル unicode_hex_input_switcher.json をフォルダ ~/.config/karabiner/assets/complex_modification/ にコピーし、  
+さらに、[Karabiner-Elements](https://karabiner-elements.pqrs.org/)をインストールします。
+ファイル unicode_hex_input_switcher.json をフォルダ ~/.config/karabiner/assets/complex_modification/ にコピーし、
 Karabiner-Elements に Unicode Hex Input Switcher を登録してください。
 
 念のため、Karabiner-Elements の設定 Device で、本ファームウェアが入ったキーボードが有効になっているか確認してください。
+#### IM に「かわせみ」を使用する場合
+コード入力に Control+Option+Shift+かな を設定してください。
+（config.h の中に ``#define NG_USE_KAWASEMI`` と ``#define UNICODE_KEY_MAC KC_NO`` を書き加えてコンパイルします）
 ### Linuxの場合
 キーボードが日本語/英語どちらの設定でも動きます。
 

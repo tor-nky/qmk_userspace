@@ -1608,6 +1608,7 @@ void ng_eof() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN_BMP:
+      bmp_send_string(SS_LSFT(SS_LCTL(SS_TAP(X_INTERNATIONAL_4)SS_TAP(X_INTERNATIONAL_4)))); // Shift+Ctrl+変換 x2
       bmp_send_string(SS_LCTL(SS_TAP(X_END)));
       break;
     case NG_LINUX_BMP:
@@ -1633,6 +1634,8 @@ void ng_eof() {
 #elif defined(NG_USE_DIC)
   switch (naginata_config.os) {
     case NG_WIN:
+      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
+      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       tap_code16(LCTL(KC_END));
       break;
     case NG_LINUX:
