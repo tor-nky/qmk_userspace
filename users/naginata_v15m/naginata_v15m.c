@@ -561,11 +561,15 @@ void ng_send_unicode_string_P(const char *str) {
 
   switch (naginata_config.os) {
     case NG_WIN:
-    case NG_LINUX:
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
       tap_code(KC_GRAVE);
       send_unicode_string_P(str);
-      tap_code(KC_INTERNATIONAL_2);
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      break;
+    case NG_LINUX:
+      tap_code16(LCTL(KC_SPACE));
+      send_unicode_string_P(str);
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC:
 #if !defined(NG_USE_KAWASEMI)
@@ -744,11 +748,14 @@ void naginata_off(void) {
   wait_ms(8); // キーを出力してから確定やIME操作までに、間を空ける
   switch (naginata_config.os) {
     case NG_WIN:
-    case NG_LINUX:
       // 確定→ひらがな→半角/全角
       tap_code16_delay(LSFT(LCTL(KC_INTERNATIONAL_4)), 8);  // Shift+Ctrl+変換
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       tap_code(KC_GRAVE); // 半角/全角
+      break;
+    case NG_LINUX:
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
+      tap_code16(LCTL(KC_SPACE));
       break;
     case NG_MAC:
       tap_code(KC_LANGUAGE_2);  // (Mac)英数
@@ -1729,9 +1736,12 @@ void ng_ime_complete() {
 #else
   switch (naginata_config.os) {
     case NG_WIN:
+      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
+      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
+      break;
     case NG_LINUX:
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
-      tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
+      tap_code16(LCTL(KC_SPACE));
+      tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC:
 # if !defined(NG_USE_KAWASEMI)
