@@ -2044,5 +2044,12 @@ void ng_edit_surround_ruby(void) { // ^x｜{改行}^v《》{改行}{↑}{Space}+
     ng_vertical_line();  // "｜"
     ng_paste();
     copy_spc_to_clipboard();
+#if defined(NG_BMP)
+    bmp_send_string(SS_DELAY(8));
+#elif defined(NG_USE_DIC)
+    wait_ms(32);
+#elif !defined(NG_USE_KAWASEMI)
+    wait_ms(40);
+#endif
     ng_double_angle_bracket(); // 《》{改行}{↑}
 }

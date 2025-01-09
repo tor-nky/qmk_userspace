@@ -555,10 +555,6 @@ void ng_show_os(void) {
 #define NG_SEND_UNICODE_STRING(string) ng_send_unicode_string_P(PSTR(string))
 
 void ng_send_unicode_string_P(const char *str) {
-#if !defined(NG_USE_KAWASEMI)
-  static uint16_t last_send = 0;
-#endif
-
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換
@@ -574,16 +570,10 @@ void ng_send_unicode_string_P(const char *str) {
     case NG_MAC:
 #if !defined(NG_USE_KAWASEMI)
       // Karabiner-Elementsが必要
-      {
-        uint16_t delay = timer_elapsed(last_send);
-        if (delay < 103) {
-          wait_ms(delay + 1);
-        }
-      }
       tap_code(KC_LANGUAGE_2);  // 未確定文字を確定する
-      tap_code16_delay(LCTL(KC_F20), 32); // Unicode HEX Inputへ切り替え
+      tap_code16_delay(LCTL(KC_F20), 56); // Unicode HEX Inputへ切り替え
       send_unicode_string_P(str);
-      tap_code(KC_LANGUAGE_1);
+      tap_code(KC_LANGUAGE_1);  // (Mac)かな
       tap_code(KC_NUM_LOCK);  // IME Cancel
 #else
       // かわせみ専用
@@ -593,10 +583,6 @@ void ng_send_unicode_string_P(const char *str) {
 #endif
       break;
   }
-
-#if !defined(NG_USE_KAWASEMI)
-  last_send = timer_read();
-#endif
 }
 
 // Shift+英字 で IMEオフ
@@ -1308,8 +1294,6 @@ void ng_paste() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN_BMP:
-      bmp_send_string(SS_LCTL("v"));
-      break;
     case NG_LINUX_BMP:
       bmp_send_string(SS_DOWN(X_LCTL)"v"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
@@ -1322,11 +1306,19 @@ void ng_paste() {
       bmp_send_string(SS_LCMD("v")SS_DELAY(220));
       break;
   }
+#elif defined(NG_USE_DIC)
+  switch (naginata_config.os) {
+    case NG_WIN:
+    case NG_LINUX:
+      tap_code16_delay(LCTL(KC_V), LINUX_WAIT_MS);
+      break;
+    case NG_MAC:
+      tap_code16_delay(LCMD(KC_V), 305);
+      break;
+  }
 #else
   switch (naginata_config.os) {
     case NG_WIN:
-      tap_code16(LCTL(KC_V));
-      break;
     case NG_LINUX:
       tap_code16_delay(LCTL(KC_V), LINUX_WAIT_MS);
       break;
@@ -1731,11 +1723,7 @@ void ng_ime_complete() {
 #elif defined(NG_USE_DIC)
   tap_code(KC_SLASH);
   tap_code(KC_ENTER);
-  if (naginata_config.os == NG_LINUX) {
-    tap_code_delay(KC_BACKSPACE, LINUX_WAIT_MS);
-  } else {
-    tap_code(KC_BACKSPACE);
-  }
+  tap_code_delay(KC_BACKSPACE, LINUX_WAIT_MS);
 #else
   switch (naginata_config.os) {
     case NG_WIN:
