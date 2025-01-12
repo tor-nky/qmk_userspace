@@ -22,33 +22,9 @@
 	</dict>
 	<dict>
 		<key>phrase</key>
-		<string>（</string>
-		<key>shortcut</key>
-		<string>なぎひまか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>）</string>
-		<key>shortcut</key>
-		<string>なぎとまか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
 		<string>「」</string>
 		<key>shortcut</key>
 		<string>なぎかか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>「</string>
-		<key>shortcut</key>
-		<string>なぎひかか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>」</string>
-		<key>shortcut</key>
-		<string>なぎとかか</string>
 	</dict>
 	<dict>
 		<key>phrase</key>
@@ -58,51 +34,15 @@
 	</dict>
 	<dict>
 		<key>phrase</key>
-		<string>『</string>
-		<key>shortcut</key>
-		<string>なぎひにか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>』</string>
-		<key>shortcut</key>
-		<string>なぎとにか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
 		<string>【】</string>
 		<key>shortcut</key>
 		<string>なぎすか</string>
 	</dict>
 	<dict>
 		<key>phrase</key>
-		<string>【</string>
-		<key>shortcut</key>
-		<string>なぎひすか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>】</string>
-		<key>shortcut</key>
-		<string>なぎとすか</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
 		<string>《》</string>
 		<key>shortcut</key>
 		<string>なぎにや</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>《</string>
-		<key>shortcut</key>
-		<string>なぎひにや</string>
-	</dict>
-	<dict>
-		<key>phrase</key>
-		<string>》</string>
-		<key>shortcut</key>
-		<string>なぎとにや</string>
 	</dict>
 	<dict>
 		<key>phrase</key>

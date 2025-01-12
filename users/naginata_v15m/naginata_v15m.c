@@ -19,6 +19,7 @@
 #include "naginata_parts.h"
 #include "unicode_P.h"
 #if defined(NG_BMP)
+#   include "bmp_host_driver.h"
 #   include "keyboards/ble_micro_pro/keymaps/naginata_v15m/bmp_send_string.h"
 #endif
 
@@ -708,7 +709,6 @@ void naginata_off(void) {
   uint8_t mods = get_mods();
   clear_mods();
 #if defined(NG_BMP)
-  // bmp_send_string(SS_DELAY(8)); // キーを出力してから確定やIME操作までに、間を空ける
   switch (naginata_config.os) {
     case NG_LINUX_BMP:
       // ひらがな→半角/全角
@@ -1253,7 +1253,7 @@ void ng_cut() {
       tap_code16_delay(LCTL(KC_X), LINUX_WAIT_MS);
       break;
     case NG_MAC:
-      tap_code16(LCMD(KC_X));
+      tap_code16_delay(LCMD(KC_X), 8);
       break;
   }
 #endif
@@ -1294,13 +1294,18 @@ void ng_paste() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN_BMP:
-    case NG_LINUX_BMP:
       bmp_send_string(SS_DOWN(X_LCTL)"v"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
+    case NG_LINUX_BMP:
+      if (!get_usb_enabled()) {
+        bmp_send_string(SS_DELAY(16));
+      }
+      bmp_send_string(SS_DOWN(X_LCTL)"v"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
+      break;
     case NG_MAC_BMP:
-      bmp_send_string(SS_DOWN(X_LCMD)SS_DOWN(X_V)SS_DELAY(135)SS_UP(X_V)SS_UP(X_LCMD));
+      bmp_send_string(SS_LCMD("v")SS_DELAY(135));
       break;
     case NG_IOS_BMP:
       bmp_send_string(SS_LCMD("v")SS_DELAY(220));
@@ -1309,17 +1314,24 @@ void ng_paste() {
 #elif defined(NG_USE_DIC)
   switch (naginata_config.os) {
     case NG_WIN:
+      tap_code16_delay(LCTL(KC_V), LINUX_WAIT_MS);
+      break;
     case NG_LINUX:
+      wait_ms(48);
       tap_code16_delay(LCTL(KC_V), LINUX_WAIT_MS);
       break;
     case NG_MAC:
-      tap_code16_delay(LCMD(KC_V), 305);
+      tap_code16(LCMD(KC_V));
+      wait_ms(305);
       break;
   }
 #else
   switch (naginata_config.os) {
     case NG_WIN:
+      tap_code16_delay(LCTL(KC_V), LINUX_WAIT_MS);
+      break;
     case NG_LINUX:
+      wait_ms(48);
       tap_code16_delay(LCTL(KC_V), LINUX_WAIT_MS);
       break;
     case NG_MAC:
