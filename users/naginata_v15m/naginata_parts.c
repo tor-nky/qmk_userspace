@@ -1377,12 +1377,8 @@ static void dic_send_string(const char *str) {
         bmp_send_string(" \n");
         break;
     }
-#   elif defined(__AVR__)
-    send_string_P(str);
-    tap_code(KC_SPACE);
-    tap_code(KC_ENTER);
 #   else
-    ng_send_kana(str);
+    send_string_P(str);
     tap_code(KC_SPACE);
     tap_code(KC_ENTER);
 #   endif
