@@ -130,6 +130,8 @@ typedef struct {
 // かな定義
 // 3キー同時 → 2キー同時 → センターシフト → 単打 の順を推奨(単打の後に置いた定義はシフト復活が起きない)
 // シフト復活判定は、3キー同時と2キー同時の順序で決まる
+// 単打とセンターシフトの並び順に「100万字日本語かなn-gramデータ」(https://kouy.exblog.jp/9731073/) を用いる
+// (頻度が多いのを下にしたほうが負荷が減る)
 const PROGMEM naginata_keymap ngmap[] = {
   // ********** 3キー同時 **********
   // 拗音、外来音
@@ -322,69 +324,69 @@ const PROGMEM naginata_keymap ngmap[] = {
 //   {.key = B_Q|B_A       , .func = tategaki_on    },  // 縦書き
 
   // センターシフト
-  {.key = B_SHFT|B_Q    , .func = ng_send_vu    },  // ヴ
-  {.key = B_SHFT|B_W    , .func = ng_send_nu    },  // ぬ
-  {.key = B_SHFT|B_E    , .func = ng_send_ri    },  // り
-  {.key = B_SHFT|B_R    , .func = ng_send_ne    },  // ね
   {.key = B_SHFT|B_T    , .func = ng_s1_next_line_r}, // +{←}
   {.key = B_SHFT|B_Y    , .func = ng_s1_previous_line_r}, // +{→}
-  {.key = B_SHFT|B_U    , .func = ng_send_sa    },  // さ
-  {.key = B_SHFT|B_I    , .func = ng_send_yo    },  // よ
-  {.key = B_SHFT|B_O    , .func = ng_send_e     },  // え
+  {.key = B_SHFT|B_Q    , .func = ng_send_vu    },  // ヴ
+  {.key = B_SHFT|B_W    , .func = ng_send_nu    },  // ぬ
   {.key = B_SHFT|B_P    , .func = ng_send_yu    },  // ゆ
-  {.key = B_SHFT|B_A    , .func = ng_send_se    },  // せ
-  {.key = B_SHFT|B_S    , .func = ng_send_me    },  // め
-  {.key = B_SHFT|B_D    , .func = ng_send_ni    },  // に
-  {.key = B_SHFT|B_F    , .func = ng_send_ma    },  // ま
-  {.key = B_SHFT|B_G    , .func = ng_send_ti    },  // ち
-  {.key = B_SHFT|B_H    , .func = ng_send_ya    },  // や
-  {.key = B_SHFT|B_J    , .func = ng_send_no    },  // の
-  {.key = B_SHFT|B_K    , .func = ng_send_mo    },  // も
-  {.key = B_SHFT|B_L    , .func = ng_send_tu    },  // つ
+  {.key = B_SHFT|B_COMM , .func = ng_send_mu    },  // む
+  {.key = B_SHFT|B_R    , .func = ng_send_ne    },  // ね
   {.key = B_SHFT|B_SCLN , .func = ng_send_hu    },  // ふ
   {.key = B_SHFT|B_Z    , .func = ng_send_ho    },  // ほ
+  {.key = B_SHFT|B_H    , .func = ng_send_ya    },  // や
   {.key = B_SHFT|B_X    , .func = ng_send_hi    },  // ひ
-  {.key = B_SHFT|B_C    , .func = ng_send_wo    },  // を
-  {.key = B_SHFT|B_V    , .func = ng_edit_touten},  // 、
+  {.key = B_SHFT|B_S    , .func = ng_send_me    },  // め
   {.key = B_SHFT|B_B    , .func = ng_send_mi    },  // み
-  {.key = B_SHFT|B_N    , .func = ng_send_o     },  // お
-  {.key = B_SHFT|B_M    , .func = ng_edit_kuten },  // 。
-  {.key = B_SHFT|B_COMM , .func = ng_send_mu    },  // む
   {.key = B_SHFT|B_DOT  , .func = ng_send_wa    },  // わ
+  {.key = B_SHFT|B_O    , .func = ng_send_e     },  // え
+  {.key = B_SHFT|B_I    , .func = ng_send_yo    },  // よ
+  {.key = B_SHFT|B_A    , .func = ng_send_se    },  // せ
+  {.key = B_SHFT|B_G    , .func = ng_send_ti    },  // ち
   {.key = B_SHFT|B_SLSH , .func = ng_send_re    },  // れ
+  {.key = B_SHFT|B_U    , .func = ng_send_sa    },  // さ
+  {.key = B_SHFT|B_C    , .func = ng_send_wo    },  // を
+  {.key = B_SHFT|B_N    , .func = ng_send_o     },  // お
+  {.key = B_SHFT|B_L    , .func = ng_send_tu    },  // つ
+  {.key = B_SHFT|B_K    , .func = ng_send_mo    },  // も
+  {.key = B_SHFT|B_E    , .func = ng_send_ri    },  // り
+  {.key = B_SHFT|B_F    , .func = ng_send_ma    },  // ま
+  {.key = B_SHFT|B_M    , .func = ng_edit_kuten },  // 。
+  {.key = B_SHFT|B_D    , .func = ng_send_ni    },  // に
+  {.key = B_SHFT|B_V    , .func = ng_edit_touten},  // 、
+  {.key = B_SHFT|B_J    , .func = ng_send_no    },  // の
 
   // ********** 単打 **********
-  {.key = B_SHFT        , .func = ng_space_or_enter},
-  {.key = B_Q           , .func = ng_send_vu    },  // ヴ
-  {.key = B_W           , .func = ng_send_ki    },  // き
-  {.key = B_E           , .func = ng_send_te    },  // て
-  {.key = B_R           , .func = ng_send_si    },  // し
   {.key = B_T           , .func = ng_1_next_line_r},  // {←}
   {.key = B_Y           , .func = ng_1_previous_line_r}, // {→}
-  {.key = B_U           , .func = ng_backspace_with_repeat  },  // {BS}
-  {.key = B_I           , .func = ng_send_ru    },  // る
-  {.key = B_O           , .func = ng_send_su    },  // す
+  {.key = B_Q           , .func = ng_send_vu    },  // ヴ
   {.key = B_P           , .func = ng_send_he    },  // へ
+  {.key = B_Z           , .func = ng_send_ho    },  // ほ
   {.key = B_A           , .func = ng_send_ro    },  // ろ
+  {.key = B_X           , .func = ng_send_hi    },  // ひ
+  {.key = B_B           , .func = ng_send_so    },  // そ
+  {.key = B_SCLN        , .func = ng_send_minus },  // ー
   {.key = B_S           , .func = ng_send_ke    },  // け
+  {.key = B_SLSH        , .func = ng_send_re    },  // れ
+  {.key = B_J           , .func = ng_send_a     },  // あ
+  {.key = B_DOT         , .func = ng_send_ra    },  // ら
+  {.key = B_O           , .func = ng_send_su    },  // す
+  {.key = B_G           , .func = ng_send_xtu   },  // っ
+  {.key = B_I           , .func = ng_send_ru    },  // る
+  {.key = B_V           , .func = ng_send_ko    },  // こ
+  {.key = B_C           , .func = ng_send_ha    },  // は
+  {.key = B_W           , .func = ng_send_ki    },  // き
+  {.key = B_M           , .func = ng_send_na    },  // な
+  {.key = B_H           , .func = ng_send_ku    },  // く
+  {.key = B_E           , .func = ng_send_te    },  // て
+  {.key = B_N           , .func = ng_send_ta    },  // た
   {.key = B_D           , .func = ng_send_to    },  // と
   {.key = B_F           , .func = ng_send_ka    },  // か
-  {.key = B_G           , .func = ng_send_xtu   },  // っ
-  {.key = B_H           , .func = ng_send_ku    },  // く
-  {.key = B_J           , .func = ng_send_a     },  // あ
-  {.key = B_K           , .func = ng_send_i     },  // い
-  {.key = B_L           , .func = ng_send_u     },  // う
-  {.key = B_SCLN        , .func = ng_send_minus },  // ー
-  {.key = B_Z           , .func = ng_send_ho    },  // ほ
-  {.key = B_X           , .func = ng_send_hi    },  // ひ
-  {.key = B_C           , .func = ng_send_ha    },  // は
-  {.key = B_V           , .func = ng_send_ko    },  // こ
-  {.key = B_B           , .func = ng_send_so    },  // そ
-  {.key = B_N           , .func = ng_send_ta    },  // た
-  {.key = B_M           , .func = ng_send_na    },  // な
+  {.key = B_R           , .func = ng_send_si    },  // し
   {.key = B_COMM        , .func = ng_send_nn    },  // ん
-  {.key = B_DOT         , .func = ng_send_ra    },  // ら
-  {.key = B_SLSH        , .func = ng_send_re    },  // れ
+  {.key = B_L           , .func = ng_send_u     },  // う
+  {.key = B_K           , .func = ng_send_i     },  // い
+  {.key = B_U           , .func = ng_backspace_with_repeat  },  // {BS}
+  {.key = B_SHFT        , .func = ng_space_or_enter},
 };
 
 // 薙刀式のレイヤー、オンオフするキー
