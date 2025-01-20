@@ -1069,7 +1069,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
         // 薙刀式のキーを押した時(同時押し定義の最大数に達していたら変換するため飛ばす)
         if (pressing && recent_key && waiting_count < NKEYS) {
           // 今押したキー以外の出力が済んでいればシフト復活できる
-          if (waiting_count == 1 && rest_shift_state == On) {
+          if (rest_shift_state == On && waiting_count == 1) {
             rest_shift_state = Run;
             continue;
           }
