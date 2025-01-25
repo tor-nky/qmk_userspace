@@ -793,9 +793,6 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
         naginata_type(keycode, record); // キーリピート解除、未出力キーを処理
         naginata_off();
         return false;
-      // case NG_CLR: // コメントアウトすると未出力キーの処理が行われる
-      //   naginata_clear(); // バッファをクリアする
-      //   return false;
       case NGSW_WIN:
         switchOS(NG_WIN);
         return false;
@@ -812,11 +809,11 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
       case NG_SHOS:
         ng_show_os();
         return false;
-      case NG_TAYO:
-        tategaki_toggle();
-        return false;
       case NG_KOTI:
         kouchi_shift_toggle();
+        return false;
+      case NG_TAYO:
+        tategaki_toggle();
         return false;
     }
   }

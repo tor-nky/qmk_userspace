@@ -142,7 +142,6 @@ typedef enum naginata_keycodes {
 #if !defined(NG_BMP)
   NG_ON,
   NG_OFF,
-  NG_CLR,
 #endif
   NGSW_WIN,
   NGSW_MAC,
@@ -153,8 +152,8 @@ typedef enum naginata_keycodes {
   NG_MLV,
 #endif
   NG_SHOS,
-  NG_TAYO,
   NG_KOTI,
+  NG_TAYO,
 } NGKEYS;
 
 // EEPROMに保存する設定
@@ -170,7 +169,7 @@ typedef union {
 
 user_config_t naginata_config;
 
-#define NG_SAFE_RANGE (NG_KOTI + 1)
+#define NG_SAFE_RANGE (NG_TAYO + 1)
 
 #define NG_WIN 1
 #define NG_MAC 2
