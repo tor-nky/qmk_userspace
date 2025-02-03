@@ -404,19 +404,7 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
       break;
     default:
       naginata_config.os = NG_IOS_BMP;
-      naginata_config.live_conv = 0;
       naginata_config.tategaki = 0;
-      naginata_config.kouchi_shift = 0;
-      break;
-  }
-#elif defined(NG_USE_DIC)
-  switch (naginata_config.os) {
-    case NG_WIN ...  NG_LINUX:
-      break;
-    default:
-      naginata_config.os = NG_WIN;
-      naginata_config.live_conv = 0;
-      naginata_config.tategaki = 1;
       naginata_config.kouchi_shift = 0;
       break;
   }
@@ -426,7 +414,6 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
       break;
     default:
       naginata_config.os = NG_WIN;
-      naginata_config.live_conv = 1;
       naginata_config.tategaki = 1;
       naginata_config.kouchi_shift = 0;
       break;
@@ -461,12 +448,11 @@ static void ng_set_unicode_mode(uint8_t os) {
   }
 }
 
-void mac_live_conversion_toggle() {
-  naginata_config.live_conv ^= 1;
-  eeconfig_update_user(naginata_config.raw);
-}
-
 void tategaki_toggle() {
+#if defined(OLED_ENABLE)
+  extern bool update_oled;
+  update_oled = true;
+#endif
   naginata_config.tategaki ^= 1;
   eeconfig_update_user(naginata_config.raw);
 }
@@ -502,11 +488,6 @@ void ng_show_os(void) {
       break;
     case NG_MAC_BMP:
       bmp_send_string("mac-bmp");
-      if (naginata_config.live_conv) {
-        bmp_send_string("/"SS_TAP(X_KP_PLUS)"lc");
-      } else {
-        bmp_send_string("/-lc");
-      }
       break;
     case NG_LINUX_BMP:
       bmp_send_string("linux-bmp");
@@ -522,8 +503,6 @@ void ng_show_os(void) {
   }
   if (naginata_config.kouchi_shift) {
     bmp_send_string("/"SS_TAP(X_KP_PLUS)"kouchi");
-  } else {
-    bmp_send_string("/-kouchi");
   }
 #else
   switch (naginata_config.os) {
@@ -532,11 +511,6 @@ void ng_show_os(void) {
       break;
     case NG_MAC:
       SEND_STRING("mac");
-      if (naginata_config.live_conv) {
-        SEND_STRING("/"SS_TAP(X_KP_PLUS)"lc");
-      } else {
-        SEND_STRING("/-lc");
-      }
       break;
     case NG_LINUX:
       SEND_STRING("linux");
@@ -549,8 +523,6 @@ void ng_show_os(void) {
   }
   if (naginata_config.kouchi_shift) {
     SEND_STRING("/"SS_TAP(X_KP_PLUS)"kouchi");
-  } else {
-    SEND_STRING("/-kouchi");
   }
 #endif
 }
@@ -571,18 +543,18 @@ void ng_send_unicode_string_P(const char *str) {
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC:
-#if !defined(NG_USE_KAWASEMI)
+#if defined(NG_USE_KAWASEMI)
+      // かわせみ専用
+      tap_code16(MEH(KC_LANGUAGE_1));   // Control+Option+Shift+(Mac)かな
+      send_unicode_string_P(str);
+      tap_code(KC_LANGUAGE_1);  // (Mac)かな
+#else
       // Karabiner-Elementsが必要
       tap_code(KC_LANGUAGE_2);  // 未確定文字を確定する
       tap_code16_delay(LCTL(KC_F20), 56); // Unicode HEX Inputへ切り替え
       send_unicode_string_P(str);
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
       tap_code(KC_NUM_LOCK);  // IME Cancel
-#else
-      // かわせみ専用
-      tap_code16(MEH(KC_LANGUAGE_1));   // Control+Option+Shift+(Mac)かな
-      send_unicode_string_P(str);
-      tap_code(KC_LANGUAGE_1);  // (Mac)かな
 #endif
       break;
   }
@@ -781,6 +753,15 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
         switchOS(NG_IOS_BMP);
         return false;
 #else
+      case NGSW_WIN:
+        switchOS(NG_WIN);
+        return false;
+      case NGSW_MAC:
+        switchOS(NG_MAC);
+        return false;
+      case NGSW_LNX:
+        switchOS(NG_LINUX);
+        return false;
       case NG_ON:
         // 起動判定中のキーを出力
         if (fghj_buf != KC_NO) {
@@ -792,18 +773,6 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
       case NG_OFF:
         naginata_type(keycode, record); // キーリピート解除、未出力キーを処理
         naginata_off();
-        return false;
-      case NGSW_WIN:
-        switchOS(NG_WIN);
-        return false;
-      case NGSW_MAC:
-        switchOS(NG_MAC);
-        return false;
-      case NGSW_LNX:
-        switchOS(NG_LINUX);
-        return false;
-      case NG_MLV:
-        mac_live_conversion_toggle();
         return false;
 #endif
       case NG_SHOS:
@@ -1712,6 +1681,11 @@ void ng_ime_cancel() {
       break;
     case NG_MAC:
       tap_code(KC_NUM_LOCK);
+# if !defined(NG_USE_KAWASEMI)
+      // ライブ変換対応
+      tap_code(KC_NUM_LOCK);
+      tap_code(KC_NUM_LOCK);
+# endif
       break;
   }
 #endif
@@ -1746,12 +1720,12 @@ void ng_ime_complete() {
       tap_code(KC_INTERNATIONAL_2); // ひらがな
       break;
     case NG_MAC:
-# if !defined(NG_USE_KAWASEMI)
-      tap_code(KC_LANGUAGE_2);  // (Mac)英数
-      tap_code16(LSFT(KC_LANGUAGE_1));  // Shift+(Mac)かな
+# if defined(NG_USE_KAWASEMI)
+      tap_code16(MEH(KC_LANGUAGE_1));   // Control+Option+Shift+(Mac)かな
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
 # else
-      tap_code16(MEH(KC_LANGUAGE_1));   // Control+Option+Shift+(Mac)かな
+      tap_code(KC_LANGUAGE_2);  // (Mac)英数
+      tap_code16(LSFT(KC_LANGUAGE_1));  // Shift+(Mac)かな
       tap_code(KC_LANGUAGE_1);  // (Mac)かな
 # endif
       break;

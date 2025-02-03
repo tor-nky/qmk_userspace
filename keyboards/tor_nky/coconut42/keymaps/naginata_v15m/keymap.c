@@ -123,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       QK_BOOT, XXXXXXX, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  US2JIS,   NK_ON,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, KC_VOLU, KC_BRIU,                      XXXXXXX,  QK_RBT, NG_KOTI,  NG_MLV,  US_KEY,  NK_OFF,
+      RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, KC_VOLU, KC_BRIU,                      XXXXXXX,  QK_RBT, NG_KOTI, XXXXXXX,  US_KEY,  NK_OFF,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RM_NEXT, RM_HUED, RM_SATD, RM_VALD, KC_VOLD, KC_BRID,                     NGSW_WIN,NGSW_MAC,NGSW_LNX, NG_TAYO, NG_SHOS, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
@@ -340,9 +340,9 @@ static void render_mode(void) {
     if (!naginata_config.kouchi_shift) {
       delete_char(2 * 128 + 5, 7);
     }
-    if (!naginata_config.live_conv) {
+    // if (!naginata_config.live_conv) {
       delete_char(3 * 128 + 5, 7);
-    }
+    // }
 }
 
 static void render_kana(void) {

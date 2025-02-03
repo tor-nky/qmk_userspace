@@ -47,7 +47,6 @@ void naginata_on(void);
 void naginata_off(void);
 bool naginata_state(void);
 void switchOS(uint8_t);
-void mac_live_conversion_toggle(void);
 void tategaki_toggle(void);
 void tategaki_on(void);
 void tategaki_off(void);
@@ -139,17 +138,14 @@ typedef enum naginata_keycodes {
   NG_SHFT,
   NG_SHFT2,
 
-#if !defined(NG_BMP)
-  NG_ON,
-  NG_OFF,
-#endif
   NGSW_WIN,
   NGSW_MAC,
   NGSW_LNX,
 #if defined(NG_BMP)
   NGSW_IOS,
 #else
-  NG_MLV,
+  NG_ON,
+  NG_OFF,
 #endif
   NG_SHOS,
   NG_KOTI,
@@ -161,9 +157,8 @@ typedef union {
   uint32_t raw;
   struct {
     uint8_t os;
-    bool live_conv :1;
-    bool tategaki :1;
     bool kouchi_shift :1;
+    bool tategaki :1;
   };
 } user_config_t;
 
