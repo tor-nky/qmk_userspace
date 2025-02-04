@@ -23,10 +23,6 @@
 
 // 薙刀式 begin 1
 #include "naginata.h"
-#ifdef OLED_ENABLE
-  bool update_oled = true;
-  bool ng_state = false;
-#endif
 // 薙刀式 end 1
 #include "twpair_on_jis.h"
 
@@ -186,22 +182,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       cont = false;
       break;
-// 薙刀式 begin 4 -- OLEDを使う場合
-#ifdef OLED_ENABLE
-    case NGSW_WIN...NG_KOTI:
-      if (pressed) {
-        update_oled = true; // 設定をOLED表示に反映する
-      }
-      break;
-#endif
-// 薙刀式 end 4
   }
 
-  // 薙刀式 begin 5
+  // 薙刀式 begin 4
   if (cont) {
     cont = process_naginata(keycode, record);
   }
-  // 薙刀式 end 5
+  // 薙刀式 end 4
 
   // typewriter pairing on jis keyboard
   if (cont && is_us2jis) {
@@ -226,14 +213,14 @@ void keyboard_post_init_user(void) {
 
 // 全ての QMK 処理の最後に、次の繰り返しを開始する前に呼び出される関数
 void housekeeping_task_user(void) {
-  // 薙刀式 begin 6
+  // 薙刀式 begin 5
   // 後置シフト待ち処理
   kouchi_shift_loop();
-  // 薙刀式 end 6
+  // 薙刀式 end 5
 }
 
 void matrix_init_user(void) {
-  // 薙刀式 begin 7
+  // 薙刀式 begin 6
   uint16_t ngonkeys[] = {KC_H, KC_J};
   uint16_t ngoffkeys[] = {KC_F, KC_G};
   set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
@@ -256,5 +243,5 @@ void matrix_init_user(void) {
       break;
   }
 #endif
-  // 薙刀式 end 7
+  // 薙刀式 end 6
 }

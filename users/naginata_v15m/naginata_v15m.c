@@ -411,8 +411,7 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
       naginata_config.kouchi_shift = 0;
       break;
   }
-  eeconfig_update_user(naginata_config.raw);
-  ng_set_unicode_mode(naginata_config.os);
+  switchOS(naginata_config.os);
 }
 
 // 薙刀式のon/off状態を返す
@@ -441,28 +440,16 @@ static void ng_set_unicode_mode(uint8_t os) {
 }
 
 void tategaki_toggle() {
-#if defined(OLED_ENABLE)
-  extern bool update_oled;
-  update_oled = true;
-#endif
   naginata_config.tategaki ^= 1;
   eeconfig_update_user(naginata_config.raw);
 }
 
 void tategaki_on() {
-#if defined(OLED_ENABLE)
-  extern bool update_oled;
-  update_oled = true;
-#endif
   naginata_config.tategaki = 1;
   // eeconfig_update_user(naginata_config.raw);
 }
 
 void tategaki_off() {
-#if defined(OLED_ENABLE)
-  extern bool update_oled;
-  update_oled = true;
-#endif
   naginata_config.tategaki = 0;
   // eeconfig_update_user(naginata_config.raw);
 }

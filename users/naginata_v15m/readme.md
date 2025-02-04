@@ -18,7 +18,7 @@ http://oookaworks.seesaa.net/article/500180437.html#gsc.tab=0
 1. [qmk_userspace/users/naginata_v15m/](https://github.com/tor-nky/qmk_userspace/tree/main/users/naginata_v15m) フォルダの内容を、各自の同様のフォルダを作りコピーする。
 1. 各自の qmk_****/keyboards/%キーボード名%/keymaps/naginata_v15m/ フォルダに keymap.c を作成する。
 1. こちらの [keymap.c](https://github.com/tor-nky/qmk_userspace/blob/main/keyboards/tor_nky/coconut42/keymaps/naginata_v15m/keymap.c) などを参考に、2つの `// 薙刀式` で囲まれた部分を付け加える。  
-OLED を使わなければ4番目と8番目は不要です。
+OLED を使わなければ7番目は不要です。
 1. コンパイルする `qmk compile -kb %キーボード名% -km naginata_v15m`
 1. キーボードに書き込む
 ## OSなどの設定 (辞書使用の場合とBLE Micro Pro)

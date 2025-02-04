@@ -25,17 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // 薙刀式 begin 1
 #include "naginata.h"
-#ifdef OLED_ENABLE
-  bool update_oled = true;
-  bool ng_state = false;
-#endif
 // 薙刀式 end 1
 #include "twpair_on_jis.h"
 
 // Defines names for use in layer keycodes and the keymap
 enum keymap_layers {
   _QWERTY,
-//   _WORKMAN,
 // 薙刀式 begin 2
   _NAGINATA, // 薙刀式入力レイヤー
 // 薙刀式 end 2
@@ -82,18 +77,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                           KC_LGUI,  LOW_BS,  LS_SPC,     RS_SPC, RAI_ENT, KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
-
-//   [_WORKMAN] = LAYOUT_split_3x6_3(
-//   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-//        OP_ESC,    KC_Q,    KC_D,    KC_R,    KC_W,    KC_B,                         KC_J,    KC_F,    KC_U,    KC_P, KC_SCLN,  KC_MINS,
-//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-//       CTL_TAB,    KC_A,    KC_S,    KC_H,    KC_T,    KC_G,                         KC_Y,    KC_N,    KC_E,    KC_O,    KC_I, KC_QUOT,
-//   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-//       KC_LSFT,    KC_Z,    KC_X,    KC_M,    KC_C,    KC_V,                         KC_K,    KC_L, KC_COMM,  KC_DOT, KC_SLSH, SFT_DEL,
-//   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-//                                           KC_LGUI,  LOW_BS,  LS_SPC,     RS_SPC, RAI_ENT, KC_RALT
-//                                       //`--------------------------'  `--------------------------'
-//   ),
 
   [_LOWER] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -188,22 +171,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       cont = false;
       break;
-// 薙刀式 begin 4 -- OLEDを使う場合
-#ifdef OLED_ENABLE
-    case NGSW_WIN...NG_KOTI:
-      if (pressed) {
-        update_oled = true; // 設定をOLED表示に反映する
-      }
-      break;
-#endif
-// 薙刀式 end 4
   }
 
-  // 薙刀式 begin 5
+  // 薙刀式 begin 4
   if (cont) {
     cont = process_naginata(keycode, record);
   }
-  // 薙刀式 end 5
+  // 薙刀式 end 4
 
   // typewriter pairing on jis keyboard
   if (cont && is_us2jis) {
@@ -228,14 +202,14 @@ void keyboard_post_init_user(void) {
 
 // 全ての QMK 処理の最後に、次の繰り返しを開始する前に呼び出される関数
 void housekeeping_task_user(void) {
-  // 薙刀式 begin 6
+  // 薙刀式 begin 5
   // 後置シフト待ち処理
   kouchi_shift_loop();
-  // 薙刀式 end 6
+  // 薙刀式 end 5
 }
 
 void matrix_init_user(void) {
-  // 薙刀式 begin 7
+  // 薙刀式 begin 6
   uint16_t ngonkeys[] = {KC_H, KC_J};
   uint16_t ngoffkeys[] = {KC_F, KC_G};
   set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
@@ -258,10 +232,10 @@ void matrix_init_user(void) {
       break;
   }
 #endif
-  // 薙刀式 end 7
+  // 薙刀式 end 6
 }
 
-// 薙刀式 begin 8 -- OLED表示
+// 薙刀式 begin 7 -- OLED表示
 #ifdef OLED_ENABLE
 
 // oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -422,19 +396,18 @@ static void render_eisu(void) {
 }
 
 bool oled_task_user(void) {
-  if (naginata_state() != ng_state) {
-    update_oled = true;
-    ng_state = naginata_state();
-  }
+  static bool ng_state = true;
+  static uint32_t ng_config;
   if (is_keyboard_master()) {
-    if (update_oled) { // 内容が変化する時だけ書き換えないとスリープに入らない。
+    if (naginata_state() != ng_state || naginata_config.raw != ng_config) { // 内容が変化する時だけ書き換えないとスリープに入らない。
+      ng_state = naginata_state();
+      ng_config = naginata_config.raw;
       if (naginata_state()) {
         render_kana();
       } else {
         render_eisu();
       }
       render_mode();
-      update_oled = false;
     }
   } else {
     naginata_logo();
@@ -442,4 +415,4 @@ bool oled_task_user(void) {
   return false;
 }
 #endif
-// 薙刀式 end 8
+// 薙刀式 end 7
