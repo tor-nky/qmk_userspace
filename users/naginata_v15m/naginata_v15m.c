@@ -398,19 +398,12 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
   ngoff_keys[1] = *(offk+1);
 
   naginata_config.raw = eeconfig_read_user();
+  switch (naginata_config.os) {
 #if defined(NG_BMP)
-  switch (naginata_config.os) {
-    case NG_WIN_BMP ... NG_IOS_BMP:
-      break;
-    default:
-      naginata_config.os = NG_IOS_BMP;
-      naginata_config.tategaki = 0;
-      naginata_config.kouchi_shift = 0;
-      break;
-  }
+    case NG_WIN ... NG_IOS:
 #else
-  switch (naginata_config.os) {
     case NG_WIN ...  NG_LINUX:
+#endif
       break;
     default:
       naginata_config.os = NG_WIN;
@@ -418,7 +411,6 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
       naginata_config.kouchi_shift = 0;
       break;
   }
-#endif
   eeconfig_update_user(naginata_config.raw);
   ng_set_unicode_mode(naginata_config.os);
 }
@@ -483,17 +475,17 @@ void kouchi_shift_toggle() {
 void ng_show_os(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
-      bmp_send_string("win-bmp");
+    case NG_WIN:
+      bmp_send_string("win");
       break;
-    case NG_MAC_BMP:
-      bmp_send_string("mac-bmp");
+    case NG_MAC:
+      bmp_send_string("mac");
       break;
-    case NG_LINUX_BMP:
-      bmp_send_string("linux-bmp");
+    case NG_LINUX:
+      bmp_send_string("linux");
       break;
-    case NG_IOS_BMP:
-      bmp_send_string("ios-bmp");
+    case NG_IOS:
+      bmp_send_string("ios");
       break;
   }
   if (naginata_config.tategaki) {
@@ -644,7 +636,7 @@ void naginata_on(void) {
 
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_TAP(X_INTERNATIONAL_2)); // ひらがな
       break;
     default:
@@ -684,7 +676,7 @@ void naginata_off(void) {
   clear_mods();
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       // ひらがな→半角/全角
       bmp_send_string(SS_TAP(X_INTERNATIONAL_2)SS_TAP(X_GRAVE));
       break;
@@ -739,20 +731,6 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
   // OS切り替え(UNICODE出力)
   if (record->event.pressed) {
     switch (keycode) {
-#if defined(NG_BMP)
-      case NGSW_WIN:
-        switchOS(NG_WIN_BMP);
-        return false;
-      case NGSW_MAC:
-        switchOS(NG_MAC_BMP);
-        return false;
-      case NGSW_LNX:
-        switchOS(NG_LINUX_BMP);
-        return false;
-      case NGSW_IOS:
-        switchOS(NG_IOS_BMP);
-        return false;
-#else
       case NGSW_WIN:
         switchOS(NG_WIN);
         return false;
@@ -762,6 +740,11 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
       case NGSW_LNX:
         switchOS(NG_LINUX);
         return false;
+#if defined(NG_BMP)
+      case NGSW_IOS:
+        switchOS(NG_IOS);
+        return false;
+#else
       case NG_ON:
         // 起動判定中のキーを出力
         if (fghj_buf != KC_NO) {
@@ -1197,18 +1180,18 @@ void ng_delete_with_repeat(void) { // {Del}
 void ng_cut() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_LCTL("x"));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_DOWN(X_LCTL)"x"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
-    case NG_MAC_BMP:
+    case NG_MAC:
       bmp_send_string(SS_LCMD("x"));
       break;
-    case NG_IOS_BMP:
+    case NG_IOS:
       bmp_send_string(SS_LCMD("x")SS_DELAY(60));
       break;
   }
@@ -1230,16 +1213,16 @@ void ng_cut() {
 void ng_copy() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_LCTL("c"));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_DOWN(X_LCTL)"c"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
+    case NG_MAC:
+    case NG_IOS:
       bmp_send_string(SS_LCMD("c"));
       break;
   }
@@ -1261,21 +1244,21 @@ void ng_copy() {
 void ng_paste() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_DOWN(X_LCTL)"v"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       if (!get_usb_enabled()) {
         bmp_send_string(SS_DELAY(16));
       }
       bmp_send_string(SS_DOWN(X_LCTL)"v"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
       break;
-    case NG_MAC_BMP:
+    case NG_MAC:
       bmp_send_string(SS_LCMD("v")SS_DELAY(135));
       break;
-    case NG_IOS_BMP:
+    case NG_IOS:
       bmp_send_string(SS_LCMD("v")SS_DELAY(220));
       break;
   }
@@ -1377,16 +1360,16 @@ void ng_previous_line(void) {
 void ng_home() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_TAP(X_HOME));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_DOWN(X_HOME)SS_DELAY(LINUX_WAIT_MS)SS_UP(X_HOME));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
+    case NG_MAC:
+    case NG_IOS:
       bmp_send_string(SS_LCTL("a"));
       break;
   }
@@ -1408,16 +1391,16 @@ void ng_home() {
 void ng_end() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_TAP(X_END));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_DOWN(X_END)SS_DELAY(LINUX_WAIT_MS)SS_UP(X_END));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
+    case NG_MAC:
+    case NG_IOS:
       bmp_send_string(SS_LCTL("e"));
       break;
   }
@@ -1447,18 +1430,18 @@ void ng_katakana() {
 void ng_save() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_LCTL("s"));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_DOWN(X_LCTL)"s"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
-    case NG_MAC_BMP:
+    case NG_MAC:
       bmp_send_string(SS_LCMD("s"));
       break;
-    case NG_IOS_BMP:
+    case NG_IOS:
       break;
   }
 #else
@@ -1487,16 +1470,16 @@ void ng_hiragana() {
 void ng_redo() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_LCTL("y"));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_DOWN(X_LCTL)"y"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
+    case NG_MAC:
+    case NG_IOS:
       bmp_send_string(SS_LCMD(SS_LSFT("z")));
       break;
   }
@@ -1518,16 +1501,16 @@ void ng_redo() {
 void ng_undo() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_LCTL("z"));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_DOWN(X_LCTL)"z"SS_DELAY(LINUX_WAIT_MS)SS_UP(X_LCTL));
         // 無線接続時、2秒以上キーを押していない状態で出力するとSS_DELAY()が働かないが、
         // 薙刀式の使用には問題ない
       break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
+    case NG_MAC:
+    case NG_IOS:
       bmp_send_string(SS_LCMD("z"));
       break;
   }
@@ -1549,14 +1532,14 @@ void ng_undo() {
 void ng_saihenkan() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_LWIN("/"));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_TAP(X_INTERNATIONAL_4)); // 変換
       break;
-    case NG_MAC_BMP:
-    case NG_IOS_BMP:
+    case NG_MAC:
+    case NG_IOS:
       bmp_send_string(SS_TAP(X_LANGUAGE_1)SS_TAP(X_LANGUAGE_1));
       break;
   }
@@ -1579,14 +1562,14 @@ void ng_saihenkan() {
 void ng_eof() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
+    case NG_WIN:
       bmp_send_string(SS_LSFT(SS_LCTL(SS_TAP(X_INTERNATIONAL_4)SS_TAP(X_INTERNATIONAL_4)))); // Shift+Ctrl+変換 x2
       bmp_send_string(SS_LCTL(SS_TAP(X_END)));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string(SS_TAP(X_GRAVE)SS_LCTL(SS_TAP(X_END))SS_TAP(X_INTERNATIONAL_2));
       break;
-    case NG_MAC_BMP:
+    case NG_MAC:
       // (Mac)英数 → Shift+(Mac)かな → (Mac)かな
       bmp_send_string(SS_TAP(X_LANGUAGE_2)SS_LSFT(SS_TAP(X_LANGUAGE_1))SS_TAP(X_LANGUAGE_1));
       if (naginata_config.tategaki)
@@ -1594,7 +1577,7 @@ void ng_eof() {
       else
         bmp_send_string(SS_LCMD(SS_TAP(X_DOWN)));
       break;
-    case NG_IOS_BMP:
+    case NG_IOS:
       // (Mac)英数 → (Mac)かな
       ng_ime_complete();
       if (naginata_config.tategaki)
@@ -1647,16 +1630,16 @@ void ng_eof() {
 void ng_ime_cancel() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_WIN_BMP:
-    case NG_LINUX_BMP:
+    case NG_WIN:
+    case NG_LINUX:
       for (uint8_t c = 0; c < 4; c++) {
         bmp_send_string(SS_TAP(X_ESCAPE));
       }
       break;
-    case NG_MAC_BMP:
+    case NG_MAC:
       bmp_send_string(SS_TAP(X_NUM_LOCK));
       break;
-    case NG_IOS_BMP:
+    case NG_IOS:
       bmp_send_string(SS_TAP(X_ESCAPE));
       break;
   }
@@ -1694,11 +1677,11 @@ void ng_ime_cancel() {
 void ng_ime_complete() {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
-    case NG_IOS_BMP:
+    case NG_IOS:
       // (Mac)英数 → (Mac)かな
       bmp_send_string(SS_TAP(X_LANGUAGE_2)SS_TAP(X_LANGUAGE_1));
       break;
-    case NG_LINUX_BMP:
+    case NG_LINUX:
       bmp_send_string("/\n\b"SS_DELAY(LINUX_WAIT_MS));
       break;
     default:

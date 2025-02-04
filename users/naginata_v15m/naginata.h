@@ -169,7 +169,4 @@ user_config_t naginata_config;
 #define NG_WIN 1
 #define NG_MAC 2
 #define NG_LINUX 3
-#define NG_WIN_BMP  251
-#define NG_MAC_BMP  252
-#define NG_LINUX_BMP 253
-#define NG_IOS_BMP  254
+#define NG_IOS 4

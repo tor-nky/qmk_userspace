@@ -1314,7 +1314,7 @@ void ng_send_tsa(void) {    // つぁ
 void copy_spc_to_clipboard(void) {
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_LINUX_BMP:
+    case NG_LINUX:
         if (get_usb_enabled()) {
             bmp_send_string(" "SS_DELAY(16));
             bmp_send_string(SS_DOWN(X_LSFT));
@@ -1325,7 +1325,7 @@ void copy_spc_to_clipboard(void) {
         }
         // LinuxとBluetooth接続した時は動作しないので省略
         break;
-    case NG_IOS_BMP:
+    case NG_IOS:
         bmp_send_string(" "SS_DELAY(BMP_DELAY));
         bmp_send_string(SS_DOWN(X_LSFT));
         ng_back_cursor();
@@ -1366,7 +1366,7 @@ void copy_spc_to_clipboard(void) {
 static void dic_send_string(const char *str) {
 #   if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_IOS_BMP:
+    case NG_IOS:
         bmp_send_string(str);
         bmp_send_string(SS_DELAY(120));
         bmp_send_string(" ");
@@ -1389,7 +1389,7 @@ static void dic_send_string(const char *str) {
 void ng_edit_touten(void) { // 、
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_IOS_BMP:
+    case NG_IOS:
         bmp_send_string(",");
         ng_ime_complete();
         break;
@@ -1405,7 +1405,7 @@ void ng_edit_touten(void) { // 、
 void ng_edit_kuten(void) { // 。
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_IOS_BMP:
+    case NG_IOS:
         bmp_send_string(".");
         ng_ime_complete();
         break;
@@ -1437,7 +1437,7 @@ void ng_middle_dot(void) { // ・
 void ng_question_mark(void) { // ？{改行}
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_IOS_BMP:
+    case NG_IOS:
         bmp_send_string(SS_LSFT("/"));
         ng_ime_complete();
         break;
@@ -1453,7 +1453,7 @@ void ng_question_mark(void) { // ？{改行}
 void ng_exclamation_mark(void) { // ！{改行}
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_IOS_BMP:
+    case NG_IOS:
         bmp_send_string(SS_LSFT("1"));
         ng_ime_complete();
         break;
@@ -1469,7 +1469,7 @@ void ng_exclamation_mark(void) { // ！{改行}
 void ng_solidus(void) { // ／{改行}
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_IOS_BMP:
+    case NG_IOS:
         bmp_send_string(SS_LOPT("/"));
         ng_ime_complete();
         break;
@@ -1506,7 +1506,7 @@ void ng_vertical_line(void) { // ｜{改行}
 void ng_ellipsis(void) { // ……{改行}
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_IOS_BMP:
+    case NG_IOS:
         bmp_send_string(SS_LOPT(";;"));
         ng_ime_complete();
         break;
@@ -1687,7 +1687,7 @@ void ng_edit_3_space(void) { // {Space 3}
 void ng_edit_togaki(void) { // {Home}{改行}{Space 3}{←}
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_LINUX_BMP:
+    case NG_LINUX:
         ng_home();
         bmp_send_string("\n"SS_DELAY(BMP_DELAY)"   ");
         ng_next_line();
@@ -1710,7 +1710,7 @@ void ng_edit_togaki(void) { // {Home}{改行}{Space 3}{←}
 void ng_edit_serifu(void) { // {Home}{改行}{Space 1}{←}
 #if defined(NG_BMP)
     switch (naginata_config.os) {
-    case NG_LINUX_BMP:
+    case NG_LINUX:
         ng_home();
         bmp_send_string("\n"SS_DELAY(BMP_DELAY)" ");
         ng_next_line();

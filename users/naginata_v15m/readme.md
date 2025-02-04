@@ -116,10 +116,7 @@ F+G を押さなくても 左右シフト＋英字 で 固定英数入力かIME�
 | OS切り替え            | Windows  | NGSW_WIN  | switchOS(NG_WIN)  |
 |                      | MacOS    | NGSW_MAC  | switchOS(NG_MAC)  |
 |                      | Linux    | NGSW_LNX  | switchOS(NG_LNX)  |
-|                      | Windows(BMP専用) | NGSW_WIN  | switchOS(NG_WIN_BMP)  |
-|                      | Mac(BMP専用)     | NGSW_MAC  | switchOS(NG_MAC_BMP)  |
-|                      | Linux(BMP専用)   | NGSW_LNX  | switchOS(NG_LNX_BMP)  |
-|                      | iOS(BMP専用) | NGSW_IOS  | switchOS(NG_IOS_BMP)  |
+|                      | iOS(BMP専用) | NGSW_IOS  | switchOS(NG_IOS)  |
 | 縦書き、横書き        | ON/OFFトグル   | NG_TAYO    | tategaki_toggle()  |
 | 後置シフト            | ON/OFFトグル   | NG_KOTI  | kouchi_shift_toggle()  |
 | 現在設定の出力        |   | NG_SHOS   | ng_show_os()  |
