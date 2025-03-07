@@ -840,7 +840,8 @@ static enum TransState which_trans_state(Ngkey search) {
         }
       } else {
 #endif
-        switch (key ^= search) {
+        Ngkey remains = key ^ search;
+        switch (remains) {
           case 0:
             if (state == None) {
               state = One;
@@ -856,7 +857,7 @@ static enum TransState which_trans_state(Ngkey search) {
             return Multipul;
 #else
           default:
-            if (naginata_config.kouchi_shift || !(key & B_SHFT)) {
+            if (naginata_config.kouchi_shift || !(remains & B_SHFT)) {
               return Multipul;
             }
             break;
