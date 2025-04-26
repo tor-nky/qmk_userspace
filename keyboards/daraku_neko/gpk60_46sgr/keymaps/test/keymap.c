@@ -18,8 +18,8 @@
 // #include "twpair_on_jis.h"
 
 #define T_C 1   // キーを同時押しするときの間隔
-#define T_S 20  // スペースキーから通常キーを押すまでの間隔
-#define T_R 20  // ロールオーバーの間隔
+#define T_S 1   // スペースキーから通常キーを押すまでの間隔
+#define T_R 5   // ロールオーバーの間隔
 #define T_P 20  // キーを押している時間
 #define T_U 1   // キーを複数上げるときの間隔
 #define T_N 5   // キーを上げてから次のキーを押すまでの間隔
@@ -203,7 +203,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           SS_DELAY(T_N)SS_DOWN(X_K)SS_DELAY(T_P)SS_UP(X_K)                                                        // い
           SS_DELAY(T_N)SS_DOWN(X_W)SS_DELAY(T_C)SS_DOWN(X_I)SS_DELAY(T_C)SS_DOWN(X_J)                             // ぎょ
           SS_DELAY(T_R)SS_DOWN(X_L)                                                                               // う
-          SS_DELAY(T_R)SS_DOWN(X_SLSH)SS_DELAY(T_U)SS_UP(X_SLSH)SS_DELAY(T_P)SS_UP(X_J)SS_DELAY(T_U)SS_UP(X_W)
+          SS_DELAY(T_R)SS_DOWN(X_SLSH)SS_DELAY(T_P)SS_UP(X_SLSH)SS_DELAY(T_U)SS_UP(X_J)SS_DELAY(T_U)SS_UP(X_W)
             SS_DELAY(T_U)SS_UP(X_L)SS_DELAY(T_U)SS_UP(X_I)                                                        // れ
           SS_DELAY(T_N)SS_DOWN(X_SPC)SS_DELAY(T_S)SS_DOWN(X_L)SS_DELAY(T_P)SS_UP(X_L)                             // つ
           SS_DELAY(T_N)SS_DOWN(X_C)SS_DELAY(T_P)SS_UP(X_C)                                                        // を
