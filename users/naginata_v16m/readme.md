@@ -4,7 +4,7 @@
 * 現行のMS-IMEでも使用できる辞書登録式
 WindowsとMacでは日本語キーボード、英語キーボードどちらでも使えます。
 * IME設定を駆使して好みに近づけた方式
-* BLE Micro Pro用(Bluetooth接続のiPhoneを含む)
+* BLE Micro Pro用(Bluetooth接続のiPhoneを含む)(bmp-vial 1.4.0対応)
 # 薙刀式カナ配列キーマップ
 薙刀式カナ配列による入力をQMKで実現します。薙刀式配列v16（快速版）に準拠しています。
 編集モードも実装していますが、
