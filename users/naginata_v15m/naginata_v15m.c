@@ -987,6 +987,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 
       // シフト復活処理
       if (rest_shift_state == Run && ng_search(pressed_key) < NGMAP_COUNT) {
+        rest_shift_state = Off;
         waiting_keys[0] = pressed_key;
         searching_key = pressed_key;
       }
