@@ -913,7 +913,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     center_shift = false;
   }
 
-  // 薙刀式のキーを押した
+  // キーを押した
   if (pressing) {
     pressed_key |= recent_key;  // キーを加える
 #if defined(NG_KOUCHI_SHIFT_MS)
@@ -1017,8 +1017,8 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   if (store_key_later) {
     // 配列に押したキーを保存
     waiting_keys[waiting_count++] = recent_key;
-  // キーを離した時
-  } else if (!pressing) {
+  // 薙刀式のキーを離した時
+  } else if (!pressing && recent_key) {
     pressed_key &= ~recent_key; // キーを取り除く
 #if defined(NG_USE_SHIFT_WHEN_SPACE_UP)
     if (waiting_count || pressed_key & B_SHFT || !pressed_key) {
