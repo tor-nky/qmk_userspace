@@ -944,7 +944,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     center_shift = false;
   }
 
-  // 薙刀式のキーを押した
+  // キーを押した
   if (pressing) {
     pressed_key |= recent_key;  // キーを加える
 #if defined(NG_KOUCHI_SHIFT_MS)
