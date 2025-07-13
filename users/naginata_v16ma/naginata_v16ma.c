@@ -987,10 +987,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 #else
         ngmap[num].func();
 #endif
-#if defined(NG_REUSE_ALL)
-        // どのかな定義もシフト復活しうる
-        rest_shift_state = Reusable;
-#else
+#if !defined(NG_REUSE_ALL)
         // NG_REUSE を指定したかな定義のみシフト復活可
         if (ngmap_key_sub(num) & NG_REUSE) {
           rest_shift_state = Reusable;
@@ -1038,8 +1035,14 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 #endif
       rest_shift_state = Off;
     // スペースを押していないなら次回、シフト復活可能
+#if defined(NG_REUSE_ALL)
+    // どのかな定義もシフト復活しうる
+    } else {
+#else
+    // NG_REUSE を指定したかな定義のみシフト復活可
     } else if (rest_shift_state == Reusable) {
-      rest_shift_state = Run;
+#endif
+        rest_shift_state = Run;
     }
   }
   return (recent_key == 0);
