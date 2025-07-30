@@ -1365,6 +1365,7 @@ static void dic_send_string(const char *str) {
     }
 #   else
     send_string_P(str);
+    // wait_ms(24); // Linux辞書式
     tap_code(KC_SPACE);
     tap_code(KC_ENTER);
 #   endif
@@ -1780,14 +1781,62 @@ void ng_right_double_angle_bracket(void) { // 》{改行}
 }
 
 void ng_right_corner_bracket_next_line(void) { // 」{改行}{改行}
+#if defined(NG_BMP)
+    ng_right_corner_bracket(); // 」{改行}
+    bmp_send_string("\n");
+    bmp_send_string(SS_DELAY(16));  // 連続押し対策
+#else
     ng_right_corner_bracket(); // 」{改行}
     tap_code(KC_ENTER);
+#endif
 }
 void ng_right_corner_bracket_next_line_left_corner_bracket(void) { // 」{改行}{改行}「{改行}
-    ng_right_corner_bracket_next_line(); // 」{改行}{改行}
+#if defined(NG_BMP)
+    ng_right_corner_bracket(); // 」{改行}
+    bmp_send_string("\n");
+    bmp_send_string(SS_DELAY(BMP_DELAY));
     ng_left_corner_bracket(); // 「{改行}
+#else
+    switch (naginata_config.os) {
+    case NG_LINUX:
+        ng_right_corner_bracket(); // 」{改行}
+        tap_code_delay(KC_ENTER, 56);
+        ng_left_corner_bracket(); // 「{改行}
+        break;
+# if !defined(NG_USE_DIC) && !defined(NG_USE_KAWASEMI)
+    case NG_MAC:
+        ng_send_unicode_string_P(PSTR("」「"));
+        tap_code16(LCTL(KC_B)); // 1文字戻る
+        tap_code(KC_ENTER);
+        tap_code16(LCTL(KC_F)); // 1文字進む
+        break;
+# endif
+        default:
+        ng_right_corner_bracket(); // 」{改行}
+        tap_code(KC_ENTER);
+        ng_left_corner_bracket(); // 「{改行}
+        break;
+    }
+#endif
 }
 void ng_right_corner_bracket_next_line_space(void) { // 」{改行}{改行}{Space}
-    ng_right_corner_bracket_next_line(); // 」{改行}{改行}
-    tap_code(KC_SPACE);
+#if defined(NG_BMP)
+    ng_right_corner_bracket(); // 」{改行}
+    bmp_send_string("\n");
+    bmp_send_string(SS_DELAY(16));  // 秀丸エディタ対策
+    bmp_send_string(" ");
+#else
+    switch (naginata_config.os) {
+    case NG_LINUX:
+        ng_right_corner_bracket(); // 」{改行}
+        tap_code_delay(KC_ENTER, 48);
+        tap_code(KC_SPACE);
+        break;
+    default:
+        ng_right_corner_bracket(); // 」{改行}
+        tap_code(KC_ENTER);
+        tap_code(KC_SPACE);
+        break;
+    }
+#endif
 }
