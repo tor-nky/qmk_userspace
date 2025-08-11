@@ -16,7 +16,7 @@
 
 #include QMK_KEYBOARD_H
 #include "keymap_japanese.h"
-// #include "twpair_on_jis.h"
+#include "users/naginata_v15m/twpair_on_jis.h"
 
 // Defines names for use in layer keycodes and the keymap
 enum layer_names {
@@ -116,23 +116,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
-// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//   static bool is_us2jis = false;
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  static bool is_us2jis = true;
 
-//   switch (keycode) {
-//     case US_KEY:
-//       if (record->event.pressed)
-//         is_us2jis = false;
-//       return false;
-//     case US2JIS:
-//       if (record->event.pressed)
-//         is_us2jis = true;
-//       return false;
-//   }
+  switch (keycode) {
+    case US_KEY:
+      if (record->event.pressed)
+        is_us2jis = false;
+      return false;
+    case US2JIS:
+      if (record->event.pressed)
+        is_us2jis = true;
+      return false;
+  }
 
-//   // typewriter pairing on jis keyboard
-//   if (is_us2jis && !twpair_on_jis(keycode, record))
-//     return false;
+  // typewriter pairing on jis keyboard
+  if (is_us2jis && !twpair_on_jis(keycode, record))
+    return false;
 
-//   return true;
-// }
+  return true;
+}
