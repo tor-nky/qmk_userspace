@@ -118,6 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static bool is_us2jis = true;
+  static uint_fast8_t spc_count = 0;
 
   switch (keycode) {
     case US_KEY:
@@ -127,6 +128,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case US2JIS:
       if (record->event.pressed)
         is_us2jis = true;
+      return false;
+    case KC_SPC:
+      if (record->event.pressed) {
+        if (!spc_count)
+          register_code(keycode);
+        spc_count++;
+      } else if (spc_count) {
+        spc_count--;
+        if (!spc_count)
+          unregister_code(keycode);
+      }
       return false;
   }
 
