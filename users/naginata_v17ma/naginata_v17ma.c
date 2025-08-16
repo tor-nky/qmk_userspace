@@ -20,7 +20,7 @@
 #include "unicode_P.h"
 #if defined(NG_BMP)
 #   include "bmp_host_driver.h"
-#   include "keyboards/ble_micro_pro/keymaps/naginata_v16ma/bmp_send_string.h"
+#   include "keyboards/ble_micro_pro/keymaps/naginata_v17ma/bmp_send_string.h"
 #endif
 
 #include <string.h>
@@ -329,12 +329,12 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_SHFT|B_B    , .func = ng_send_nu    },  // ぬ
   {.key = B_SHFT|B_P    , .func = ng_send_yu    },  // ゆ
   {.key = B_SHFT|B_COMM , .func = ng_send_mu    },  // む
-  {.key = B_SHFT|B_W    , .func = ng_send_ne    },  // ね
+  {.key = B_SHFT|B_R    , .func = ng_send_ne    },  // ね
   {.key = B_SHFT|B_SCLN , .func = ng_send_hu    },  // ふ
   {.key = B_SHFT|B_Z    , .func = ng_send_ho    },  // ほ
   {.key = B_SHFT|B_H    , .func = ng_send_ya    },  // や
   {.key = B_SHFT|B_X    , .func = ng_send_hi    },  // ひ
-  {.key = B_SHFT|B_R    , .func = ng_send_me    },  // め
+  {.key = B_SHFT|B_W    , .func = ng_send_me    },  // め
   {.key = B_SHFT|B_S    , .func = ng_send_mi    },  // み
   {.key = B_SHFT|B_DOT  , .func = ng_send_wa    },  // わ
   {.key = B_SHFT|B_O    , .func = ng_send_e     },  // え
