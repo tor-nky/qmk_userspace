@@ -15,7 +15,7 @@
  */
 #include QMK_KEYBOARD_H
 #include "keymap_japanese.h"
-// #include "twpair_on_jis.h"
+// #include "users/naginata_v15m/twpair_on_jis.h"
 
 #define T_C 1   // キーを同時押しするときの間隔
 #define T_S 1   // スペースキーから通常キーを押すまでの間隔
