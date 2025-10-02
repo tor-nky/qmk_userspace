@@ -110,7 +110,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------+--------|
       RM_NEXT, RM_HUED, RM_SATD, RM_VALD, KC_VOLD, KC_BRID,       NGSW_WIN,NGSW_MAC,NGSW_LNX, NG_TAYO, NG_SHOS, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------|
-      XXXXXXX,                   _______, _______, _______,        _______, _______, _______,                   XXXXXXX
+      XXXXXXX,                   XXXXXXX, _______, XXXXXXX,        XXXXXXX, _______, XXXXXXX,                   XXXXXXX
   //`--------'                 `--------+--------+--------'      `--------------------------'                 `--------'
   ),
 
@@ -364,4 +364,3 @@ void matrix_init_user(void) {
 #endif
   // 薙刀式 end 6
 }
-
