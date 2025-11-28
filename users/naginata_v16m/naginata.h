@@ -74,7 +74,6 @@ void ng_cut(void);
 void ng_copy(void);
 void ng_paste(void);
 void ng_move_cursor_with_repeat(bool, uint8_t, uint8_t);
-void ng_move_cursor_with_ty_repeat(bool shift, uint8_t code, uint8_t count);
 void ng_back_cursor(void);
 void ng_forward_cursor(void);
 void ng_next_line(void);
