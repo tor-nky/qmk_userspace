@@ -1364,8 +1364,11 @@ static void dic_send_string(const char *str) {
         break;
     }
 #   else
-    send_string_P(str);
-    // wait_ms(24); // Linux辞書式
+    if (naginata_config.os == NG_LINUX) {
+        send_string_with_delay_P(str, 8);
+    } else {
+        send_string_P(str);
+    }
     tap_code(KC_SPACE);
     tap_code(KC_ENTER);
 #   endif
