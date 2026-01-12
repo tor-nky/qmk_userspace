@@ -6,7 +6,7 @@ RGBLIGHT_ENABLE = no	# Enable WS2812 RGB underlight.
 RGB_MATRIX_ENABLE = yes
 #OLED_ENABLE		= yes
 OLED_DRIVER		= ssd1306
-OS_DETECTION_ENABLE = yes
+# OS_DETECTION_ENABLE = yes
 
 
 DEBOUNCE_TYPE = sym_defer_pk	# debouncing per key.

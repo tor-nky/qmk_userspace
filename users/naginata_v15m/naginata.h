@@ -19,16 +19,16 @@
 // *************** 薙刀式の設定 ***************
 // 有効にするとスペースキーを離しても文字キーシフト全復活
 // 無効にするとDvorakJ風になる
-// #define NG_USE_SHIFT_WHEN_SPACE_UP
+#define NG_USE_SHIFT_WHEN_SPACE_UP
 
 // 後置シフトの時間制限(ms) ※ 無効にすれば時間無制限
-#define NG_KOUCHI_SHIFT_MS 60
+#define NG_KOUCHI_SHIFT_MS 12
 
 // センターシフトを押しながら2キー以上同時押しをする際の、普通キーの時間制限(ms) ※ 無効にすれば時間無制限
 // #define NG_SHIFTED_DOUJI_MS 50
 
 // センターシフトを単独で押し続けて無効になる時間(ミリ秒)
-// #define SHIFT_ALONE_TIMEOUT_MS 1000
+#define SHIFT_ALONE_TIMEOUT_MS 500
 // ********************************************
 
 // LINUX で編集モードを使うときの間

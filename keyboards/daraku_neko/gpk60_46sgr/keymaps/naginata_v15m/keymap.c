@@ -56,7 +56,7 @@ enum custom_keycodes {
 #define LS_SPC LSFT_T(KC_SPC)
 #define RS_SPC RSFT_T(KC_SPC)
 #define RAI_ENT LT(_RAISE, KC_ENT)
-#define OP_KANA RALT_T(KC_LNG1)
+#define OP_KANA LALT_T(KC_LNG1)
 #define SFT_DEL RSFT_T(KC_DEL)
 // [_LOWER]
 #define ADJ_ENT LT(_ADJUST, KC_PENT)

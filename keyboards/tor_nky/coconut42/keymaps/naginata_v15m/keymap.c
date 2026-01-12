@@ -56,7 +56,7 @@ enum custom_keycodes {
 #define LS_SPC LSFT_T(KC_SPC)
 #define RS_SPC RSFT_T(KC_SPC)
 #define RAI_ENT LT(_RAISE, KC_ENT)
-#define OP_KANA RALT_T(KC_LNG1)
+#define OP_KANA LALT_T(KC_LNG1)
 #define SFT_DEL RSFT_T(KC_DEL)
 // [_LOWER]
 #define ADJ_ENT LT(_ADJUST, KC_PENT)
@@ -74,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, SFT_DEL,
   //|--------+--------+--------+--------+--------+--------|    |--------+--------+--------+--------+--------+--------|
-                                 KC_LGUI,  LOW_BS,  LS_SPC,       RS_SPC, RAI_ENT, KC_RALT
+                                 KC_LGUI,  LOW_BS,  LS_SPC,       RS_SPC, RAI_ENT, KC_LALT
                              //`--------------------------'    `--------------------------'
   ),
 
@@ -130,7 +130,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static bool is_us2jis = false;
+  static bool is_us2jis = true;
 #ifdef CONSOLE_ENABLE
   const uint16_t key_timer = timer_read();  // 時間測定開始;
   uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %i, time: %u, interrupt: %i, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
