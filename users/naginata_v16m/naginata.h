@@ -74,6 +74,7 @@ void ng_cut(void);
 void ng_copy(void);
 void ng_paste(void);
 void ng_move_cursor_with_repeat(bool, uint8_t, uint8_t);
+void ng_move_cursor_with_ty_repeat(bool shift, uint8_t code, uint8_t count);
 void ng_back_cursor(void);
 void ng_forward_cursor(void);
 void ng_next_line(void);
@@ -145,7 +146,7 @@ typedef enum naginata_keycodes {
 #endif
   NG_SHOS,
   NG_KOTI,
-  // NG_TAYO,
+  NG_TAYO,
 } NGKEYS;
 
 // EEPROMに保存する設定
@@ -154,13 +155,13 @@ typedef union {
   struct {
     uint8_t os;
     bool kouchi_shift :1;
-    // bool tategaki :1;
+    bool tategaki :1;
   };
 } user_config_t;
 
 user_config_t naginata_config;
 
-#define NG_SAFE_RANGE (NG_KOTI + 1)
+#define NG_SAFE_RANGE (NG_TAYO + 1)
 
 #define NG_WIN 1
 #define NG_MAC 2

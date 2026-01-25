@@ -193,14 +193,14 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_D|B_F|B_H   , .func = ng_edit_kakutei_end}, // {Enter}{End}
   {.key = B_D|B_F|B_N   , .func = ng_end}, // {End}
   {.key = B_D|B_F|B_U   , .func = ng_edit_delete_to_end}, // +{End}{BS}
-  {.key = B_D|B_F|B_J   , .func = ng_1_up}, // {↑}
-  {.key = B_D|B_F|B_M   , .func = ng_1_down}, // {↓}
+  {.key = B_D|B_F|B_J   , .func = ng_1_back_cursor_r}, // {↑}
+  {.key = B_D|B_F|B_M   , .func = ng_1_forward_cursor_r}, // {↓}
   {.key = B_D|B_F|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
-  {.key = B_D|B_F|B_K   , .func = ng_s1_up}, // +{↑}
-  {.key = B_D|B_F|B_COMM, .func = ng_s1_down}, // +{↓}
+  {.key = B_D|B_F|B_K   , .func = ng_s1_back_cursor_r}, // +{↑}
+  {.key = B_D|B_F|B_COMM, .func = ng_s1_forward_cursor_r}, // +{↓}
   {.key = B_D|B_F|B_O   , .func = ng_delete_with_repeat}, // {Del}
-  {.key = B_D|B_F|B_L   , .func = ng_s7_up}, // +{↑ 7}
-  {.key = B_D|B_F|B_DOT , .func = ng_s7_down}, // +{↓ 7}
+  {.key = B_D|B_F|B_L   , .func = ng_s7_back_cursor_r}, // +{↑ 7}
+  {.key = B_D|B_F|B_DOT , .func = ng_s7_forward_cursor_r}, // +{↓ 7}
   {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // +{Esc 2}
   {.key = B_D|B_F|B_SCLN, .func = ng_katakana}, // ^i
   {.key = B_D|B_F|B_SLSH, .func = ng_hiragana}, // ^u
@@ -222,17 +222,17 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_C|B_V|B_H   , .func = ng_copy}, // ^c
   {.key = B_C|B_V|B_N   , .func = ng_edit_s_end}, // +{End}
   {.key = B_C|B_V|B_U   , .func = ng_cut}, // ^x
-  {.key = B_C|B_V|B_J   , .func = ng_1_left}, // {←}
-  {.key = B_C|B_V|B_M   , .func = ng_s1_left}, // +{←}
+  {.key = B_C|B_V|B_J   , .func = ng_1_next_line_r}, // {←}
+  {.key = B_C|B_V|B_M   , .func = ng_s1_next_line_r}, // +{←}
   {.key = B_C|B_V|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
-  {.key = B_C|B_V|B_K   , .func = ng_1_right}, // {→}
-  {.key = B_C|B_V|B_COMM, .func = ng_s1_right}, // +{→}
+  {.key = B_C|B_V|B_K   , .func = ng_1_previous_line_r}, // {→}
+  {.key = B_C|B_V|B_COMM, .func = ng_s1_previous_line_r}, // +{→}
   {.key = B_C|B_V|B_O   , .func = ng_paste}, // ^v
   {.key = B_C|B_V|B_L   , .func = copy_spc_to_clipboard}, // {改行}{Space}+{Home}^x{BS}
-  {.key = B_C|B_V|B_DOT , .func = ng_s7_left}, // +{← 7}
+  {.key = B_C|B_V|B_DOT , .func = ng_s7_next_line_r}, // +{← 7}
   {.key = B_C|B_V|B_P   , .func = ng_undo}, // ^z
   {.key = B_C|B_V|B_SCLN, .func = ng_redo}, // ^y
-  {.key = B_C|B_V|B_SLSH, .func = ng_s7_right}, // +{→ 7}
+  {.key = B_C|B_V|B_SLSH, .func = ng_s7_previous_line_r}, // +{→ 7}
   {.key = B_M|B_COMM|B_Q, .func = ng_vertical_line}, // ｜{改行}
   {.key = B_M|B_COMM|B_A, .func = ng_left_double_angle_bracket}, // 《{改行}
   {.key = B_M|B_COMM|B_Z, .func = ng_right_double_angle_bracket}, // 》{改行}
@@ -322,8 +322,8 @@ const PROGMEM naginata_keymap ngmap[] = {
 
   // センターシフト
   {.key = B_SHFT|B_Q    , .func = ng_null       },
-  {.key = B_SHFT|B_T    , .func = ng_s1_left    }, // +{←}
-  {.key = B_SHFT|B_Y    , .func = ng_s1_right   }, // +{→}
+  {.key = B_SHFT|B_T    , .func = ng_s1_next_line_r}, // +{←}
+  {.key = B_SHFT|B_Y    , .func = ng_s1_previous_line_r}, // +{→}
   {.key = B_SHFT|B_W    , .func = ng_send_nu    },  // ぬ
   {.key = B_SHFT|B_P    , .func = ng_send_yu    },  // ゆ
   {.key = B_SHFT|B_B    , .func = ng_send_mu    },  // む
@@ -354,8 +354,8 @@ const PROGMEM naginata_keymap ngmap[] = {
 
   // ********** 単打 **********
   // {.key = B_Q           , .func = ng_null       },
-  {.key = B_T           , .func = ng_1_left     }, // {←}
-  {.key = B_Y           , .func = ng_1_right    }, // {→}
+  {.key = B_T           , .func = ng_1_next_line_r}, // {←}
+  {.key = B_Y           , .func = ng_1_previous_line_r}, // {→}
   {.key = B_P           , .func = ng_send_he    },  // へ
   {.key = B_Z           , .func = ng_send_ho    },  // ほ
   {.key = B_A           , .func = ng_send_ro    },  // ろ
@@ -404,6 +404,7 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
       break;
     default:
       naginata_config.os = NG_WIN;
+      naginata_config.tategaki = 1;
       naginata_config.kouchi_shift = 0;
       break;
   }
@@ -435,6 +436,21 @@ static void ng_set_unicode_mode(uint8_t os) {
   }
 }
 
+void tategaki_toggle() {
+  naginata_config.tategaki ^= 1;
+  eeconfig_update_user(naginata_config.raw);
+}
+
+void tategaki_on() {
+  naginata_config.tategaki = 1;
+  // eeconfig_update_user(naginata_config.raw);
+}
+
+void tategaki_off() {
+  naginata_config.tategaki = 0;
+  // eeconfig_update_user(naginata_config.raw);
+}
+
 void kouchi_shift_toggle() {
   naginata_config.kouchi_shift ^= 1;
   eeconfig_update_user(naginata_config.raw);
@@ -456,6 +472,9 @@ void ng_show_os(void) {
       bmp_send_string("ios");
       break;
   }
+  if (!naginata_config.tategaki) {
+    bmp_send_string("/rot");
+  }
   if (naginata_config.kouchi_shift) {
     bmp_send_string("/"SS_TAP(X_KP_PLUS)"kouchi");
   }
@@ -470,6 +489,9 @@ void ng_show_os(void) {
     case NG_LINUX:
       SEND_STRING("linux");
       break;
+  }
+  if (!naginata_config.tategaki) {
+    SEND_STRING("/rot");
   }
   if (naginata_config.kouchi_shift) {
     SEND_STRING("/"SS_TAP(X_KP_PLUS)"kouchi");
@@ -705,6 +727,9 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
         return false;
       case NG_KOTI:
         kouchi_shift_toggle();
+        return false;
+      case NG_TAYO:
+        tategaki_toggle();
         return false;
     }
   }
@@ -1208,6 +1233,19 @@ void ng_paste() {
 #endif
 }
 
+static uint8_t convert_ty(uint8_t code) {
+  if (!naginata_config.tategaki) {
+    switch (code) {
+      case KC_LEFT:   code = KC_DOWN;   break;
+      case KC_DOWN:   code = KC_RIGHT;  break;
+      case KC_RIGHT:  code = KC_UP;     break;
+      case KC_UP:     code = KC_LEFT;   break;
+      default:    break;
+    }
+  }
+  return code;
+}
+
 // リピート対応の方向キー移動
 // リピート中を示す変数を更新
 void ng_move_cursor_with_repeat(bool shift, uint8_t code, uint8_t count) {
@@ -1236,6 +1274,28 @@ void ng_move_cursor_with_repeat(bool shift, uint8_t code, uint8_t count) {
 #else
   register_code(code);
 #endif
+}
+
+// リピート対応の縦横変換を伴う方向キー移動
+void ng_move_cursor_with_ty_repeat(bool shift, uint8_t code, uint8_t count) {
+  ng_move_cursor_with_repeat(shift, convert_ty(code), count);
+}
+
+void ng_back_cursor(void) {
+  ng_1_back_cursor_r();
+  end_repeating_key();
+}
+void ng_forward_cursor(void) {
+  ng_1_forward_cursor_r();
+  end_repeating_key();
+}
+void ng_next_line(void) {
+  ng_1_next_line_r();
+  end_repeating_key();
+}
+void ng_previous_line(void) {
+  ng_1_previous_line_r();
+  end_repeating_key();
 }
 
 void ng_home() {

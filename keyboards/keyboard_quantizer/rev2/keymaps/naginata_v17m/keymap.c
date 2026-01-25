@@ -87,8 +87,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,
         XXXXXXX, XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
         QK_BOOT,  XXXXXXX,XXXXXXX,KC_MPRV,KC_MPLY,KC_MNXT,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,       XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
-        XXXXXXX,   XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX, QK_RBT,NG_KOTI,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,                                          XXXXXXX,XXXXXXX,XXXXXXX,
-        XXXXXXX,    XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,NGSW_WIN,NGSW_MAC,NGSW_LNX,XXXXXXX,NG_SHOS,XXXXXXX,          XXXXXXX,          XXXXXXX,          XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
+        XXXXXXX,   XXXXXXX,XXXXXXX,XXXXXXX,KC_VOLU,KC_BRIU,XXXXXXX, QK_RBT,NG_KOTI,XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,                                          XXXXXXX,XXXXXXX,XXXXXXX,
+        XXXXXXX,    XXXXXXX,XXXXXXX,XXXXXXX,KC_VOLD,KC_BRID,NGSW_WIN,NGSW_MAC,NGSW_LNX,NG_TAYO,NG_SHOS,XXXXXXX,          XXXXXXX,          XXXXXXX,          XXXXXXX,XXXXXXX,XXXXXXX,XXXXXXX,
         XXXXXXX,XXXXXXX,   XXXXXXX,    XXXXXXX,         XXXXXXX,       XXXXXXX,   XXXXXXX,   XXXXXXX,  XXXXXXX,XXXXXXX,  XXXXXXX,  XXXXXXX,XXXXXXX,XXXXXXX,  XXXXXXX,        XXXXXXX
     ),
 
@@ -114,17 +114,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case JP_ZKHK:
-      if (record->event.pressed) {
-        if (naginata_state()) {
-          naginata_off();
-        } else {
-          naginata_on();
-        }
-      }
-      return false;
-  }
+//   switch (keycode) {
+//     case JP_ZKHK:
+//       if (record->event.pressed) {
+//         if (naginata_state()) {
+//           naginata_off();
+//         } else {
+//           naginata_on();
+//         }
+//       }
+//       return false;
+//   }
 
   // 薙刀式 begin 4
   if (!process_naginata(keycode, record))
@@ -239,6 +239,11 @@ static void render_mode(void) {
       case NG_LINUX:
         delete_char(5, 14);
         break;
+    }
+    if (naginata_config.tategaki) {
+      delete_char(128 + 12, 7);
+    } else {
+      delete_char(128 + 5, 7);
     }
     if (!naginata_config.kouchi_shift) {
       delete_char(2 * 128 + 5, 7);

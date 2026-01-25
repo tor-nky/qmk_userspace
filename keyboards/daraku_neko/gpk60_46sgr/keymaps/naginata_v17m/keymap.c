@@ -108,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------+--------|
       RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, KC_VOLU, KC_BRIU,        XXXXXXX,  QK_RBT, NG_KOTI, XXXXXXX,  US_KEY,  NK_OFF, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------+--------|
-      RM_NEXT, RM_HUED, RM_SATD, RM_VALD, KC_VOLD, KC_BRID,       NGSW_WIN,NGSW_MAC,NGSW_LNX, XXXXXXX, NG_SHOS, KC_RSFT,
+      RM_NEXT, RM_HUED, RM_SATD, RM_VALD, KC_VOLD, KC_BRID,       NGSW_WIN,NGSW_MAC,NGSW_LNX, NG_TAYO, NG_SHOS, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------|      |--------+--------+--------+--------+--------+--------|
       XXXXXXX,                   XXXXXXX, _______, XXXXXXX,        XXXXXXX, _______, XXXXXXX,                   XXXXXXX
   //`--------'                 `--------+--------+--------'      `--------------------------'                 `--------'
@@ -249,9 +249,13 @@ void matrix_init_user(void) {
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
 layer_state_t layer_state_set_user(layer_state_t state) {
   if (naginata_state()) {
-    rgblight_sethsv_noeeprom(HSV_GREEN);
+    if (naginata_config.tategaki) {
+      rgblight_sethsv_noeeprom(HSV_RED);
+    } else {
+      rgblight_sethsv_noeeprom(HSV_CYAN);
+    }
   } else {
-    rgblight_sethsv(HSV_TURQUOISE);
+    rgblight_sethsv(HSV_GOLD);
   }
   return state;
 }

@@ -108,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|    |--------+--------+--------+--------+--------+--------|
       RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, KC_VOLU, KC_BRIU,      XXXXXXX,  QK_RBT, NG_KOTI, XXXXXXX,  US_KEY,  NK_OFF,
   //|--------+--------+--------+--------+--------+--------|    |--------+--------+--------+--------+--------+--------|
-      RM_NEXT, RM_HUED, RM_SATD, RM_VALD, KC_VOLD, KC_BRID,     NGSW_WIN,NGSW_MAC,NGSW_LNX, XXXXXXX, NG_SHOS, KC_RSFT,
+      RM_NEXT, RM_HUED, RM_SATD, RM_VALD, KC_VOLD, KC_BRID,     NGSW_WIN,NGSW_MAC,NGSW_LNX, NG_TAYO, NG_SHOS, KC_RSFT,
   //|--------+--------+--------+--------+--------+--------|    |--------+--------+--------+--------+--------+--------|
                                  XXXXXXX, _______, XXXXXXX,      XXXXXXX, _______, XXXXXXX
                              //`--------------------------'    `--------------------------'
@@ -130,7 +130,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static bool is_us2jis = false;
+  static bool is_us2jis = true;
 #ifdef CONSOLE_ENABLE
   const uint16_t key_timer = timer_read();  // 時間測定開始;
   uprintf("KL: kc: 0x%04X, col: %u, row: %u, pressed: %i, time: %u, interrupt: %i, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
@@ -305,6 +305,11 @@ static void render_mode(void) {
       case NG_LINUX:
         delete_char(5, 14);
         break;
+    }
+    if (naginata_config.tategaki) {
+      delete_char(128 + 12, 7);
+    } else {
+      delete_char(128 + 5, 7);
     }
     if (!naginata_config.kouchi_shift) {
       delete_char(2 * 128 + 5, 7);

@@ -228,6 +228,18 @@ void ng_ellipsis(void); // ……{改行}
 void ng_bar(void); // ――{改行}
 void ng_edit_separate_line(void); // 　　　×　　　×　　　×{改行 2}
 
+void ng_1_back_cursor_r(void); // {↑}
+void ng_s1_back_cursor_r(void); // +{↑}
+void ng_s7_back_cursor_r(void); // +{↑ 7}
+void ng_1_forward_cursor_r(void); // {↓}
+void ng_s1_forward_cursor_r(void); // +{↓}
+void ng_s7_forward_cursor_r(void); // +{↓ 7}
+void ng_1_previous_line_r(void); // {→}
+void ng_s1_previous_line_r(void); // +{→}
+void ng_s7_previous_line_r(void); // +{→ 7}
+void ng_1_next_line_r(void); // {←}
+void ng_s1_next_line_r(void); // +{←}
+void ng_s7_next_line_r(void); // +{← 7}
 void ng_1_up(void); // {↑}
 void ng_s1_up(void); // +{↑}
 void ng_s7_up(void); // +{↑ 7}

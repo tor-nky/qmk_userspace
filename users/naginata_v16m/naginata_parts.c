@@ -1535,6 +1535,43 @@ void ng_edit_separate_line(void) { // 　　　×　　　×　　　×{改行 2
 #endif
 }
 
+void ng_1_back_cursor_r(void) { // {↑}
+    ng_move_cursor_with_ty_repeat(false, KC_UP, 1);
+}
+void ng_s1_back_cursor_r(void) { // +{↑}
+    ng_move_cursor_with_ty_repeat(true, KC_UP, 1);
+}
+void ng_s7_back_cursor_r(void) { // +{↑ 7}
+    ng_move_cursor_with_ty_repeat(true, KC_UP, 7);
+}
+void ng_1_forward_cursor_r(void) { // {↓}
+    ng_move_cursor_with_ty_repeat(false, KC_DOWN, 1);
+}
+void ng_s1_forward_cursor_r(void) { // +{↓}
+    ng_move_cursor_with_ty_repeat(true, KC_DOWN, 1);
+}
+void ng_s7_forward_cursor_r(void) { // +{↓ 7}
+    ng_move_cursor_with_ty_repeat(true, KC_DOWN, 7);
+}
+void ng_1_previous_line_r(void) { // {→}
+    ng_move_cursor_with_ty_repeat(false, KC_RIGHT, 1);
+}
+void ng_s1_previous_line_r(void) { // +{→}
+    ng_move_cursor_with_ty_repeat(true, KC_RIGHT, 1);
+}
+void ng_s7_previous_line_r(void) { // +{→ 7}
+    ng_move_cursor_with_ty_repeat(true, KC_RIGHT, 7);
+}
+void ng_1_next_line_r(void) { // {←}
+    ng_move_cursor_with_ty_repeat(false, KC_LEFT, 1);
+}
+void ng_s1_next_line_r(void) { // +{←}
+    ng_move_cursor_with_ty_repeat(true, KC_LEFT, 1);
+}
+void ng_s7_next_line_r(void) { // +{← 7}
+    ng_move_cursor_with_ty_repeat(true, KC_LEFT, 7);
+}
+
 void ng_1_up(void) { // {↑}
     ng_move_cursor_with_repeat(false, KC_UP, 1);
 }
@@ -1629,12 +1666,12 @@ void ng_edit_togaki(void) { // {Home}{改行}{Space 3}{←}
     case NG_LINUX:
         ng_home();
         bmp_send_string("\n"SS_DELAY(BMP_DELAY)"   ");
-        ng_1_left();
+        ng_next_line();
         break;
     default:
         ng_home();
         bmp_send_string("\n   ");
-        ng_1_left();
+        ng_next_line();
         break;
     }
 #else
@@ -1643,7 +1680,7 @@ void ng_edit_togaki(void) { // {Home}{改行}{Space 3}{←}
     tap_code(KC_SPACE);
     tap_code(KC_SPACE);
     tap_code(KC_SPACE);
-    ng_1_left();
+    ng_next_line();
 #endif
 }
 void ng_edit_serifu(void) { // {Home}{改行}{Space 1}{←}
@@ -1652,53 +1689,53 @@ void ng_edit_serifu(void) { // {Home}{改行}{Space 1}{←}
     case NG_LINUX:
         ng_home();
         bmp_send_string("\n"SS_DELAY(BMP_DELAY)" ");
-        ng_1_left();
+        ng_next_line();
         break;
     default:
         ng_home();
         bmp_send_string("\n ");
-        ng_1_left();
+        ng_next_line();
         break;
     }
 #else
     ng_home();
     tap_code_delay(KC_ENTER, 16);
     tap_code(KC_SPACE);
-    ng_1_left();
+    ng_next_line();
 #endif
 }
 void ng_edit_togaki_zengyo(void) { // {Home}{→}{End}{Del 4}{←}
 #if defined(NG_BMP)
     ng_home();
-    ng_1_right();
+    ng_previous_line();
     ng_end();
     bmp_send_string(SS_TAP(X_DELETE)SS_TAP(X_DELETE)SS_TAP(X_DELETE)SS_TAP(X_DELETE));
-    ng_1_left();
+    ng_next_line();
 #else
     ng_home();
-    ng_1_right();
+    ng_previous_line();
     ng_end();
     tap_code(KC_DELETE);
     tap_code(KC_DELETE);
     tap_code(KC_DELETE);
     tap_code(KC_DELETE);
-    ng_1_left();
+    ng_next_line();
 #endif
 }
 void ng_edit_serifu_zengyo(void) { // {Home}{→}{End}{Del 2}{←}
 #if defined(NG_BMP)
     ng_home();
-    ng_1_right();
+    ng_previous_line();
     ng_end();
     bmp_send_string(SS_TAP(X_DELETE)SS_TAP(X_DELETE));
-    ng_1_left();
+    ng_next_line();
 #else
     ng_home();
-    ng_1_right();
+    ng_previous_line();
     ng_end();
     tap_code(KC_DELETE);
     tap_code(KC_DELETE);
-    ng_1_left();
+    ng_next_line();
 #endif
 }
 
