@@ -1084,7 +1084,7 @@ void ng_space_or_enter(void) {
 #if defined(NG_BMP)
   char str[4] = "\1\1\0\0";
   str[2] = ng_center_keycode;
-  if (center_shift_count) {
+  if (center_shift_count > 1) {
     bmp_send_string(SS_DOWN(X_LSFT));
     bmp_send_string(str); // SS_TAP(ng_center_keycode);
     bmp_send_string(SS_UP(X_LSFT));
