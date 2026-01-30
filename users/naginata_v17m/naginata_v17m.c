@@ -1029,17 +1029,26 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     waiting_keys[waiting_count++] = recent_key;
   // キーを離した時
   } else if (!pressing) {
-    pressed_key &= ~recent_key; // キーを取り除く
 #if defined(NG_USE_SHIFT_WHEN_SPACE_UP)
+    pressed_key &= ~recent_key; // キーを取り除く
     if (waiting_count || pressed_key & B_SHFT || !pressed_key) {
-#else
-    if (waiting_count || pressed_key & B_SHFT || !pressed_key || recent_key == B_SHFT) {
-#endif
       reuse_key_state = Off;
     // スペースを押していないなら次回、キー再利用可能
     } else {
       reuse_key_state = Run;
     }
+#else
+    reuse_key_state = Off;
+    if (recent_key == B_SHFT) {
+      pressed_key = 0;
+    } else {
+      pressed_key &= ~recent_key; // キーを取り除く
+      if (!(waiting_count || pressed_key & B_SHFT || !pressed_key)) {
+        // スペースを押していないなら次回、キー再利用可能
+        reuse_key_state = Run;
+      }
+    }
+#endif
   }
   return (recent_key == 0);
 }
