@@ -728,7 +728,7 @@ void ng_send_tsa(void) {    // つぁ
 #   else
 // 文字列を高速出力
 static void ng_send_kana(const char *str) {
-    // Macでは押していないカーソルキーがなぜか入力されることがあるので、普通の方法で出力
+    // Macでは、押した順番がABC順に並び替えられてしまうので普通の方法で出力
     if (naginata_config.os == NG_MAC) {
         send_string_P(str);
         return;
