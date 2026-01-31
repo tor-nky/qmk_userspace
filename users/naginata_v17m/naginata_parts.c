@@ -726,7 +726,7 @@ void ng_send_tsa(void) {    // つぁ
 #   if defined(NG_BMP)
 #       define NG_SEND_KANA(string) bmp_send_string(string)
 #   else
-// 文字列を少し速く出力
+// 文字列を高速出力
 static void ng_send_kana(const char *str) {
     // Macでは押していないカーソルキーがなぜか入力されることがあるので、普通の方法で出力
     if (naginata_config.os == NG_MAC) {
@@ -734,27 +734,30 @@ static void ng_send_kana(const char *str) {
         return;
     }
 
-    // 取り出し
-    char ascii_code = pgm_read_byte(str++);
-    while (ascii_code != '\0') {
-        // 出力バッファを空にする
-        clear_keys();
-        // 次のを取り出し
-        char next = pgm_read_byte(str++);
-        // 出力
-        {
+    // 出力バッファを空にする
+    clear_keys();
+
+    {
+        uint8_t ascii_code;
+        int8_t i = 0;
+        // 取り出し
+        while ((ascii_code = pgm_read_byte(str++)) != '\0') {
             // アスキーコードからキーコードに変換
-            uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-            // 同じキーの連続
-            if (ascii_code == next) {
-                tap_code(keycode);
-            } else {
-                register_code(keycode);
+            uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[ascii_code]);
+            // 出力バッファがいっぱいか、未出力の同じキーがあれば、出力して空にする
+            if (i == KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
+                send_keyboard_report();
+                clear_keyboard_but_mods();  // 押されている修飾キー以外の全てのキーをクリア
+                i = 0;
             }
+            // バッファにためる
+            add_key(keycode);
+            i++;
         }
-        // 更新
-        ascii_code = next;
     }
+
+    // 出力
+    send_keyboard_report();
     // 最後にすべてのキーを離す
     clear_keyboard_but_mods();  // 押されている修飾キー以外の全てのキーをクリア
 }
