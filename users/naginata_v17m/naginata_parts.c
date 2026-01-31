@@ -752,6 +752,12 @@ static void ng_send_kana(const char *str) {
             }
             // バッファにためる
             add_key(keycode);
+#ifdef NKRO_ENABLE
+            // NKROがオンの時は、押した順番がABC順に並び替えられてしまわないように都度出力
+            if (host_can_send_nkro() && keymap_config.nkro) {
+                send_keyboard_report();
+            }
+#endif
             i++;
         }
     }
