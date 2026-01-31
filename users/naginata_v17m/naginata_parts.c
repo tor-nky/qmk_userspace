@@ -736,19 +736,17 @@ static void ng_send_kana(const char *str) {
 
     // 出力バッファを空にする
     clear_keys();
-
+    // 文字を取り出しながら最大限まとめて出力
     {
         uint8_t ascii_code;
-        int8_t i = 0;
-        // 取り出し
-        while ((ascii_code = pgm_read_byte(str++)) != '\0') {
+        for (int8_t i = 0; (ascii_code = pgm_read_byte(str++)) != '\0'; i++) {
             // アスキーコードからキーコードに変換
             uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[ascii_code]);
-            // 出力バッファがいっぱいか、未出力の同じキーがあれば、出力して空にする
+            // バッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
             if (i == KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
-                send_keyboard_report();
-                clear_keyboard_but_mods();  // 押されている修飾キー以外の全てのキーをクリア
                 i = 0;
+                send_keyboard_report();
+                clear_keyboard_but_mods();
             }
             // バッファにためる
             add_key(keycode);
@@ -758,13 +756,9 @@ static void ng_send_kana(const char *str) {
                 send_keyboard_report();
             }
 #endif
-            i++;
         }
     }
-
-    // 出力
     send_keyboard_report();
-    // 最後にすべてのキーを離す
     clear_keyboard_but_mods();  // 押されている修飾キー以外の全てのキーをクリア
 }
 #       define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
