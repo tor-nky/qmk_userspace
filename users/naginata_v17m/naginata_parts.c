@@ -744,13 +744,13 @@ static void ng_send_kana(const char *str) {
     clear_keys();
     // 文字を取り出しながら最大限まとめて出力
     {
-        uint8_t ascii_code;
+        char ascii_code;
 #ifdef NKRO_ENABLE
         uint8_t last_keycode = 0;
 #endif
         for (int8_t i = 0; (ascii_code = pgm_read_byte(str++)) != 0; i++) {
             // アスキーコードからキーコードに変換
-            uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[ascii_code]);
+            uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
 #ifdef NKRO_ENABLE
             // NKROがオンの時はアスキー順の若いキーコードがきたときに、
             // そうでなくてもバッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする

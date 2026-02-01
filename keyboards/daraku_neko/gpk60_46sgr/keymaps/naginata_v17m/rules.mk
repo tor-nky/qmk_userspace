@@ -7,4 +7,4 @@
 OS_DETECTION_ENABLE = yes
 DEBOUNCE_TYPE = sym_defer_pk	# debouncing per key.
 
-# CONSOLE_ENABLE = yes
+CONSOLE_ENABLE = yes
