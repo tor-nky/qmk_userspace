@@ -727,6 +727,12 @@ void ng_send_tsa(void) {    // つぁ
 #       define NG_SEND_KANA(string) bmp_send_string(string)
 #   else
 // 文字列を高速出力
+// 出力できる文字は、英小文字、数字、空白、一部の記号、一部の制御文字に限られます
+//      \b\t\n ,-./0123456789;abcdefghijklmnopqrstuvwxyz
+// 出力原理:
+//    Win, Linux で 6KRO のとき、押したキーを最大6個ためて一度に送出し、すべて離したことを一度に出力します（最速）
+//                  NKRO のとき、アスキー順にキーを押している間は最大6個ためて一度に送出し、すべて離したことを一度に出力します（中間）
+//    Mac では、キーを1個押すごと、1個離すごとにそれぞれ出力します（普通の方法）
 static void ng_send_kana(const char *str) {
     // Macでは押していないカーソルキーがなぜか入力されることがあったので、普通の方法で出力
     if (naginata_config.os == NG_MAC) {
