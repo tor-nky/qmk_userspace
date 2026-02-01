@@ -749,10 +749,19 @@ static void ng_send_kana(const char *str) {
         // アスキーコードからキーコードに変換
         uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
 #ifdef NKRO_ENABLE
-        // NKROがオンの時はアスキー順の若いキーコードがきたときに、
-        // そうでなくてもバッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
-        if ((host_can_send_nkro() && keymap_config.nkro && keycode <= last_keycode)
-            || i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
+        if (host_can_send_nkro() && keymap_config.nkro) {
+            // 未出力の同じキー
+            if (is_key_pressed(keycode)) {
+                i = 0;
+                send_keyboard_report();
+                clear_keys();
+                send_keyboard_report();
+            // NKROがオンの時はアスキー順の若いキーコードがきたときに一度出力
+            } else if (keycode < last_keycode) {
+                send_keyboard_report();
+            }
+        // バッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
+        } else if (i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
 #else
         // バッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
         if (i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
