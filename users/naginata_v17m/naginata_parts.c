@@ -728,7 +728,7 @@ void ng_send_tsa(void) {    // つぁ
 #   else
 // 文字列を高速出力
 static void ng_send_kana(const char *str) {
-    // Macでは、押した順番がABC順に並び替えられてしまうので普通の方法で出力
+    // Macでは押していないカーソルキーがなぜか入力されることがあったので、普通の方法で出力
     if (naginata_config.os == NG_MAC) {
         send_string_P(str);
         return;
@@ -739,11 +739,21 @@ static void ng_send_kana(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
     {
         uint8_t ascii_code;
-        for (int8_t i = 0; (ascii_code = pgm_read_byte(str++)) != '\0'; i++) {
+#ifdef NKRO_ENABLE
+        uint8_t last_keycode = 0;
+#endif
+        for (int8_t i = 0; (ascii_code = pgm_read_byte(str++)) != 0; i++) {
             // アスキーコードからキーコードに変換
             uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[ascii_code]);
+#ifdef NKRO_ENABLE
+            // NKROがオンの時はアスキー順の若いキーコードがきたときに、
+            // そうでなくてもバッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
+            if ((host_can_send_nkro() && keymap_config.nkro && keycode <= last_keycode)
+                || i == KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
+#else
             // バッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
             if (i == KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
+#endif
                 i = 0;
                 send_keyboard_report();
                 clear_keyboard_but_mods();
@@ -751,10 +761,7 @@ static void ng_send_kana(const char *str) {
             // バッファにためる
             add_key(keycode);
 #ifdef NKRO_ENABLE
-            // NKROがオンの時は、押した順番がABC順に並び替えられてしまわないように都度出力
-            if (host_can_send_nkro() && keymap_config.nkro) {
-                send_keyboard_report();
-            }
+            last_keycode = keycode;
 #endif
         }
     }
