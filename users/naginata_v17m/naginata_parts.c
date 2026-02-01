@@ -780,6 +780,12 @@ static void ng_send_kana(const char *str) {
 void ng_send_iroha(void) {  // いろは歌
     NG_SEND_KANA("irohanihohetotirinuruwowakayotaresotunenaramuuwyinookuyamakehukoeteasakiyumemisiwyehimosesu");
 }
+void ng_send_abc(void) {
+    NG_SEND_KANA("abcdefghijklmnopqrstuvwxyz");
+}
+void ng_send_zyx(void) {
+    NG_SEND_KANA("zyxwvutsrqponmlkjihgfedcba");
+}
 
 // アルファベット
 void ng_send_a(void) {  // あ
