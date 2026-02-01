@@ -21,8 +21,8 @@ void ng_null(void);
 // テスト用
 #if !defined(__AVR__)
 void ng_send_iroha(void);   // いろは歌
-void ng_send_abc(void);
-void ng_send_zyx(void);
+void ng_send_abc(void);     // abc順
+void ng_send_zyx(void);     // abcの逆順
 #endif
 
 // アルファベット

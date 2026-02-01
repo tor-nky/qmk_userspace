@@ -740,39 +740,37 @@ static void ng_send_kana(const char *str) {
         return;
     }
 
-    // 出力バッファを空にする
-    clear_keys();
     // 文字を取り出しながら最大限まとめて出力
-    {
-        char ascii_code;
+    char ascii_code;
 #ifdef NKRO_ENABLE
-        uint8_t last_keycode = 0;
+    uint8_t last_keycode = 0;
 #endif
-        for (int8_t i = 0; (ascii_code = pgm_read_byte(str++)) != 0; i++) {
-            // アスキーコードからキーコードに変換
-            uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
+    for (uint8_t i = has_anykey(); (ascii_code = pgm_read_byte(str++)) != 0; i++) {
+        // アスキーコードからキーコードに変換
+        uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
 #ifdef NKRO_ENABLE
-            // NKROがオンの時はアスキー順の若いキーコードがきたときに、
-            // そうでなくてもバッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
-            if ((host_can_send_nkro() && keymap_config.nkro && keycode <= last_keycode)
-                || i == KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
+        // NKROがオンの時はアスキー順の若いキーコードがきたときに、
+        // そうでなくてもバッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
+        if ((host_can_send_nkro() && keymap_config.nkro && keycode <= last_keycode)
+            || i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
 #else
-            // バッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
-            if (i == KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
+        // バッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
+        if (i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
 #endif
-                i = 0;
-                send_keyboard_report();
-                clear_keyboard_but_mods();
-            }
-            // バッファにためる
-            add_key(keycode);
-#ifdef NKRO_ENABLE
-            last_keycode = keycode;
-#endif
+            i = 0;
+            send_keyboard_report();
+            clear_keys();
+            send_keyboard_report();
         }
+        // バッファにためる
+        add_key(keycode);
+#ifdef NKRO_ENABLE
+        last_keycode = keycode;
+#endif
     }
     send_keyboard_report();
-    clear_keyboard_but_mods();  // 押されている修飾キー以外の全てのキーをクリア
+    clear_keys();
+    send_keyboard_report();
 }
 #       define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
 #   endif
@@ -780,10 +778,10 @@ static void ng_send_kana(const char *str) {
 void ng_send_iroha(void) {  // いろは歌
     NG_SEND_KANA("irohanihohetotirinuruwowakayotaresotunenaramuuwyinookuyamakehukoeteasakiyumemisiwyehimosesu");
 }
-void ng_send_abc(void) {
+void ng_send_abc(void) {    // abc順
     NG_SEND_KANA("abcdefghijklmnopqrstuvwxyz");
 }
-void ng_send_zyx(void) {
+void ng_send_zyx(void) {    // abcの逆順
     NG_SEND_KANA("zyxwvutsrqponmlkjihgfedcba");
 }
 
