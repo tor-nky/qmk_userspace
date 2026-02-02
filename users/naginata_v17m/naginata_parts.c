@@ -1105,19 +1105,19 @@ void ng_send_xi(void) {     // ぃ
     NG_SEND_KANA("xi");
 }
 void ng_send_xu(void) {     // ぅ
-    NG_SEND_KANA("xu");
+    NG_SEND_KANA("lu");
 }
 void ng_send_xe(void) {     // ぇ
     NG_SEND_KANA("xe");
 }
 void ng_send_xo(void) {     // ぉ
-    NG_SEND_KANA("xo");
+    NG_SEND_KANA("lo");
 }
 void ng_send_xwa(void) {    // ゎ
-    NG_SEND_KANA("xwa");
+    NG_SEND_KANA("lwa");
 }
 void ng_send_xtu(void) {    // っ
-    NG_SEND_KANA("xtu");
+    NG_SEND_KANA("ltu");
 }
 void ng_send_xke(void) {    // ヶ
     NG_SEND_KANA("xke");
@@ -1167,10 +1167,10 @@ void ng_send_tya(void) {    // ちゃ
     NG_SEND_KANA("tya");
 }
 void ng_send_tyu(void) {    // ちゅ
-    NG_SEND_KANA("tyu");
+    NG_SEND_KANA("chu");
 }
 void ng_send_tyo(void) {    // ちょ
-    NG_SEND_KANA("tyo");
+    NG_SEND_KANA("cho");
 }
 void ng_send_dya(void) {    // ぢゃ
     NG_SEND_KANA("dya");
