@@ -734,17 +734,9 @@ void ng_send_tsa(void) {    // つぁ
 //                  NKRO のとき、アスキー順にキーを押している間は最大6個ためて一度に送出し、すべて離したことを一度に出力します（中間）
 //    Mac では、キーを1個押すごと、1個離すごとにそれぞれ出力します（普通の方法）
 static void ng_send_kana(const char *str) {
-    // Macでは押していないカーソルキーがなぜか入力されることがあったので、普通の方法で出力
-    if (naginata_config.os == NG_MAC) {
-        send_string_P(str);
-        return;
-    }
-
     // 文字を取り出しながら最大限まとめて出力
     char ascii_code;
-#ifdef NKRO_ENABLE
     uint8_t last_keycode = 0;
-#endif
     for (uint8_t i = has_anykey(); (ascii_code = pgm_read_byte(str++)) != 0; i++) {
         // アスキーコードからキーコードに変換
         uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
@@ -770,12 +762,12 @@ static void ng_send_kana(const char *str) {
             send_keyboard_report();
             clear_keys();
             send_keyboard_report();
+        } else if (naginata_config.os == NG_MAC && keycode < last_keycode) {
+            send_keyboard_report();
         }
         // バッファにためる
         add_key(keycode);
-#ifdef NKRO_ENABLE
         last_keycode = keycode;
-#endif
     }
     send_keyboard_report();
     clear_keys();
