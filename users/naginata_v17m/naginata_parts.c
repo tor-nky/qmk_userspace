@@ -730,9 +730,9 @@ void ng_send_tsa(void) {    // つぁ
 // 出力できる文字は、英小文字、数字、空白、一部の記号、一部の制御文字に限られます
 //      \b\t\n ,-./0123456789;abcdefghijklmnopqrstuvwxyz
 // 出力原理:
-//    Win, Linux で 6KRO のとき、押したキーを最大6個ためて一度に送出し、すべて離したことを一度に出力します（最速）
-//                  NKRO のとき、アスキー順にキーを押している間は最大6個ためて一度に送出し、すべて離したことを一度に出力します（中間）
-//    Mac では、キーを1個押すごと、1個離すごとにそれぞれ出力します（普通の方法）
+//    6KRO のとき、押したキーを最大6個ためて一度に送出し、離すのも一度に出力（最速）
+//      （Macではアスキー順にキーを押している限りためる）
+//    NKRO のとき、アスキー順にキーを押している限りためて一度に送出し、離すのも一度に出力（やや高速）
 static void ng_send_kana(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
     char ascii_code;
@@ -748,16 +748,14 @@ static void ng_send_kana(const char *str) {
                 send_keyboard_report();
                 clear_keys();
                 send_keyboard_report();
-            // NKROがオンの時はアスキー順の若いキーコードがきたときに一度出力
+            // アスキー順の若いキーコードがきたら区切りの出力
             } else if (keycode < last_keycode) {
                 send_keyboard_report();
             }
-        // バッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
-        } else if (i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
-#else
-        // バッファがいっぱいか、未出力の同じキーがあれば、出力してバッファを空にする
-        if (i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
+        // バッファがいっぱいか、未出力の同じキーがきたら出力しバッファを空に
+        } else
 #endif
+        if (i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
             i = 0;
             send_keyboard_report();
             clear_keys();
