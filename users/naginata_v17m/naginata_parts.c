@@ -756,7 +756,8 @@ static void ng_send_kana(const char *str) {
         ascii_code = next;
     }
     // 最後にすべてのキーを離す
-    clear_keyboard_but_mods();  // 押されている修飾キー以外の全てのキーをクリア
+    clear_keys();
+    send_keyboard_report();
 }
 #       define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
 #   endif
