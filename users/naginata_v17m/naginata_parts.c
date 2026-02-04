@@ -737,6 +737,10 @@ static void ng_send_kana(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
     char ascii_code;
     uint8_t last_keycode = 0;
+#ifdef CONSOLE_ENABLE
+    uint keys = 0;
+    uint times = 0;
+#endif
     for (uint8_t i = has_anykey(); (ascii_code = pgm_read_byte(str++)) != 0; i++) {
         // アスキーコードからキーコードに変換
         uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
@@ -748,9 +752,17 @@ static void ng_send_kana(const char *str) {
                 send_keyboard_report();
                 clear_keys();
                 send_keyboard_report();
+#   ifdef CONSOLE_ENABLE
+                times += 2;
+                print("  ");
+#   endif
             // アスキー順の若いキーコードがきたら区切りの出力
             } else if (keycode < last_keycode) {
                 send_keyboard_report();
+#   ifdef CONSOLE_ENABLE
+                times++;
+                print(" ");
+#   endif
             }
         // バッファがいっぱいか、未出力の同じキーがきたら出力しバッファを空に
         } else
@@ -760,16 +772,31 @@ static void ng_send_kana(const char *str) {
             send_keyboard_report();
             clear_keys();
             send_keyboard_report();
+#ifdef CONSOLE_ENABLE
+            times += 2;
+            print("  ");
+#endif
         } else if (naginata_config.os == NG_MAC && keycode < last_keycode) {
             send_keyboard_report();
+#   ifdef CONSOLE_ENABLE
+            times++;
+            print(" ");
+#   endif
         }
         // バッファにためる
         add_key(keycode);
         last_keycode = keycode;
+#ifdef CONSOLE_ENABLE
+        keys++;
+        uprintf("%c", ascii_code);
+#endif
     }
     send_keyboard_report();
     clear_keys();
     send_keyboard_report();
+#ifdef CONSOLE_ENABLE
+    uprintf("\n%u key(s) send in %u ms.\n", keys, times + 2);
+#endif
 }
 #       define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
 #   endif
