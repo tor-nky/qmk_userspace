@@ -911,13 +911,13 @@ void ng_send_sa(void) { // さ
     NG_SEND_KANA("sa");
 }
 void ng_send_si(void) { // し
-    NG_SEND_KANA("si");
+    NG_SEND_KANA("si"); // ci は Mac日本語入力 で使えない
 }
 void ng_send_su(void) { // す
     NG_SEND_KANA("su");
 }
 void ng_send_se(void) { // せ
-    NG_SEND_KANA("se");
+    NG_SEND_KANA("se"); // ce は Mac日本語入力 で使えない
 }
 void ng_send_so(void) { // そ
     NG_SEND_KANA("so");
@@ -926,7 +926,7 @@ void ng_send_ta(void) { // た
     NG_SEND_KANA("ta");
 }
 void ng_send_ti(void) { // ち
-    NG_SEND_KANA("ti");
+    NG_SEND_KANA("chi");
 }
 void ng_send_tu(void) { // つ
     NG_SEND_KANA("tu");
@@ -1339,7 +1339,7 @@ void ng_send_qo(void) {     // くぉ
     NG_SEND_KANA("qo");
 }
 void ng_send_kuxwa(void) {  // くゎ
-    NG_SEND_KANA("kuxwa");
+    NG_SEND_KANA("kulwa");  // kuxwa の高速入力は Macかわせみ が誤入力する
 }
 void ng_send_gwa(void) {    // ぐぁ
     NG_SEND_KANA("gwa");
@@ -1354,7 +1354,7 @@ void ng_send_gwo(void) {    // ぐぉ
     NG_SEND_KANA("gwo");
 }
 void ng_send_guxwa(void) {  // ぐゎ
-    NG_SEND_KANA("guxwa");
+    NG_SEND_KANA("gulwa");  // guxwa の高速入力は Macかわせみ が誤入力する
 }
 void ng_send_tsa(void) {    // つぁ
     NG_SEND_KANA("tsa");
