@@ -739,7 +739,7 @@ static void ng_send_kana(const char *str) {
     uint8_t last_keycode = 0;
 #ifdef CONSOLE_ENABLE
     uint keys = 0;
-    uint times = 0;
+    uint ms = 0;
 #endif
     for (uint8_t i = has_anykey(); (ascii_code = pgm_read_byte(str++)) != 0; i++) {
         // アスキーコードからキーコードに変換
@@ -753,14 +753,14 @@ static void ng_send_kana(const char *str) {
                 clear_keys();
                 send_keyboard_report();
 #   ifdef CONSOLE_ENABLE
-                times += 2;
+                ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
                 print("  ");
 #   endif
             // アスキー順の若いキーコードがきたら区切りの出力
             } else if (keycode < last_keycode) {
                 send_keyboard_report();
 #   ifdef CONSOLE_ENABLE
-                times++;
+                ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
                 print(" ");
 #   endif
             }
@@ -773,13 +773,13 @@ static void ng_send_kana(const char *str) {
             clear_keys();
             send_keyboard_report();
 #ifdef CONSOLE_ENABLE
-            times += 2;
+            ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
             print("  ");
 #endif
         } else if (naginata_config.os == NG_MAC && keycode < last_keycode) {
             send_keyboard_report();
 #   ifdef CONSOLE_ENABLE
-            times++;
+            ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
             print(" ");
 #   endif
         }
@@ -795,7 +795,8 @@ static void ng_send_kana(const char *str) {
     clear_keys();
     send_keyboard_report();
 #ifdef CONSOLE_ENABLE
-    uprintf("\n%u key(s) send in %u ms.\n", keys, times + 2);
+    ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
+    uprintf("\nSend %u key(s) in %u ms.\n", keys, ms);
 #endif
 }
 #       define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
