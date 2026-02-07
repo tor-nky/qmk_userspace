@@ -731,12 +731,10 @@ void ng_send_tsa(void) {    // つぁ
 //      \b\t\n ,-./0123456789;abcdefghijklmnopqrstuvwxyz
 // 出力原理:
 //    6KRO のとき、押したキーを最大6個ためて一度に送出し、離すのも一度に出力（最速）
-//      （Macではアスキー順にキーを押している限りためる）
+//      Macではアスキー順にキーを押している限りためる（やや高速）
 //    NKRO のとき、アスキー順にキーを押している限りためて一度に送出し、離すのも一度に出力（やや高速）
 static void ng_send_kana(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
-    char ascii_code;
-    uint8_t last_keycode = 0;
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
         // is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.26.x 以前
@@ -747,39 +745,52 @@ static void ng_send_kana(const char *str) {
         uint keys = 0;
         uint ms = 0;
     #endif
-    for (uint8_t i = has_anykey(); (ascii_code = pgm_read_byte(str++)) != 0; i++) {
-        // アスキーコードからキーコードに変換
-        uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-        // バッファがいっぱいか、未出力の同じキーがきたら出力しバッファを空に
-        if (is_key_pressed(keycode) || (!is_nkro && i >= KEYBOARD_REPORT_KEYS)) {
-            i = 0;
-            send_keyboard_report();
-            clear_keys();
-            send_keyboard_report();
+
+    while (pgm_read_byte(str) != 0) {
+        uint8_t len = 0;
+        {
+            // すでにバッファに入っている文字や、NKROやMacのアスキー順にならない文字がくるまで何文字あるか探索
+            const char *str_copy = str;
+            char ascii_code;
+            uint8_t last_keycode = 0;
+            for ( ; (ascii_code = pgm_read_byte(str_copy++)) != 0; len++) {
+                // アスキーコードからキーコードに変換
+                uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
+                // バッファにあるのと同じキー
+                if (is_key_pressed(keycode)
+                    || ((is_nkro || naginata_config.os == NG_MAC) && keycode < last_keycode)
+                    || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)) {
+                        break;
+                }
+                last_keycode = keycode;
+            }
+        }
+        clear_keys();
+        for (uint8_t i = 0; i < len; i++, str++) {
+            char ascii_code = pgm_read_byte(str);
+            // アスキーコードからキーコードに変換
+            uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
+            // バッファに入れてみたら同じキーがあった
+            if (i > 0 && is_key_pressed(keycode)) {
+                break;
+            }
+            // バッファにためる
+            add_key(keycode);
             #ifdef CONSOLE_ENABLE
-                ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
-                print("  ");
-            #endif
-        } else if ((is_nkro || naginata_config.os == NG_MAC) && keycode < last_keycode) {
-            send_keyboard_report();
-            #ifdef CONSOLE_ENABLE
-                ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
-                print(" ");
+                keys++;
+                uprintf("%c", ascii_code);
             #endif
         }
-        // バッファにためる
-        add_key(keycode);
-        last_keycode = keycode;
+        send_keyboard_report();
         #ifdef CONSOLE_ENABLE
-            keys++;
-            uprintf("%c", ascii_code);
+            ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
+            print(" ");
         #endif
     }
-    send_keyboard_report();
     clear_keys();
     send_keyboard_report();
     #ifdef CONSOLE_ENABLE
-        ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
+        ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
         uprintf("\nSend %u key(s) in %u ms.\n", keys, ms);
     #endif
 }
