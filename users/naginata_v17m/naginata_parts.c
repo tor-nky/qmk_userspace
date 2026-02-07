@@ -737,67 +737,51 @@ static void ng_send_kana(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
     char ascii_code;
     uint8_t last_keycode = 0;
-#ifdef CONSOLE_ENABLE
-    uint keys = 0;
-    uint ms = 0;
-#endif
+    bool is_nkro = false;
+    #ifdef NKRO_ENABLE
+        // is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.26.x 以前
+        // is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.27 〜 0.28.x
+        is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.29 以降
+    #endif
+    #ifdef CONSOLE_ENABLE
+        uint keys = 0;
+        uint ms = 0;
+    #endif
     for (uint8_t i = has_anykey(); (ascii_code = pgm_read_byte(str++)) != 0; i++) {
         // アスキーコードからキーコードに変換
         uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-#ifdef NKRO_ENABLE
-        if (host_can_send_nkro() && keymap_config.nkro) {
-            // 未出力の同じキー
-            if (is_key_pressed(keycode)) {
-                i = 0;
-                send_keyboard_report();
-                clear_keys();
-                send_keyboard_report();
-#   ifdef CONSOLE_ENABLE
-                ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
-                print("  ");
-#   endif
-            // アスキー順の若いキーコードがきたら区切りの出力
-            } else if (keycode < last_keycode) {
-                send_keyboard_report();
-#   ifdef CONSOLE_ENABLE
-                ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
-                print(" ");
-#   endif
-            }
         // バッファがいっぱいか、未出力の同じキーがきたら出力しバッファを空に
-        } else
-#endif
-        if (i >= KEYBOARD_REPORT_KEYS || is_key_pressed(keycode)) {
+        if (is_key_pressed(keycode) || (!is_nkro && i >= KEYBOARD_REPORT_KEYS)) {
             i = 0;
             send_keyboard_report();
             clear_keys();
             send_keyboard_report();
-#ifdef CONSOLE_ENABLE
-            ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
-            print("  ");
-#endif
-        } else if (naginata_config.os == NG_MAC && keycode < last_keycode) {
+            #ifdef CONSOLE_ENABLE
+                ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
+                print("  ");
+            #endif
+        } else if ((is_nkro || naginata_config.os == NG_MAC) && keycode < last_keycode) {
             send_keyboard_report();
-#   ifdef CONSOLE_ENABLE
-            ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
-            print(" ");
-#   endif
+            #ifdef CONSOLE_ENABLE
+                ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
+                print(" ");
+            #endif
         }
         // バッファにためる
         add_key(keycode);
         last_keycode = keycode;
-#ifdef CONSOLE_ENABLE
-        keys++;
-        uprintf("%c", ascii_code);
-#endif
+        #ifdef CONSOLE_ENABLE
+            keys++;
+            uprintf("%c", ascii_code);
+        #endif
     }
     send_keyboard_report();
     clear_keys();
     send_keyboard_report();
-#ifdef CONSOLE_ENABLE
-    ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
-    uprintf("\nSend %u key(s) in %u ms.\n", keys, ms);
-#endif
+    #ifdef CONSOLE_ENABLE
+        ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) * 2 : 2;
+        uprintf("\nSend %u key(s) in %u ms.\n", keys, ms);
+    #endif
 }
 #       define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
 #   endif
