@@ -186,7 +186,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           SS_DELAY(T_R)SS_DOWN(X_I)SS_DELAY(T_P)SS_UP(X_I)                                                        // る
           SS_DELAY(T_N)SS_DOWN(X_D)SS_DELAY(T_P)SS_UP(X_D)                                                        // と
           SS_DELAY(T_N)SS_DOWN(X_SPC)SS_DELAY(T_S)SS_DOWN(X_V)SS_DELAY(T_P)SS_UP(X_V)                             // 、
-          SS_DELAY(T_N)SS_DOWN(X_B)SS_DELAY(T_P)SS_UP(X_B)                                                        // み
+          SS_DELAY(T_N)SS_DOWN(X_S)SS_DELAY(T_P)SS_UP(X_S)                                                        // み
           SS_DELAY(T_N)SS_DOWN(X_A)SS_DELAY(T_P)SS_UP(X_A)                                                        // せ
           SS_DELAY(T_R)SS_DOWN(X_J)SS_DELAY(T_P)SS_UP(X_J)                                                        // の
           SS_DELAY(T_R)SS_DOWN(X_F)SS_DELAY(T_P)SS_UP(X_F)                                                        // ま
