@@ -737,8 +737,8 @@ static void ng_send_kana(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
-        // is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.26.x 以前
-        // is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.27 〜 0.28.x
+        // is_nkro = keyboard_protocol && keymap_config.nkro;   // QMK Firmware 0.26.x 以前
+        // is_nkro = usb_device_state_get_protocol() && keymap_config.nkro;   // QMK Firmware 0.27 〜 0.28.x
         is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.29 以降
     #endif
     #ifdef CONSOLE_ENABLE
