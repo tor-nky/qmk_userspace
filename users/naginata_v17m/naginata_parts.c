@@ -922,7 +922,7 @@ void ng_send_ta(void) { // た
     NG_SEND_KANA("ta");
 }
 void ng_send_ti(void) { // ち
-    NG_SEND_KANA("chi");
+    NG_SEND_KANA("ti");
 }
 void ng_send_tu(void) { // つ
     NG_SEND_KANA("tu");
