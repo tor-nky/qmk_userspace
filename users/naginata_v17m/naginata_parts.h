@@ -227,7 +227,7 @@ void ng_middle_dot(void); // ・
 void ng_question_mark(void); // ？{改行}
 void ng_exclamation_mark(void); // ！{改行}
 void ng_solidus(void); // ／{改行}
-void ng_white_circle(void); // 〇{改行}
+void ng_white_circle(void); // ○{改行}
 void ng_vertical_line(void); // ｜{改行}
 void ng_ellipsis(void); // ……{改行}
 void ng_bar(void); // ――{改行}
