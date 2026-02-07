@@ -1492,12 +1492,12 @@ void ng_solidus(void) { // ／{改行}
     ng_send_unicode_string_P(PSTR("／"));
 #endif
 }
-void ng_white_circle(void) { // 〇{改行}
+void ng_white_circle(void) { // ○{改行}
 #if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    dic_send_string(PSTR("nagimaru")); // "〇"
+    dic_send_string(PSTR("nagimaru")); // "○"
 #else
-    ng_send_unicode_string_P(PSTR("〇"));
+    ng_send_unicode_string_P(PSTR("○"));
 #endif
 }
 void ng_vertical_line(void) { // ｜{改行}

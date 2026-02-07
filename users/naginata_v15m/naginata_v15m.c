@@ -244,7 +244,7 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_M|B_COMM|B_R, .func = ng_edit_3_space}, // {Space 3}
   {.key = B_M|B_COMM|B_F, .func = ng_edit_surround_corner_bracket}, // ^x「^v」{改行}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_V, .func = ng_edit_next_line_corner_bracket}, // {改行}{End}{改行}「」{改行}{↑}
-  {.key = B_M|B_COMM|B_T, .func = ng_white_circle}, // 〇{改行}
+  {.key = B_M|B_COMM|B_T, .func = ng_white_circle}, // ○{改行}
   {.key = B_M|B_COMM|B_G, .func = ng_edit_surround_ruby}, // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_B, .func = ng_edit_next_line_space}, // {改行}{End}{改行}{Space}
 
