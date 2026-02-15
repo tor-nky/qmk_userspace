@@ -16,7 +16,7 @@
 
 #include QMK_KEYBOARD_H
 #include "keymap_japanese.h"
-#include "users/naginata_v15m/twpair_on_jis.h"
+#include "users/naginata_v17m/twpair_on_jis.h"
 
 // Defines names for use in layer keycodes and the keymap
 enum layer_names {

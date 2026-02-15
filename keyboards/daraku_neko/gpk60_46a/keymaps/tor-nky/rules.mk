@@ -1,4 +1,4 @@
-SRC += users/naginata_v15m/twpair_on_jis.c
+SRC += users/naginata_v17m/twpair_on_jis.c
 
 #BOOTMAGIC_ENABLE = yes		# Enable Bootmagic Lite
 #MOUSEKEY_ENABLE = yes		# Mouse keys

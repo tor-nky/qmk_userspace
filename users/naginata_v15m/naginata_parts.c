@@ -728,35 +728,20 @@ void ng_send_tsa(void) {    // つぁ
 #   else
 // 文字列を少し速く出力
 static void ng_send_kana(const char *str) {
-    // Macでは押していないカーソルキーがなぜか入力されることがあるので、普通の方法で出力
-    if (naginata_config.os == NG_MAC) {
-        send_string_P(str);
-        return;
-    }
-
-    // 取り出し
-    char ascii_code = pgm_read_byte(str++);
-    while (ascii_code != '\0') {
-        // 出力バッファを空にする
-        clear_keys();
-        // 次のを取り出し
-        char next = pgm_read_byte(str++);
-        // 出力
-        {
-            // アスキーコードからキーコードに変換
-            uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-            // 同じキーの連続
-            if (ascii_code == next) {
-                tap_code(keycode);
-            } else {
-                register_code(keycode);
-            }
+    char ascii_code;
+    uint8_t last_keycode = KC_NO;
+    clear_keys();
+    while ((ascii_code = pgm_read_byte(str++)) != 0) {
+        uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
+        if (keycode == last_keycode) {
+            unregister_code(keycode);
+        } else {
+            clear_keys();
         }
-        // 更新
-        ascii_code = next;
+        register_code(keycode);
+        last_keycode = keycode;
     }
-    // 最後にすべてのキーを離す
-    clear_keyboard_but_mods();  // 押されている修飾キー以外の全てのキーをクリア
+    unregister_code(last_keycode);
 }
 #       define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
 #   endif

@@ -726,6 +726,24 @@ void ng_send_tsa(void) {    // つぁ
 #   if defined(NG_BMP)
 #       define NG_SEND_KANA(string) bmp_send_string(string)
 #   else
+// // 文字列を少し速く出力
+// static void ng_send_kana(const char *str) {
+//     char ascii_code;
+//     uint8_t last_keycode = KC_NO;
+//     clear_keys();
+//     while ((ascii_code = pgm_read_byte(str++)) != 0) {
+//         uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
+//         if (keycode == last_keycode) {
+//             unregister_code(keycode);
+//         } else {
+//             clear_keys();
+//         }
+//         register_code(keycode);
+//         last_keycode = keycode;
+//     }
+//     unregister_code(last_keycode);
+// }
+
 // 文字列をできるかぎりロールオーバーしながら高速出力
 // 出力できる文字は、英小文字、数字、空白、一部の記号、一部の制御文字
 //      \b\t\n ,-./0123456789;abcdefghijklmnopqrstuvwxyz
