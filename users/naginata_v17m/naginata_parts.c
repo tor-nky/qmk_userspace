@@ -726,14 +726,14 @@ void ng_send_tsa(void) {    // つぁ
 #   if defined(NG_BMP)
 #       define NG_SEND_KANA(string) bmp_send_string(string)
 #   else
-// 文字列を高速出力
-// 出力できる文字は、英小文字、数字、空白、一部の記号、一部の制御文字に限られます
+// 文字列をできるかぎりロールオーバーしながら高速出力
+// 出力できる文字は、英小文字、数字、空白、一部の記号、一部の制御文字
 //      \b\t\n ,-./0123456789;abcdefghijklmnopqrstuvwxyz
 // 出力原理:
-//    6KRO のとき、押したキーを最大6個ためて一度に送出し、離すのも一度に出力（最速）
-//      Macではアスキー順にキーを押している限りためる（やや高速）
-//    NKRO のとき、アスキー順にキーを押している限りためて一度に送出し、離すのも一度に出力（やや高速）
-static void ng_send_kana(const char *str) {
+//    6KRO(Macを除く) なら、押したキーを最大6個ためて一度に送出し、離すのも一度に出力（最速）
+//    6KRO で Mac なら、USBキーコード順にキーが続くかぎり最大6個ためる（やや高速）
+//    NKRO なら、USBキーコード順にキーが続くかぎりためて一度に送出し、離すのも一度に出力（やや高速）
+static void ng_send_kana_fast(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
@@ -749,15 +749,14 @@ static void ng_send_kana(const char *str) {
     while (pgm_read_byte(str) != 0) {
         uint8_t len = 0;
         {
-            // すでにバッファに入っている文字や、NKROやMacのアスキー順にならない文字がくるまで何文字あるか探索
+            // すでにバッファに入っている文字を避け、NKROまたはMacではUSBキーコード順が続くかぎり、何文字あるか探索
             const char *str_copy = str;
             char ascii_code;
             uint8_t last_keycode = 0;
             for ( ; (ascii_code = pgm_read_byte(str_copy++)) != 0; len++) {
-                // アスキーコードからキーコードに変換
                 uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
                 // バッファにあるのと同じキー
-                if (is_key_pressed(keycode)
+                if (is_key_pressed(keycode) // QMK Firmware 0.23 以降
                     || ((is_nkro || naginata_config.os == NG_MAC) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)) {
                         break;
@@ -768,10 +767,9 @@ static void ng_send_kana(const char *str) {
         clear_keys();
         for (uint8_t i = 0; i < len; i++, str++) {
             char ascii_code = pgm_read_byte(str);
-            // アスキーコードからキーコードに変換
             uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
             // バッファに入れてみたら同じキーがあった
-            if (i > 0 && is_key_pressed(keycode)) {
+            if (i > 0 && is_key_pressed(keycode)) { // QMK Firmware 0.23 以降
                 break;
             }
             // バッファにためる
@@ -794,7 +792,7 @@ static void ng_send_kana(const char *str) {
         uprintf("\nSend %u key(s) in %u ms.\n", keys, ms);
     #endif
 }
-#       define NG_SEND_KANA(string) ng_send_kana(PSTR(string))
+#       define NG_SEND_KANA(string) ng_send_kana_fast(PSTR(string))
 #   endif
 // テスト用
 void ng_send_iroha(void) {  // いろは歌
