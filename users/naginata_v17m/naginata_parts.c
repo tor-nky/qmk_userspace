@@ -813,17 +813,6 @@ void ng_send_kana_fast(const char *str) {
 }
 #       define NG_SEND_KANA(string) send_string_fast(PSTR(string), naginata_config.os != NG_MAC)
 #   endif
-// テスト用
-void ng_send_iroha(void) {  // いろは歌
-    NG_SEND_KANA("irohanihohetotirinuruwowakayotaresotunenaramuuwyinookuyamakehukoeteasakiyumemisiwyehimosesu");
-}
-void ng_send_abc(void) {    // abc順
-    NG_SEND_KANA("abcdefghijklmnopqrstuvwxyz");
-}
-void ng_send_zyx(void) {    // abcの逆順
-    NG_SEND_KANA("zyxwvutsrqponmlkjihgfedcba");
-}
-
 // アルファベット
 void ng_send_a(void) {  // あ
     NG_SEND_KANA("a");
