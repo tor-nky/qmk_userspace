@@ -41,11 +41,23 @@ enum custom_keycodes {
     CUSTOM_KEYCODE1 = NG_SAFE_RANGE,
 };
 
+// Tap Dance declarations
+enum {
+    TD_COLN_EQL,
+};
+
+// Tap Dance definitions
+tap_dance_action_t tap_dance_actions[] = {
+    // Tap once for Escape, twice for Caps Lock
+    [TD_COLN_EQL] = ACTION_TAP_DANCE_DOUBLE(JP_COLN, JP_EQL),
+};
+
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 #define ADJUST MO(_ADJUST)
 // [_BASE]
 #define LOW_BS LT(_LOWER, KC_BSPC)
+#define LS_SPC LSFT_T(KC_SPC)
 #define RAI_ENT LT(_RAISE, KC_ENT)
 // [_LOWER]
 #define ADJ_ENT LT(_ADJUST, KC_PENT)
@@ -58,19 +70,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base */
     [_BASE] =  LAYOUT(
          KC_ESC,   KC_F1,  KC_F2,  KC_F3,  KC_F4,    KC_F5,  KC_F6,  KC_F7,  KC_F8,    KC_F9, KC_F10, KC_F11, KC_F12,  KC_PSCR,KC_SCRL,KC_PAUS,
-        JP_ZKHK,    JP_1,   JP_2,   JP_3,   JP_4,   JP_5,   JP_6,   JP_7,   JP_8,   JP_9,   JP_0,JP_MINS,JP_CIRC, JP_YEN,KC_BSPC,   KC_INS,KC_HOME,KC_PGUP,  JP_COLN,KC_PSLS,KC_PAST,KC_PMNS,
+        JP_ZKHK,    JP_1,   JP_2,   JP_3,   JP_4,   JP_5,   JP_6,   JP_7,   JP_8,   JP_9,   JP_0,JP_MINS,JP_CIRC, JP_YEN,KC_BSPC,   KC_INS,KC_HOME,KC_PGUP,TD(TD_COLN_EQL),KC_PSLS,KC_PAST,KC_PMNS,
          KC_TAB,     JP_Q,   JP_W,   JP_E,   JP_R,   JP_T,   JP_Y,   JP_U,   JP_I,   JP_O,   JP_P,  JP_AT,JP_LBRC,        KC_ENT,   KC_DEL, KC_END,KC_PGDN,    KC_P7,  KC_P8,  KC_P9,KC_PPLS,
        S(JP_CAPS),    JP_A,   JP_S,   JP_D,   JP_F,   JP_G,   JP_H,   JP_J,   JP_K,   JP_L,JP_SCLN,JP_COLN,JP_RBRC,                                            KC_P4,  KC_P5,  KC_P6,
         KC_LSFT,       JP_Z,   JP_X,   JP_C,   JP_V,   JP_B,   JP_N,   JP_M,JP_COMM, JP_DOT,JP_SLSH,JP_BSLS,             KC_RSFT,            KC_UP,            KC_P1,  KC_P2,  KC_P3,KC_PENT,
-        KC_LCTL,KC_LGUI,   KC_LALT,     LOW_BS,        S(KC_SPC),       RAI_ENT,    KC_SPC,   KC_RALT,  KC_RGUI, KC_APP,  KC_RCTL,  KC_LEFT,KC_DOWN,KC_RGHT,    KC_P0,        KC_PDOT
+        KC_LCTL,KC_LGUI,   KC_LALT,     LOW_BS,           LS_SPC,       RAI_ENT,    KC_SPC,   KC_RALT,  KC_RGUI, KC_APP,  KC_RCTL,  KC_LEFT,KC_DOWN,KC_RGHT,    KC_P0,        KC_PDOT
     ),
 
     [_LOWER] = LAYOUT(
         _______, _______,_______,_______,_______,  _______,_______,_______,_______,  _______,_______,_______,_______,  _______,_______,_______,
         _______, _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,  _______,_______,_______,  _______,_______,_______,_______,
-         KC_GRV,  KC_CIRC,KC_RBRC,KC_AMPR,KC_LBRC,KC_BSLS,KC_COLN,   KC_7,   KC_8,   KC_9,KC_PSLS,KC_PMNS,_______,       _______,  _______,_______,_______,  _______,_______,_______,_______,
-        _______,   KC_EXLM,  KC_AT,KC_PIPE,KC_LPRN,KC_RPRN, KC_EQL,   KC_4,   KC_5,   KC_6,KC_PPLS,KC_PAST,_______,                                          _______,_______,_______,
-        _______,    KC_TILD, KC_DLR,KC_HASH,KC_LCBR,KC_RCBR,   KC_0,   KC_1,   KC_2,   KC_3,KC_PDOT,KC_PERC,             _______,          _______,          _______,_______,_______,_______,
+         JP_GRV,  JP_CIRC,JP_RBRC,JP_AMPR,JP_LBRC,JP_BSLS,JP_COLN,   KC_7,   KC_8,   KC_9,KC_PSLS,KC_PMNS,_______,       _______,  _______,_______,_______,  _______,_______,_______,_______,
+        _______,   JP_EXLM,  JP_AT,JP_PIPE,JP_LPRN,JP_RPRN, JP_EQL,   KC_4,   KC_5,   KC_6,KC_PPLS,KC_PAST,_______,                                          _______,_______,_______,
+        _______,    JP_TILD, JP_DLR,JP_HASH,JP_LCBR,JP_RCBR,   KC_0,   KC_1,   KC_2,   KC_3,KC_PDOT,JP_PERC,             _______,          _______,          _______,_______,_______,_______,
         _______,_______,   _______,    _______,         _______,       ADJ_ENT,   _______,   _______,  _______,_______,  _______,  _______,_______,_______,  _______,        _______
     ),
 

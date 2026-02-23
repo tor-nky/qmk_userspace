@@ -6,4 +6,6 @@ CONSOLE_ENABLE = no			# Console for debug
 LTO_ENABLE = yes
 OLED_ENABLE = yes
 OLED_DRIVER = ssd1306
-OS_DETECTION_ENABLE = yes
+# OS_DETECTION_ENABLE = yes
+
+TAP_DANCE_ENABLE = yes
