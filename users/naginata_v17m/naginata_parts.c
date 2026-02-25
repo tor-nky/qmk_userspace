@@ -17,7 +17,6 @@
 #include QMK_KEYBOARD_H
 #include "naginata.h"
 #include "naginata_parts.h"
-#include "users/send_string_fast/send_string_fast.h"
 #if defined(NG_BMP)
 #   include "bmp_host_driver.h"
 #   include "keyboards/ble_micro_pro/keymaps/naginata_v17m/bmp_send_string.h"
@@ -727,24 +726,6 @@ void ng_send_tsa(void) {    // つぁ
 #   if defined(NG_BMP)
 #       define NG_SEND_KANA(string) bmp_send_string(string)
 #   else
-// 文字列を少し速く出力
-void ng_send_kana(const char *str) {
-    char ascii_code;
-    uint8_t last_keycode = KC_NO;
-    clear_keys();
-    while ((ascii_code = pgm_read_byte(str++)) != 0) {
-        uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-        if (keycode == last_keycode) {
-            unregister_code(keycode);
-        } else {
-            clear_keys();
-        }
-        register_code(keycode);
-        last_keycode = keycode;
-    }
-    unregister_code(last_keycode);
-}
-
 // 文字列をできるかぎりロールオーバーしながら高速出力
 // 出力できる文字は、英小文字、数字、空白、一部の記号、一部の制御文字
 //      \b\t\n ,-./0123456789;abcdefghijklmnopqrstuvwxyz
@@ -752,7 +733,7 @@ void ng_send_kana(const char *str) {
 //    6KRO(Macを除く) なら、押したキーを最大6個ためて一度に送出し、離すのも一度に出力（最速）
 //    6KRO で Mac なら、USBキーコード順にキーが続くかぎり最大6個ためる（やや高速）
 //    NKRO なら、USBキーコード順にキーが続くかぎりためて一度に送出し、離すのも一度に出力（やや高速）
-void ng_send_kana_fast(const char *str) {
+static void ng_send_kana_fast(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
@@ -811,7 +792,7 @@ void ng_send_kana_fast(const char *str) {
         uprintf("\nSend %u key(s) in %u ms.\n", keys, ms);
     #endif
 }
-#       define NG_SEND_KANA(string) send_string_fast(PSTR(string), naginata_config.os != NG_MAC)
+#       define NG_SEND_KANA(string) ng_send_kana_fast(PSTR(string))
 #   endif
 // アルファベット
 void ng_send_a(void) {  // あ

@@ -7,5 +7,3 @@ SRC +=  naginata_v17m.c
 SRC +=  naginata_parts.c
 SRC +=	unicode_P.c
 SRC +=  twpair_on_jis.c
-
-SRC += users/send_string_fast/send_string_fast.c
