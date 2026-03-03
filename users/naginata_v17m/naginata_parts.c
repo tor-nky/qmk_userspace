@@ -996,10 +996,14 @@ void ng_send_wo(void) { // を
     NG_SEND_KANA("wo");
 }
 void ng_send_nn(void) { // ん
-    if (naginata_config.os == NG_MAC) {
-        NG_SEND_KANA("nn"); // 「かわせみ」は "xn" が登録されていない
-    } else {
+    switch (naginata_config.os) {
+    case NG_WIN:
+    case NG_LINUX:
         NG_SEND_KANA("xn");
+        break;
+    default:
+        NG_SEND_KANA("nn");
+        break;
     }
 }
 void ng_send_minus(void) {  // ー
