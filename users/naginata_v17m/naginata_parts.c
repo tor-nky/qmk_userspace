@@ -996,6 +996,9 @@ void ng_send_wo(void) { // を
     NG_SEND_KANA("wo");
 }
 void ng_send_nn(void) { // ん
+#if defined(NG_BMP)
+    NG_SEND_KANA("nn");
+#else
     switch (naginata_config.os) {
     case NG_WIN:
     case NG_LINUX:
@@ -1005,6 +1008,7 @@ void ng_send_nn(void) { // ん
         NG_SEND_KANA("nn");
         break;
     }
+#endif
 }
 void ng_send_minus(void) {  // ー
     NG_SEND_KANA("-");
