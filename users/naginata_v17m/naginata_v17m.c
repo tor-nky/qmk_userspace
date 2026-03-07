@@ -943,6 +943,11 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
 #if defined(NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS) || defined (SHIFT_ALONE_TIMEOUT_MS)
     ng_last_pressed_ms = record->event.time;
 #endif
+    // キー再利用処理
+    if (recent_key && reuse_key_state == Run && !(pressed_key & B_SHFT) && ng_search(pressed_key) < NGMAP_COUNT) {
+      reuse_key_state = Off;
+      waiting_keys[0] = pressed_key;
+    }
   }
 
   // 何かキーを押したか、リピート中のキーを離した時
@@ -961,13 +966,6 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       }
       for (uint_fast8_t i = 0; i < searching_count; i++) {
         searching_key |= waiting_keys[i];
-      }
-
-      // キー再利用処理
-      if (reuse_key_state == Run && !(searching_key & B_SHFT) && ng_search(pressed_key) < NGMAP_COUNT) {
-        reuse_key_state = Off;
-        waiting_keys[0] = pressed_key;
-        searching_key = pressed_key;
       }
 
       // バッファ内の全てのキーを組み合わせている場合
