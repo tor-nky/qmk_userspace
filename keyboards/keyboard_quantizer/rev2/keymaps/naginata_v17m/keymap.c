@@ -193,7 +193,7 @@ void matrix_init_user(void) {
 
 /*
     薙刀式ロゴの著作権は大岡俊彦氏に帰属します。
-    http://oookaworks.seesaa.net
+    https://oookaworks.seesaa.net
 */
 static void naginata_logo(void) {
     static const char PROGMEM ng_logo[] = {
