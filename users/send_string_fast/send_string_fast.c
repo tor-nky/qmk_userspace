@@ -22,6 +22,7 @@
 //    6KRO で Mac なら、USBキーコード順にキーが続くかぎり最大6個ためる（やや高速）
 //    NKRO なら、USBキーコード順にキーが続くかぎりためて一度に送出し、離すのも一度に出力（やや高速）
 void send_string_fast(const char *str, bool is_not_apple) {
+    bool is_output = false;
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
         // is_nkro = keyboard_protocol && keymap_config.nkro;   // QMK Firmware 0.26.x 以前
@@ -127,6 +128,7 @@ void send_string_fast(const char *str, bool is_not_apple) {
                 if (is_dead) {
                     is_dead = false;
                 } else {
+                    is_output = true;
                     str++;
                     sendable_length--;
                     is_dead = (pgm_read_byte(&((ascii_to_dead_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
@@ -140,14 +142,16 @@ void send_string_fast(const char *str, bool is_not_apple) {
             print("⌨");
         #endif
     }
-    // 終了処理
-    del_mods(MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_ALT));
-    clear_keys();
-    send_keyboard_report();
-    #ifdef CONSOLE_ENABLE
-        ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
-        uprintf("⌨\nSend %u key(s) in %u ms.\n", keys, ms);
-    #endif
+    if (is_output) {
+        // 終了処理
+        del_mods(MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_ALT));
+        clear_keys();
+        send_keyboard_report();
+        #ifdef CONSOLE_ENABLE
+            ms += (TAP_CODE_DELAY) > 0 ? (TAP_CODE_DELAY) : 1;
+            uprintf("⌨\nSend %u key(s) in %u ms.\n", keys, ms);
+        #endif
+    }
 
     // SS_TAP(), SS_DOWN(), SS_UP(), SS_DELAY() 以降は関数 send_string() にまかせる
     if (pgm_read_byte(str) == SS_QMK_PREFIX) {

@@ -119,7 +119,7 @@ const PROGMEM char *test_words[] = {
   "gulwa",  // H
   "kuxwa",  // J
   "kulwa",  // K
-  "", // L
+  "a 3 b",  // L
   "", // ;
   "", // Z
   "", // X
