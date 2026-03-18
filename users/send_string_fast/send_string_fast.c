@@ -45,23 +45,23 @@ void send_string_fast(const char *str, bool is_not_apple) {
         {
             const char *str_copy = str;
             char ascii_code;
-            bool is_dead_now = is_dead;
+            bool is_dead_this = is_dead;
             uint8_t last_keycode = 0;
-            for (uint8_t len = 0; is_dead_now || (ascii_code = pgm_read_byte(str_copy)) > SS_QMK_PREFIX; len++) {
+            for (uint8_t len = 0; is_dead_this || (ascii_code = pgm_read_byte(str_copy)) > SS_QMK_PREFIX; len++) {
                 uint8_t keycode;
-                bool is_shifted_now = false;
-                bool is_altgred_now = false;
-                if (is_dead_now) {
+                bool is_shifted_this = false;
+                bool is_altgred_this = false;
+                if (is_dead_this) {
                     keycode = KC_SPACE;
                 } else {
                     // 参考: qmk_firmware/quantum/send_string/send_string.c
                     keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
                     //      #define PGM_LOADBIT(mem, pos) ((pgm_read_byte(&((mem)[(pos) / 8])) >> ((pos) % 8)) & 0x01)
-                    is_shifted_now = (pgm_read_byte(&((ascii_to_shift_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
-                    is_altgred_now = (pgm_read_byte(&((ascii_to_altgr_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
+                    is_shifted_this = (pgm_read_byte(&((ascii_to_shift_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
+                    is_altgred_this = (pgm_read_byte(&((ascii_to_altgr_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
                 }
                 // バッファにあるのと同じキー
-                if ((len > 0 && (is_shifted_now != is_shifted || is_altgred_now != is_altgred))
+                if ((len > 0 && (is_shifted_this != is_shifted || is_altgred_this != is_altgred))
                     || ((is_nkro || !is_not_apple) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)
                     || is_key_pressed(keycode)  // QMK Firmware 0.23 以降
@@ -69,13 +69,13 @@ void send_string_fast(const char *str, bool is_not_apple) {
                     break;
                 }
                 last_keycode = keycode;
-                if (is_dead_now) {
-                    is_dead_now = false;
+                if (is_dead_this) {
+                    is_dead_this = false;
                 } else {
                     str_copy++;
-                    is_shifted = is_shifted_now;
-                    is_altgred = is_altgred_now;
-                    is_dead_now = (pgm_read_byte(&((ascii_to_dead_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
+                    is_shifted = is_shifted_this;
+                    is_altgred = is_altgred_this;
+                    is_dead_this = (pgm_read_byte(&((ascii_to_dead_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
                 }
             }
             sendable_length = str_copy - str;
@@ -96,18 +96,18 @@ void send_string_fast(const char *str, bool is_not_apple) {
             for (uint8_t len = 0; is_dead || sendable_length > 0; len++) {
                 char ascii_code;
                 uint8_t keycode;
-                bool is_shifted_now = false;
-                bool is_altgred_now = false;
+                bool is_shifted_this = false;
+                bool is_altgred_this = false;
                 if (is_dead) {
                     keycode = KC_SPACE;
                 } else {
                     ascii_code = pgm_read_byte(str);
                     keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-                    is_shifted_now = (pgm_read_byte(&((ascii_to_shift_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
-                    is_altgred_now = (pgm_read_byte(&((ascii_to_altgr_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
+                    is_shifted_this = (pgm_read_byte(&((ascii_to_shift_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
+                    is_altgred_this = (pgm_read_byte(&((ascii_to_altgr_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
                 }
                 // バッファにあるのと同じキー
-                if ((is_shifted_now != is_shifted || is_altgred_now != is_altgred)
+                if ((is_shifted_this != is_shifted || is_altgred_this != is_altgred)
                     || ((is_nkro || !is_not_apple) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)
                     || (is_dead && last_has_space)
