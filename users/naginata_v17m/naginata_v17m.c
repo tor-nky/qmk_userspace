@@ -812,8 +812,9 @@ static enum TransState which_trans_state(Ngkey search) {
         } else {
           return WaitDouji;
         }
-      } else {
+      } else
 #endif
+      {
         Ngkey remains = key ^ search;
         switch (remains) {
           case 0:
@@ -828,7 +829,12 @@ static enum TransState which_trans_state(Ngkey search) {
             }
             break;
           default:
-            return Multipul;
+            if (!(remains & B_SHFT)) {
+              return Multipul;
+            } else if (naginata_config.kouchi_shift) {
+              state = WaitShift;
+            }
+            break;
 #else
           default:
             if (naginata_config.kouchi_shift || !(remains & B_SHFT)) {
@@ -837,9 +843,7 @@ static enum TransState which_trans_state(Ngkey search) {
             break;
 #endif
         }
-#if defined (NG_SHIFTED_DOUJI_MS)
       }
-#endif
     }
   }
   return state;
