@@ -716,6 +716,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
         center_shift_count++;
         recent_key = B_SHFT;
         ng_center_keycode = (keycode == NG_SHFT ? KC_SPACE : KC_ENTER);
+        reuse_key_state = Off;
       } else if (center_shift_count) {
         center_shift_count--;
         if (!center_shift_count) {
@@ -724,6 +725,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       }
       break;
     default:
+      reuse_key_state = Off;
       break;
   }
 
@@ -742,7 +744,7 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // 配列に押したキーを保存
       waiting_keys[waiting_count++] = recent_key;
       // キー再利用処理
-      if (reuse_key_state == Run && !(pressed_key & B_SHFT) && ng_search(pressed_key) < NGMAP_COUNT) {
+      if (reuse_key_state == Run && ng_search(pressed_key) < NGMAP_COUNT) {
         reuse_key_state = Off;
         waiting_keys[0] = pressed_key;
       }
