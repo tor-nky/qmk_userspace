@@ -133,6 +133,67 @@ typedef struct {
 // (頻度が多いのを下にしたほうが負荷が減る)
 const PROGMEM naginata_keymap ngmap[] = {
   // ********** 3キー同時 **********
+  // 編集モード
+  {.key = B_D|B_F|B_Y   , .func = ng_home}, // {Home}
+  {.key = B_D|B_F|B_H   , .func = ng_edit_kakutei_end}, // {Enter}{End}
+  {.key = B_D|B_F|B_N   , .func = ng_end}, // {End}
+  {.key = B_D|B_F|B_U   , .func = ng_edit_delete_to_end}, // +{End}{BS}
+  {.key = B_D|B_F|B_J   , .func = ng_1_back_cursor_r}, // {↑}
+  {.key = B_D|B_F|B_M   , .func = ng_1_forward_cursor_r}, // {↓}
+  {.key = B_D|B_F|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
+  {.key = B_D|B_F|B_K   , .func = ng_s1_back_cursor_r}, // +{↑}
+  {.key = B_D|B_F|B_COMM, .func = ng_s1_forward_cursor_r}, // +{↓}
+  {.key = B_D|B_F|B_O   , .func = ng_delete_with_repeat}, // {Del}
+  {.key = B_D|B_F|B_L   , .func = ng_s7_back_cursor_r}, // +{↑ 7}
+  {.key = B_D|B_F|B_DOT , .func = ng_s7_forward_cursor_r}, // +{↓ 7}
+  {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // +{Esc 3}
+  {.key = B_D|B_F|B_SCLN, .func = ng_katakana}, // ^i
+  {.key = B_D|B_F|B_SLSH, .func = ng_hiragana}, // ^u
+  {.key = B_J|B_K|B_Q   , .func = ng_eof}, // ^{End}
+  {.key = B_J|B_K|B_A   , .func = ng_ellipsis}, // ……{改行}
+  {.key = B_J|B_K|B_Z   , .func = ng_bar}, // ――{改行}
+  {.key = B_J|B_K|B_W   , .func = ng_solidus}, // ／{改行}
+  {.key = B_J|B_K|B_S   , .func = ng_left_white_corner_bracket}, // 『{改行}
+  {.key = B_J|B_K|B_X   , .func = ng_right_white_corner_bracket}, // 』{改行}
+  {.key = B_J|B_K|B_D   , .func = ng_question_mark}, // ？{改行}
+  {.key = B_J|B_K|B_C   , .func = ng_exclamation_mark}, // ！{改行}
+  {.key = B_J|B_K|B_R   , .func = ng_save}, // ^s
+  {.key = B_J|B_K|B_F   , .func = ng_left_corner_bracket}, // 「{改行}
+  {.key = B_J|B_K|B_V   , .func = ng_right_corner_bracket}, // 」{改行}
+  {.key = B_J|B_K|B_T   , .func = ng_middle_dot}, // ・
+  {.key = B_J|B_K|B_G   , .func = ng_left_parenthesis}, // ({改行}
+  {.key = B_J|B_K|B_B   , .func = ng_right_parenthesis}, // ){改行}
+  {.key = B_C|B_V|B_Y   , .func = ng_edit_s_home}, // +{Home}
+  {.key = B_C|B_V|B_H   , .func = ng_copy}, // ^c
+  {.key = B_C|B_V|B_N   , .func = ng_edit_s_end}, // +{End}
+  {.key = B_C|B_V|B_U   , .func = ng_cut}, // ^x
+  {.key = B_C|B_V|B_J   , .func = ng_1_next_line_r}, // {←}
+  {.key = B_C|B_V|B_M   , .func = ng_s1_next_line_r}, // +{←}
+  {.key = B_C|B_V|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
+  {.key = B_C|B_V|B_K   , .func = ng_1_previous_line_r}, // {→}
+  {.key = B_C|B_V|B_COMM, .func = ng_s1_previous_line_r}, // +{→}
+  {.key = B_C|B_V|B_O   , .func = ng_paste}, // ^v
+  {.key = B_C|B_V|B_L   , .func = ng_s7_next_line_r}, // +{← 7}
+  {.key = B_C|B_V|B_DOT , .func = ng_delete_current_line}, // {End}+{Home}
+  {.key = B_C|B_V|B_P   , .func = ng_undo}, // ^z
+  {.key = B_C|B_V|B_SCLN, .func = ng_s7_previous_line_r}, // +{→ 7}
+  {.key = B_C|B_V|B_SLSH, .func = ng_redo}, // ^y
+  {.key = B_M|B_COMM|B_Q, .func = ng_vertical_line}, // ｜{改行}
+  {.key = B_M|B_COMM|B_A, .func = ng_left_double_angle_bracket}, // 《{改行}
+  {.key = B_M|B_COMM|B_Z, .func = ng_right_double_angle_bracket}, // 》{改行}
+  {.key = B_M|B_COMM|B_W, .func = ng_edit_separate_line}, // 　　　×　　　×　　　×{改行 2}
+  {.key = B_M|B_COMM|B_S, .func = ng_left_black_lenticular_bracket}, // 【{改行}
+  {.key = B_M|B_COMM|B_X, .func = ng_right_black_lenticular_bracket}, // 】{改行}
+  {.key = B_M|B_COMM|B_E, .func = ng_edit_serifu_zengyo}, // {Home}{→}{End}{Del 2}{←}
+  {.key = B_M|B_COMM|B_D, .func = ng_edit_togaki_zengyo}, // {Home}{→}{End}{Del 4}{←}
+  {.key = B_M|B_COMM|B_C, .func = ng_right_corner_bracket_next_line}, // 」{改行}{改行}
+  {.key = B_M|B_COMM|B_R, .func = ng_edit_serifu}, // {Home}{改行}{Space 1}{←}
+  {.key = B_M|B_COMM|B_F, .func = ng_edit_togaki}, // {Home}{改行}{Space 3}{←}
+  {.key = B_M|B_COMM|B_V, .func = ng_right_corner_bracket_next_line_left_corner_bracket}, // 」{改行}{改行}「{改行}
+  {.key = B_M|B_COMM|B_T, .func = ng_white_circle}, // ○{改行}
+  {.key = B_M|B_COMM|B_G, .func = ng_edit_3_space}, // {Space 3}
+  {.key = B_M|B_COMM|B_B, .func = ng_right_corner_bracket_next_line_space}, // 」{改行}{改行}{Space}
+
   // 拗音、外来音
   {.key = B_J|B_W|B_H   , .func = ng_send_gya   },  // ぎゃ
   {.key = B_J|B_R|B_H   , .func = ng_send_ja    },  // じゃ
@@ -187,68 +248,6 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_F|B_H|B_DOT , .func = ng_send_guxwa },  // ぐゎ
   // 非標準の変換
 //  {.key = B_X|B_C|B_M    , .func = ng_send_pyu   },  // ピュ
-
-  // 編集モード
-  {.key = B_D|B_F|B_Y   , .func = ng_home}, // {Home}
-  {.key = B_D|B_F|B_H   , .func = ng_edit_kakutei_end}, // {Enter}{End}
-  {.key = B_D|B_F|B_N   , .func = ng_end}, // {End}
-  {.key = B_D|B_F|B_U   , .func = ng_edit_delete_to_end}, // +{End}{BS}
-  {.key = B_D|B_F|B_J   , .func = ng_1_back_cursor_r}, // {↑}
-  {.key = B_D|B_F|B_M   , .func = ng_1_forward_cursor_r}, // {↓}
-  {.key = B_D|B_F|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
-  {.key = B_D|B_F|B_K   , .func = ng_s1_back_cursor_r}, // +{↑}
-  {.key = B_D|B_F|B_COMM, .func = ng_s1_forward_cursor_r}, // +{↓}
-  {.key = B_D|B_F|B_O   , .func = ng_delete_with_repeat}, // {Del}
-  {.key = B_D|B_F|B_L   , .func = ng_s7_back_cursor_r}, // +{↑ 7}
-  {.key = B_D|B_F|B_DOT , .func = ng_s7_forward_cursor_r}, // +{↓ 7}
-  {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // +{Esc 3}
-  {.key = B_D|B_F|B_SCLN, .func = ng_katakana}, // ^i
-  {.key = B_D|B_F|B_SLSH, .func = ng_hiragana}, // ^u
-  {.key = B_J|B_K|B_Q   , .func = ng_eof}, // ^{End}
-  {.key = B_J|B_K|B_A   , .func = ng_ellipsis}, // ……{改行}
-  {.key = B_J|B_K|B_Z   , .func = ng_bar}, // ――{改行}
-  {.key = B_J|B_K|B_W   , .func = ng_solidus}, // ／{改行}
-  {.key = B_J|B_K|B_S   , .func = ng_left_white_corner_bracket}, // 『{改行}
-  {.key = B_J|B_K|B_X   , .func = ng_right_white_corner_bracket}, // 』{改行}
-  {.key = B_J|B_K|B_D   , .func = ng_question_mark}, // ？{改行}
-  {.key = B_J|B_K|B_C   , .func = ng_exclamation_mark}, // ！{改行}
-  {.key = B_J|B_K|B_R   , .func = ng_save}, // ^s
-  {.key = B_J|B_K|B_F   , .func = ng_left_corner_bracket}, // 「{改行}
-  {.key = B_J|B_K|B_V   , .func = ng_right_corner_bracket}, // 」{改行}
-  {.key = B_J|B_K|B_T   , .func = ng_middle_dot}, // ・
-  {.key = B_J|B_K|B_G   , .func = ng_left_parenthesis}, // ({改行}
-  {.key = B_J|B_K|B_B   , .func = ng_right_parenthesis}, // ){改行}
-  {.key = B_C|B_V|B_Y   , .func = ng_edit_s_home}, // +{Home}
-  {.key = B_C|B_V|B_H   , .func = ng_copy}, // ^c
-  {.key = B_C|B_V|B_N   , .func = ng_edit_s_end}, // +{End}
-  {.key = B_C|B_V|B_U   , .func = ng_cut}, // ^x
-  {.key = B_C|B_V|B_J   , .func = ng_1_next_line_r}, // {←}
-  {.key = B_C|B_V|B_M   , .func = ng_s1_next_line_r}, // +{←}
-  {.key = B_C|B_V|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
-  {.key = B_C|B_V|B_K   , .func = ng_1_previous_line_r}, // {→}
-  {.key = B_C|B_V|B_COMM, .func = ng_s1_previous_line_r}, // +{→}
-  {.key = B_C|B_V|B_O   , .func = ng_paste}, // ^v
-  {.key = B_C|B_V|B_L   , .func = ng_s7_next_line_r}, // +{← 7}
-  {.key = B_C|B_V|B_DOT , .func = ng_delete_current_line}, // {End}+{Home}
-  {.key = B_C|B_V|B_P   , .func = ng_undo}, // ^z
-  {.key = B_C|B_V|B_SCLN, .func = ng_s7_previous_line_r}, // +{→ 7}
-  {.key = B_C|B_V|B_SLSH, .func = ng_redo}, // ^y
-
-  {.key = B_M|B_COMM|B_Q, .func = ng_vertical_line}, // ｜{改行}
-  {.key = B_M|B_COMM|B_A, .func = ng_left_double_angle_bracket}, // 《{改行}
-  {.key = B_M|B_COMM|B_Z, .func = ng_right_double_angle_bracket}, // 》{改行}
-  {.key = B_M|B_COMM|B_W, .func = ng_edit_separate_line}, // 　　　×　　　×　　　×{改行 2}
-  {.key = B_M|B_COMM|B_S, .func = ng_left_black_lenticular_bracket}, // 【{改行}
-  {.key = B_M|B_COMM|B_X, .func = ng_right_black_lenticular_bracket}, // 】{改行}
-  {.key = B_M|B_COMM|B_E, .func = ng_edit_serifu_zengyo}, // {Home}{→}{End}{Del 2}{←}
-  {.key = B_M|B_COMM|B_D, .func = ng_edit_togaki_zengyo}, // {Home}{→}{End}{Del 4}{←}
-  {.key = B_M|B_COMM|B_C, .func = ng_right_corner_bracket_next_line}, // 」{改行}{改行}
-  {.key = B_M|B_COMM|B_R, .func = ng_edit_serifu}, // {Home}{改行}{Space 1}{←}
-  {.key = B_M|B_COMM|B_F, .func = ng_edit_togaki}, // {Home}{改行}{Space 3}{←}
-  {.key = B_M|B_COMM|B_V, .func = ng_right_corner_bracket_next_line_left_corner_bracket}, // 」{改行}{改行}「{改行}
-  {.key = B_M|B_COMM|B_T, .func = ng_white_circle}, // ○{改行}
-  {.key = B_M|B_COMM|B_G, .func = ng_edit_3_space}, // {Space 3}
-  {.key = B_M|B_COMM|B_B, .func = ng_right_corner_bracket_next_line_space}, // 」{改行}{改行}{Space}
 
   // ********** 2キー同時 **********
   // 濁音
