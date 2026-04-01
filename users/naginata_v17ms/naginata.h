@@ -30,8 +30,6 @@ void ng_show_os(void);
 void ng_send_unicode_string(const char *);
 
 bool process_naginata(uint16_t, keyrecord_t *);
-bool naginata_type(uint16_t, keyrecord_t *);
-void kouchi_shift_loop(void);
 
 // 同時押し等の状態を示す、各ビットがキーに対応する型
 typedef uint32_t Ngkey;

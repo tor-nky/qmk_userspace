@@ -21,6 +21,7 @@
 #include <string.h>
 
 static void ng_set_unicode_mode(uint8_t);
+static bool ng_type(bool, Ngkey);
 static void naginata_clear(void);
 
 static bool is_naginata = false; // 薙刀式がオンかオフか
@@ -124,7 +125,6 @@ typedef struct {
 
 // かな定義
 // 順不同なのだが、3キー同時 → 2キー同時 → センターシフト → 単打 の順を推奨
-// 単打とセンターシフトの並び順に「100万字日本語かなn-gramデータ」(https://kouy.exblog.jp/9731073/) を用いる
 // (頻度が多いのを下にしたほうが負荷が減る)
 const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_SHFT        , .func = ng_space_or_enter},
@@ -483,7 +483,8 @@ static int8_t n_modifier = 0;
 static bool process_modifier(uint16_t keycode, keyrecord_t *record) {
   if (IS_MODIFIER_KEYCODE(keycode) || IS_QK_MOD_TAP(keycode)) {
     if (record->event.pressed) {
-      naginata_type(KC_NO, record); // 未出力キーを処理
+      // 残り全部出力
+      ng_type(true, 0);
       n_modifier++;
       layer_off(naginata_layer);
     } else {
@@ -584,6 +585,194 @@ void naginata_off(void) {
   set_mods(mods);
 }
 
+// かな定義を探し、配列の添え字を返す
+// 見つからないと NGMAP_COUNT を返す
+static Ngmap_num ng_search(Ngkey searching_key) {
+  // if (!searching_key)  return false;
+  for (Ngmap_num num = NGMAP_COUNT; num-- > 0; ) {  // 逆順で検索
+    if (searching_key == ngmap[num].key) {
+      return num;
+    }
+  }
+  return NGMAP_COUNT;
+}
+
+// かな定義を探し出力する
+// 成功すれば true を返す
+static bool ng_search_and_send(Ngkey searching_key) {
+  // if (!searching_key)  return false;
+  Ngmap_num num = ng_search(searching_key);
+  if (num < NGMAP_COUNT) {
+    ngmap[num].func();
+    return true;
+  }
+  return false;
+}
+
+// 変換してよいか調べる
+// None: なし, One: 一つしかない, Multipul: しぼれない
+enum TransState { None, One, Multipul };
+
+static enum TransState which_trans_state(Ngkey search) {
+  enum TransState state = None;
+  for (Ngmap_num num = 0; num < NGMAP_COUNT; num++) {
+    Ngkey key = ngmap[num].key;
+    // search を含む
+    if ((key & search) == search) {
+      Ngkey remains = key ^ search;
+      switch (remains) {
+        case 0:
+          if (state == None) {
+            state = One;
+          }
+          break;
+        default:
+          if (!(remains & B_SHFT)) {
+            return Multipul;
+          }
+          break;
+      }
+    }
+  }
+  return state;
+}
+
+static Ngkey pressed_key = 0; // 同時押しの状態を示す。各ビットがキーに対応する。
+static Ngkey waiting_keys[NKEYS]; // 各ビットがキーに対応する
+static uint_fast8_t waiting_count = 0; // 文字キーを数える
+static uint_fast8_t center_shift_count = 0;
+static uint8_t ng_center_keycode = KC_NO;
+static enum ReuseKeyState { Off, Run } reuse_key_state = Off;
+
+// 出力
+// 引数 send_all: 残りをすべて出力するなら true
+//      released_key: 上げたキーをビットで表現
+// 戻り値: なにか出力したら true を返す
+static bool ng_type(bool send_all, Ngkey released_key) {
+  const uint_fast8_t saved_waiting_count = waiting_count;
+
+  uint_fast8_t searching_count = waiting_count;
+  while (searching_count) {
+    // バッファ内のキーを組み合わせる
+    Ngkey searching_key = pressed_key & B_SHFT; // センターキー
+    for (uint_fast8_t i = 0; i < searching_count; i++) {
+      searching_key |= waiting_keys[i];
+    }
+
+    // 全てのキーの組み合わせ
+    if (searching_count == waiting_count && !send_all) {
+      // 同時押し定義の最大数でない
+      if (!released_key && waiting_count < NKEYS) {
+        // 変換してよいか調べる
+        enum TransState trans_state = which_trans_state(searching_key);
+        // 組み合わせがなくなった
+        if (trans_state == None && searching_count > 1) {
+          searching_count--;  // 最後のキーを減らして検索
+          continue;
+        // まだ変換できない
+        } else if (!(trans_state == None || trans_state == One)) {
+          break;
+        }
+      // 離したキーに関わらなくなったら終了
+      } else if (released_key && !(searching_key & released_key)) {
+        break;
+      }
+    }
+
+    // かな定義を探して出力する
+    // 1キーで何も定義がないキーも取り除く
+    if (ng_search_and_send(searching_key) || searching_count == 1) {
+      // 関数naginata_clear()が実行されていたら終了
+      if (!waiting_count) {
+        break;
+      }
+      // 1回出力したらキー再利用は終わり
+      reuse_key_state = Off;
+      // 見つかった分のキーを配列から取り除く
+      waiting_count -= searching_count;
+      for (uint_fast8_t i = 0; i < waiting_count; i++) {
+        waiting_keys[i] = waiting_keys[i + searching_count];
+      }
+      searching_count = waiting_count;
+    // 見つからなかったら最後のキーを減らして再検索
+    } else {
+      searching_count--;
+    }
+  }
+
+  return (bool)(saved_waiting_count - waiting_count);
+}
+
+static bool naginata_press(uint16_t keycode) {
+  Ngkey recent_key;  // 各ビットがキーに対応する
+  switch (keycode) {
+    case NG_Q ... NG_SLSH:
+      recent_key = ng_key[keycode - NG_Q];
+      // 配列に押したキーを保存
+      waiting_keys[waiting_count++] = recent_key;
+      pressed_key |= recent_key;  // キーを加える
+      // キー再利用処理
+      if (reuse_key_state == Run && ng_search(pressed_key) < NGMAP_COUNT) {
+        reuse_key_state = Off;
+        waiting_keys[0] = pressed_key;
+      }
+      // 出力
+      if (ng_type(false, 0)) {
+        reuse_key_state = Off;
+      }
+      return false;
+    case NG_SHFT: // スペースキー
+    case NG_SHFT2:  // エンターキー
+      center_shift_count++;
+      recent_key = B_SHFT;
+      pressed_key |= recent_key;  // キーを加える
+      ng_center_keycode = (keycode == NG_SHFT ? KC_SPACE : KC_ENTER);
+      // 残り全部出力
+      ng_type(true, 0);
+      reuse_key_state = Off;
+      // 配列に押したキーを保存
+      waiting_keys[waiting_count++] = recent_key;
+      return false;
+    default:
+      // 残り全部出力
+      ng_type(true, 0);
+      reuse_key_state = Off;
+      return true;
+  }
+}
+
+static bool naginata_release(uint16_t keycode) {
+  Ngkey recent_key = 0;  // 各ビットがキーに対応する
+  reuse_key_state = Off;
+  switch (keycode) {
+    case NG_Q ... NG_SLSH:
+      recent_key = ng_key[keycode - NG_Q];
+      ng_type(false, recent_key);
+      pressed_key &= ~recent_key; // キーを取り除く
+      if (!(waiting_count || pressed_key & B_SHFT || !pressed_key)) {
+        // スペースを押していないなら次回、キー再利用可能
+        reuse_key_state = Run;
+      }
+      return false;
+    case NG_SHFT: // スペースキー
+    case NG_SHFT2:  // エンターキー
+      if (center_shift_count) {
+        center_shift_count--;
+        if (!center_shift_count) {
+          ng_type(false, B_SHFT);
+          pressed_key = 0;
+        }
+      }
+      return false;
+    default:
+      if (!(waiting_count || pressed_key & B_SHFT || !pressed_key)) {
+        // スペースを押していないなら次回、キー再利用可能
+        reuse_key_state = Run;
+      }
+      return true;
+  }
+}
+
 // #define LOG_PROCESS_NAGINATA
 // 薙刀式の入力処理
 bool process_naginata(uint16_t keycode, keyrecord_t *record) {
@@ -616,7 +805,8 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
         naginata_on();
         return false;
       case NG_OFF:
-        naginata_type(keycode, record); // キーリピート解除、未出力キーを処理
+        // 残り全部出力
+        ng_type(true, 0);
         naginata_off();
         return false;
       case NG_SHOS:
@@ -634,200 +824,10 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
     return true;
 
   // キー入力を文字に変換して出力する
-  return naginata_type(keycode, record);
-}
-
-// かな定義を探し、配列の添え字を返す
-// 見つからないと NGMAP_COUNT を返す
-static Ngmap_num ng_search(Ngkey searching_key) {
-  // if (!searching_key)  return false;
-  for (Ngmap_num num = NGMAP_COUNT; num-- > 0; ) {  // 逆順で検索
-    if (searching_key == ngmap[num].key) {
-      return num;
-    }
-  }
-  return NGMAP_COUNT;
-}
-
-// かな定義を探し出力する
-// 成功すれば true を返す
-static bool ng_search_and_send(Ngkey searching_key) {
-  // if (!searching_key)  return false;
-  Ngmap_num num = ng_search(searching_key);
-  if (num < NGMAP_COUNT) {
-    ngmap[num].func();
-    return true;
-  }
-  return false;
-}
-
-// 変換してよいか調べる
-// None: なし, One: 一つしかない, Multipul: しぼれない,
-enum TransState { None, One, Multipul };
-
-static enum TransState which_trans_state(Ngkey search) {
-  enum TransState state = None;
-  for (Ngmap_num num = 0; num < NGMAP_COUNT; num++) {
-    Ngkey key = ngmap[num].key;
-    // search を含む
-    if ((key & search) == search) {
-      Ngkey remains = key ^ search;
-      switch (remains) {
-        case 0:
-          if (state == None) {
-            state = One;
-          }
-          break;
-        default:
-          if (!(remains & B_SHFT)) {
-            return Multipul;
-          }
-          break;
-      }
-    }
-  }
-  return state;
-}
-
-static Ngkey pressed_key = 0; // 同時押しの状態を示す。各ビットがキーに対応する。
-static uint_fast8_t waiting_count = 0; // 文字キーを数える
-static uint_fast8_t center_shift_count = 0;
-static uint8_t ng_center_keycode = KC_NO;
-static enum ReuseKeyState { Off, Run } reuse_key_state = Off;
-
-// キー入力を文字に変換して出力する
-// 薙刀式のキー入力だったなら false を返す
-// そうでない時は未出力を全て出力、true を返してQMKにまかせる
-bool naginata_type(uint16_t keycode, keyrecord_t *record) {
-  static Ngkey waiting_keys[NKEYS]; // 各ビットがキーに対応する
-  static bool center_shift = false; // センターシフトの連続用
-
-  Ngkey recent_key = 0;  // 各ビットがキーに対応する
-  const bool pressing = record->event.pressed;
-  bool store_key_later = false;
-
-  switch (keycode) {
-    case NG_Q ... NG_SLSH:
-      recent_key = ng_key[keycode - NG_Q];
-      break;
-    case NG_SHFT: // スペースキー
-    case NG_SHFT2:  // エンターキー
-      if (pressing) {
-        center_shift_count++;
-        recent_key = B_SHFT;
-        ng_center_keycode = (keycode == NG_SHFT ? KC_SPACE : KC_ENTER);
-        reuse_key_state = Off;
-      } else if (center_shift_count) {
-        center_shift_count--;
-        if (!center_shift_count) {
-          recent_key = B_SHFT;
-        }
-      }
-      break;
-    default:
-      reuse_key_state = Off;
-      break;
-  }
-
-  // センターシフトを押していなければ解除
-  if (!(pressed_key & B_SHFT)) {
-    center_shift = false;
-  }
-
-  // キーを押した
-  if (pressing) {
-    pressed_key |= recent_key;  // キーを加える
-    // センターシフト(前置シフト限定)
-    if (recent_key == B_SHFT) {
-      store_key_later = true;
-    } else if (recent_key) {
-      // 配列に押したキーを保存
-      waiting_keys[waiting_count++] = recent_key;
-      // キー再利用処理
-      if (reuse_key_state == Run && ng_search(pressed_key) < NGMAP_COUNT) {
-        reuse_key_state = Off;
-        waiting_keys[0] = pressed_key;
-      }
-    }
-  }
-
-  // 出力
-  {
-    uint_fast8_t searching_count = waiting_count;
-    while (searching_count) {
-      // バッファ内のキーを組み合わせる
-      Ngkey searching_key = 0;
-      if (center_shift) {
-        searching_key |= B_SHFT; // センターキー
-      }
-      for (uint_fast8_t i = 0; i < searching_count; i++) {
-        searching_key |= waiting_keys[i];
-      }
-
-      // バッファ内の全てのキーを組み合わせている場合
-      // (前置センターシフトの時は全て出力する)
-      if (searching_count == waiting_count && !store_key_later) {
-        // 薙刀式のキーを押した時(同時押し定義の最大数に達していたら変換するため飛ばす)
-        if (pressing && recent_key && waiting_count < NKEYS) {
-          // 変換してよいか調べる
-          enum TransState trans_state = which_trans_state(searching_key);
-          // 組み合わせがなくなった
-          if (trans_state == None && searching_count > 1) {
-            searching_count--;  // 最後のキーを減らして検索
-            continue;
-          // まだ変換できない
-          } else if (!(trans_state == None || trans_state == One)) {
-            break;
-          }
-        // キーを離した時は、そのキーが関わるところまで出力する
-        // (薙刀式以外のキーを離したのなら出力しない)
-        } else if (!pressing && !(searching_key & recent_key)) {
-          break;
-        }
-      }
-
-      // かな定義を探して出力する
-      // 1キーで何も定義がないキーもここで配列から取り除く
-      if (ng_search_and_send(searching_key) || searching_count == 1) {
-        // 関数naginata_clear()が実行されていたら早期終了
-        if (!waiting_count) {
-          return false;
-        }
-        // センターシフトの連続用
-        center_shift = (bool)(searching_key & B_SHFT);
-        // 1回出力したらキー再利用は終わり
-        reuse_key_state = Off;
-        // 見つかった分のキーを配列から取り除く
-        waiting_count -= searching_count;
-        for (uint_fast8_t i = 0; i < waiting_count; i++) {
-          waiting_keys[i] = waiting_keys[i + searching_count];
-        }
-        searching_count = waiting_count;
-      // 見つからなかったら最後のキーを減らして再検索
-      } else {
-        searching_count--;
-      }
-    }
-  }
-
-  // センターシフト(前置シフト限定)
-  if (store_key_later) {
-    // 配列に押したキーを保存
-    waiting_keys[waiting_count++] = recent_key;
-  // キーを離した時
-  } else if (!pressing) {
-    reuse_key_state = Off;
-    if (recent_key == B_SHFT) {
-      pressed_key = 0;
-    } else {
-      pressed_key &= ~recent_key; // キーを取り除く
-      if (!(waiting_count || pressed_key & B_SHFT || !pressed_key)) {
-        // スペースを押していないなら次回、キー再利用可能
-        reuse_key_state = Run;
-      }
-    }
-  }
-  return (recent_key == 0);
+  if (record->event.pressed)
+    return naginata_press(keycode);
+  else
+    return naginata_release(keycode);
 }
 
 // バッファをクリアする
