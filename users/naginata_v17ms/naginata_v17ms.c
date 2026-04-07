@@ -609,12 +609,18 @@ static bool ng_search_and_send(Ngkey searching_key) {
   return false;
 }
 
-// 変換してよいか調べる
-// None: なし, One: 一つしかない, Multipul: しぼれない
-enum TransState { None, One, Multipul };
+static Ngkey pressed_key = 0; // 同時押しの状態を示す。各ビットがキーに対応する。
+static Ngkey waiting_keys[NKEYS]; // 各ビットがキーに対応する
+static uint_fast8_t waiting_count = 0; // 文字キーを数える
+static uint_fast8_t center_shift_count = 0;
+static uint8_t ng_center_keycode = KC_NO;
+static bool is_reuse_key = false;
 
-static enum TransState which_trans_state(Ngkey search) {
-  enum TransState state = None;
+// 組み合わせが複数ある > 1: 変換しない
+// 組み合わせが一つしかない = 1: 変換を開始する
+// 組み合わせがない = 0: 変換を開始する
+static uint8_t number_of_candidates(Ngkey search) {
+  uint8_t state = 0;
   for (Ngmap_num num = 0; num < NGMAP_COUNT; num++) {
     Ngkey key = ngmap[num].key;
     // search を含む
@@ -622,13 +628,11 @@ static enum TransState which_trans_state(Ngkey search) {
       Ngkey remains = key ^ search;
       switch (remains) {
         case 0:
-          if (state == None) {
-            state = One;
-          }
+          state = 1;
           break;
         default:
           if (!(remains & B_SHFT)) {
-            return Multipul;
+            return 2;
           }
           break;
       }
@@ -636,13 +640,6 @@ static enum TransState which_trans_state(Ngkey search) {
   }
   return state;
 }
-
-static Ngkey pressed_key = 0; // 同時押しの状態を示す。各ビットがキーに対応する。
-static Ngkey waiting_keys[NKEYS]; // 各ビットがキーに対応する
-static uint_fast8_t waiting_count = 0; // 文字キーを数える
-static uint_fast8_t center_shift_count = 0;
-static uint8_t ng_center_keycode = KC_NO;
-static bool is_reuse_key = false;
 
 // 出力
 // 引数 send_all: 残りをすべて出力するなら true
@@ -664,13 +661,13 @@ static bool ng_type(bool send_all, Ngkey released_key) {
       // 同時押し定義の最大数でない
       if (!released_key && waiting_count < NKEYS) {
         // 変換してよいか調べる
-        enum TransState trans_state = which_trans_state(searching_key);
+        uint8_t trans_state = number_of_candidates(searching_key);
         // 組み合わせがなくなった
-        if (trans_state == None && searching_count > 1) {
+        if (trans_state == 0 && searching_count > 1) {
           searching_count--;  // 最後のキーを減らして検索
           continue;
         // まだ変換できない
-        } else if (!(trans_state == None || trans_state == One)) {
+        } else if (trans_state > 1) {
           break;
         }
       // 離したキーに関わらなくなったら終了
