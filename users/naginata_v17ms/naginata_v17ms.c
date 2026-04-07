@@ -21,7 +21,7 @@
 #include <string.h>
 
 static void ng_set_unicode_mode(uint8_t);
-static bool ng_type(bool, Ngkey);
+static bool ng_type(bool);
 static void naginata_clear(void);
 
 static bool is_naginata = false; // 薙刀式がオンかオフか
@@ -484,7 +484,7 @@ static bool process_modifier(uint16_t keycode, keyrecord_t *record) {
   if (IS_MODIFIER_KEYCODE(keycode) || IS_QK_MOD_TAP(keycode)) {
     if (record->event.pressed) {
       // 残り全部出力
-      ng_type(true, 0);
+      ng_type(true);
       n_modifier++;
       layer_off(naginata_layer);
     } else {
@@ -631,10 +631,10 @@ static uint8_t number_of_candidates(Ngkey search) {
           state = 1;
           break;
         default:
-          if (!(remains & B_SHFT)) {
-            return 2;
+          if ((remains & B_SHFT) || (remains & pressed_key)) {
+            break;
           }
-          break;
+          return 2;
       }
     }
   }
@@ -642,10 +642,9 @@ static uint8_t number_of_candidates(Ngkey search) {
 }
 
 // 出力
-// 引数 send_all: 残りをすべて出力するなら true
-//      released_key: 上げたキーをビットで表現
+// 引数 is_send_all: 残りをすべて出力するなら true
 // 戻り値: なにか出力したら true を返す
-static bool ng_type(bool send_all, Ngkey released_key) {
+static bool ng_type(bool is_send_all) {
   const uint_fast8_t saved_waiting_count = waiting_count;
 
   uint_fast8_t searching_count = waiting_count;
@@ -656,22 +655,16 @@ static bool ng_type(bool send_all, Ngkey released_key) {
       searching_key |= waiting_keys[i];
     }
 
-    // 全てのキーの組み合わせ
-    if (searching_count == waiting_count && !send_all) {
-      // 同時押し定義の最大数でない
-      if (!released_key && waiting_count < NKEYS) {
-        // 変換してよいか調べる
-        uint8_t trans_state = number_of_candidates(searching_key);
-        // 組み合わせがなくなった
-        if (trans_state == 0 && searching_count > 1) {
-          searching_count--;  // 最後のキーを減らして検索
-          continue;
-        // まだ変換できない
-        } else if (trans_state > 1) {
-          break;
-        }
-      // 離したキーに関わらなくなったら終了
-      } else if (released_key && !(searching_key & released_key)) {
+    // 全てのキーの組み合わせていて、同時押し定義の最大数でない
+    if (!is_send_all && searching_count == waiting_count && waiting_count < NKEYS) {
+      // 変換してよいか調べる
+      uint8_t trans_state = number_of_candidates(searching_key);
+      // 組み合わせがなくなった
+      if (trans_state == 0 && searching_count > 1) {
+        searching_count--;  // 最後のキーを減らして検索
+        continue;
+      // まだ変換できない
+      } else if (trans_state > 1) {
         break;
       }
     }
@@ -714,7 +707,7 @@ static bool naginata_press(uint16_t keycode) {
         waiting_keys[0] = pressed_key;
       }
       // 出力
-      if (ng_type(false, 0)) {
+      if (ng_type(false)) {
         is_reuse_key = false;
       }
       return false;
@@ -725,14 +718,14 @@ static bool naginata_press(uint16_t keycode) {
       pressed_key |= recent_key;  // キーを加える
       ng_center_keycode = (keycode == NG_SHFT ? KC_SPACE : KC_ENTER);
       // 残り全部出力
-      ng_type(true, 0);
+      ng_type(true);
       is_reuse_key = false;
       // 配列に押したキーを保存
       waiting_keys[waiting_count++] = recent_key;
       return false;
     default:
       // 残り全部出力
-      ng_type(true, 0);
+      ng_type(true);
       is_reuse_key = false;
       return true;
   }
@@ -744,7 +737,7 @@ static bool naginata_release(uint16_t keycode) {
   switch (keycode) {
     case NG_Q ... NG_SLSH:
       recent_key = ng_key[keycode - NG_Q];
-      ng_type(false, recent_key);
+      ng_type(true);
       pressed_key &= ~recent_key; // キーを取り除く
       if (!(waiting_count || pressed_key & B_SHFT || !pressed_key)) {
         // スペースを押していないなら次回、キー再利用可能
@@ -757,7 +750,7 @@ static bool naginata_release(uint16_t keycode) {
         center_shift_count--;
         if (!center_shift_count) {
           recent_key = B_SHFT;
-          ng_type(false, recent_key);
+          ng_type(true);
           pressed_key &= ~recent_key; // キーを取り除く
         }
       }
@@ -804,7 +797,7 @@ bool process_naginata(uint16_t keycode, keyrecord_t *record) {
         return false;
       case NG_OFF:
         // 残り全部出力
-        ng_type(true, 0);
+        ng_type(true);
         naginata_off();
         return false;
       case NG_SHOS:
