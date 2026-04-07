@@ -759,8 +759,9 @@ static bool naginata_release(uint16_t keycode) {
       if (center_shift_count) {
         center_shift_count--;
         if (!center_shift_count) {
-          ng_type(false, B_SHFT);
-          pressed_key = 0;
+          recent_key = B_SHFT;
+          ng_type(false, recent_key);
+          pressed_key &= ~recent_key; // キーを取り除く
         }
       }
       return false;
