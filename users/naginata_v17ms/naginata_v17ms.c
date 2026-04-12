@@ -643,7 +643,6 @@ static uint8_t number_of_candidates(Ngkey search) {
 
 // 出力
 // 引数 is_send_all: 残りをすべて出力するなら true
-// 戻り値: なにか出力したら true を返す
 static void ng_type(bool is_send_all) {
   uint_fast8_t searching_count = waiting_count;
   while (searching_count) {
