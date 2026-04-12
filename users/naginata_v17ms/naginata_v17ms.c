@@ -21,7 +21,7 @@
 #include <string.h>
 
 static void ng_set_unicode_mode(uint8_t);
-static bool ng_type(bool);
+static void ng_type(bool);
 static void naginata_clear(void);
 
 static bool is_naginata = false; // 薙刀式がオンかオフか
@@ -644,9 +644,7 @@ static uint8_t number_of_candidates(Ngkey search) {
 // 出力
 // 引数 is_send_all: 残りをすべて出力するなら true
 // 戻り値: なにか出力したら true を返す
-static bool ng_type(bool is_send_all) {
-  const uint_fast8_t saved_waiting_count = waiting_count;
-
+static void ng_type(bool is_send_all) {
   uint_fast8_t searching_count = waiting_count;
   while (searching_count) {
     // バッファ内のキーを組み合わせる
@@ -672,12 +670,12 @@ static bool ng_type(bool is_send_all) {
     // かな定義を探して出力する
     // 1キーで何も定義がないキーも取り除く
     if (ng_search_and_send(searching_key) || searching_count == 1) {
+      // 1回出力したらキー再利用は終わり
+      is_reuse_key = false;
       // 関数naginata_clear()が実行されていたら終了
       if (!waiting_count) {
         break;
       }
-      // 1回出力したらキー再利用は終わり
-      is_reuse_key = false;
       // 見つかった分のキーを配列から取り除く
       waiting_count -= searching_count;
       for (uint_fast8_t i = 0; i < waiting_count; i++) {
@@ -689,8 +687,6 @@ static bool ng_type(bool is_send_all) {
       searching_count--;
     }
   }
-
-  return (bool)(saved_waiting_count - waiting_count);
 }
 
 static bool naginata_press(uint16_t keycode) {
@@ -707,9 +703,7 @@ static bool naginata_press(uint16_t keycode) {
         waiting_keys[0] = pressed_key;
       }
       // 出力
-      if (ng_type(false)) {
-        is_reuse_key = false;
-      }
+      ng_type(false);
       return false;
     case NG_SHFT: // スペースキー
     case NG_SHFT2:  // エンターキー
