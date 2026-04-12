@@ -998,14 +998,14 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
       // かな定義を探して出力する
       // 1キーで何も定義がないキーもここで配列から取り除く
       if (ng_search_and_send(searching_key) || searching_count == 1) {
-        // 関数naginata_clear()が実行されていたら早期終了
-        if (!waiting_count) {
-          return false;
-        }
         // センターシフトの連続用
         center_shift = (bool)(searching_key & B_SHFT);
         // 1回出力したらキー再利用は終わり
         reuse_key_state = Off;
+        // 関数naginata_clear()が実行されていたら早期終了
+        if (!waiting_count) {
+          return false;
+        }
         // 見つかった分のキーを配列から取り除く
         waiting_count -= searching_count;
         for (uint_fast8_t i = 0; i < waiting_count; i++) {
