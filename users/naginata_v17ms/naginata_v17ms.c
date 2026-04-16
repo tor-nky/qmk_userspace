@@ -732,7 +732,7 @@ static bool naginata_release(uint16_t keycode) {
       recent_key = ng_key[keycode - NG_Q];
       ng_type(true);
       pressed_key &= ~recent_key; // キーを取り除く
-      if (!(waiting_count || pressed_key & B_SHFT || !pressed_key)) {
+      if (!(pressed_key & B_SHFT) && pressed_key) {
         // スペースを押していないなら次回、キー再利用可能
         is_reuse_key = true;
       }
@@ -749,7 +749,8 @@ static bool naginata_release(uint16_t keycode) {
       }
       return false;
     default:
-      if (!(waiting_count || pressed_key & B_SHFT || !pressed_key)) {
+      ng_type(true);
+      if (!(pressed_key & B_SHFT) && pressed_key) {
         // スペースを押していないなら次回、キー再利用可能
         is_reuse_key = true;
       }
