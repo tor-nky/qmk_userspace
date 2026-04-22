@@ -692,8 +692,8 @@ static bool naginata_press(uint16_t keycode) {
   Ngkey recent_key;  // 各ビットがキーに対応する
   switch (keycode) {
     case NG_Q ... NG_SLSH:
-      recent_key = ng_key[keycode - NG_Q];
       // 配列に押したキーを保存
+      recent_key = ng_key[keycode - NG_Q];
       waiting_keys[waiting_count++] = recent_key;
       pressed_key |= recent_key;  // キーを加える
       // キー再利用処理
@@ -707,13 +707,13 @@ static bool naginata_press(uint16_t keycode) {
     case NG_SHFT: // スペースキー
     case NG_SHFT2:  // エンターキー
       center_shift_count++;
-      recent_key = B_SHFT;
-      pressed_key |= recent_key;  // キーを加える
       ng_center_keycode = (keycode == NG_SHFT ? KC_SPACE : KC_ENTER);
       // 残り全部出力
       ng_type(true);
       is_reuse_key = false;
       // 配列に押したキーを保存
+      recent_key = B_SHFT;
+      pressed_key |= recent_key;  // キーを加える
       waiting_keys[waiting_count++] = recent_key;
       return false;
     default:
@@ -732,9 +732,9 @@ static bool naginata_release(uint16_t keycode) {
       recent_key = ng_key[keycode - NG_Q];
       ng_type(true);
       pressed_key &= ~recent_key; // キーを取り除く
-      if (!(pressed_key & B_SHFT) && pressed_key) {
-        // スペースを押していないなら次回、キー再利用可能
-        is_reuse_key = true;
+      // スペースを押していないなら次回、キー再利用可能
+      if (!(pressed_key & B_SHFT)) {
+        is_reuse_key = (bool)pressed_key;
       }
       return false;
     case NG_SHFT: // スペースキー
