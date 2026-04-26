@@ -1018,8 +1018,8 @@ bool naginata_type(uint16_t keycode, keyrecord_t *record) {
           waiting_keys[i] = waiting_keys[i + searching_count];
         }
         searching_count = waiting_count;
-        // キーを離したり、まだ探すキーが残ってたらキーリピートしない
-        if (!pressing || searching_count) {
+        // キーを離した時や、探すキーが残っている時はキーリピートしない
+        if (!pressing || searching_count || store_key_later) {
           end_repeating_key();  // キーリピート解除
         // リピートするキーを保存
         } else {
