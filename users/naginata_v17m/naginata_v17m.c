@@ -25,6 +25,9 @@
 
 #include <string.h>
 
+// 修正: naginata.hはextern宣言のみになったので、実体はここで定義する
+user_config_t naginata_config;
+
 static void ng_set_unicode_mode(uint8_t);
 static void naginata_clear(void);
 
@@ -115,7 +118,7 @@ const Ngkey ng_key[] = {
   [NG_SHFT2 - NG_Q] = B_SHFT,
 };
 
-#define NKEYS 3 // 組み合わせにある同時押しするキーの数、薙刀式なら3
+#define NKEYS 3 // 1同時押しの最大キー数、薙刀式なら3
                 // (最大何キーまでバッファに貯めるか)
 
 // カナ変換テーブル
@@ -870,7 +873,9 @@ static void end_repeating_key(void) {
 #else
   if (repeating.code != KC_NO) {
     unregister_code(repeating.code);
-    unregister_code(repeating.mod);
+    if (repeating.mod != KC_NO) {
+      unregister_code(repeating.mod);
+    }
   }
 #endif
   repeating.code = repeating.mod = KC_NO;
@@ -1262,6 +1267,8 @@ static uint8_t convert_ty(uint8_t code) {
 // リピート対応の方向キー移動
 // リピート中を示す変数を更新
 void ng_move_cursor_with_repeat(bool shift, uint8_t code, uint8_t count) {
+  if (code == KC_NO)  return;
+
   if (shift) {
     repeating.mod = KC_LEFT_SHIFT;
 #if defined(NG_BMP)
