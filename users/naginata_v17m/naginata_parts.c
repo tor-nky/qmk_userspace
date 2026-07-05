@@ -16,7 +16,6 @@
 
 #include QMK_KEYBOARD_H
 #include "naginata.h"
-#include "naginata_parts.h"
 #if defined(NG_BMP)
 #   include "bmp_host_driver.h"
 #   include "keyboards/ble_micro_pro/keymaps/naginata_v17m/bmp_send_string.h"
@@ -580,6 +579,10 @@ void ng_send_ryo(void) {    // りょ
 }
 
 // 清音外来音 濁音外来音
+void ng_send_ye(void) {     // いぇ
+    ng_send_y();
+    ng_send_e();
+}
 void ng_send_thi(void) {    // てぃ
     ng_send_t();
     ng_send_hi();
@@ -641,10 +644,6 @@ void ng_send_fo(void) {     // ふぉ
 void ng_send_fyu(void) {    // ふゅ
     ng_send_f();
     ng_send_yu();
-}
-void ng_send_ye(void) {     // いぇ
-    ng_send_y();
-    ng_send_e();
 }
 void ng_send_wi(void) {     // うぃ
     ng_send_w();
@@ -1469,20 +1468,6 @@ void ng_bar(void) { // ――{改行}
     ng_send_unicode_string_P(PSTR("──"));
 #endif
 }
-void ng_edit_separate_line(void) { // 　　　×　　　×　　　×{改行 2}
-#if defined(NG_BMP)
-    ng_edit_3_space();  // {Space 3}
-    dic_send_string(PSTR("nagibatu")); // "　　　×　　　×　　　×"
-    bmp_send_string("\n");
-#elif defined(NG_USE_DIC)
-    ng_edit_3_space();  // {Space 3}
-    dic_send_string(PSTR("nagibatu")); // "　　　×　　　×　　　×"
-    tap_code(KC_ENTER);
-#else
-    ng_send_unicode_string_P(PSTR("　　　×　　　×　　　×"));
-    tap_code(KC_ENTER);
-#endif
-}
 
 void ng_1_back_cursor_r(void) { // {↑}
     ng_move_cursor_with_ty_repeat(false, KC_UP, 1);
@@ -1558,27 +1543,6 @@ void ng_s7_left(void) { // +{← 7}
     ng_move_cursor_with_repeat(true, KC_LEFT, 7);
 }
 
-void ng_edit_kakutei_end(void) { // {Enter}{End}
-    ng_ime_complete();
-    ng_end();
-}
-void ng_edit_delete_to_end(void) { // +{End}{BS}
-#if defined(NG_BMP)
-    bmp_send_string(SS_DOWN(X_LSFT));
-    ng_end();
-    bmp_send_string(SS_UP(X_LSFT));
-    bmp_send_string("\b");
-#else
-    add_mods(MOD_BIT(KC_LEFT_SHIFT));
-    ng_end();
-    del_mods(MOD_BIT(KC_LEFT_SHIFT));
-    tap_code(KC_BACKSPACE);
-#endif
-}
-void ng_delete_current_line(void) { // {End}+{Home}
-    ng_end();
-    ng_edit_s_home();
-}
 void ng_edit_s_home(void) { // +{Home}
 #if defined(NG_BMP)
     bmp_send_string(SS_DOWN(X_LSFT));
@@ -1601,6 +1565,23 @@ void ng_edit_s_end(void) { // +{End}
     del_mods(MOD_BIT(KC_LEFT_SHIFT));
 #endif
 }
+void ng_edit_kakutei_end(void) { // {Enter}{End}
+    ng_ime_complete();
+    ng_end();
+}
+void ng_edit_delete_to_end(void) { // +{End}{BS}
+#if defined(NG_BMP)
+    ng_edit_s_end();    // +{End}
+    bmp_send_string("\b");
+#else
+    ng_edit_s_end();    // +{End}
+    tap_code(KC_BACKSPACE);
+#endif
+}
+void ng_delete_current_line(void) { // {End}+{Home}
+    ng_end();
+    ng_edit_s_home();
+}
 
 void ng_edit_3_space(void) { // {Space 3}
 #if defined(NG_BMP)
@@ -1611,6 +1592,20 @@ void ng_edit_3_space(void) { // {Space 3}
     tap_code(KC_SPACE);
     tap_code(KC_SPACE);
     tap_code(KC_SPACE);
+#endif
+}
+void ng_edit_separate_line(void) { // 　　　×　　　×　　　×{改行 2}
+#if defined(NG_BMP)
+    ng_edit_3_space();  // {Space 3}
+    dic_send_string(PSTR("nagibatu")); // "　　　×　　　×　　　×"
+    bmp_send_string("\n");
+#elif defined(NG_USE_DIC)
+    ng_edit_3_space();  // {Space 3}
+    dic_send_string(PSTR("nagibatu")); // "　　　×　　　×　　　×"
+    tap_code(KC_ENTER);
+#else
+    ng_send_unicode_string_P(PSTR("　　　×　　　×　　　×"));
+    tap_code(KC_ENTER);
 #endif
 }
 void ng_edit_togaki(void) { // {Home}{改行}{Space 3}{←}

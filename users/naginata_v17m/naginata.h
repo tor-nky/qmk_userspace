@@ -159,7 +159,9 @@ typedef union {
   };
 } user_config_t;
 
-user_config_t naginata_config;
+// 修正: ヘッダでは実体を定義せずextern宣言にする。
+//       naginata_v17.c側で定義。-fno-common環境での多重定義リンクエラーを回避
+extern user_config_t naginata_config;
 
 #define NG_SAFE_RANGE (NG_TAYO + 1)
 
