@@ -439,22 +439,22 @@ static void ng_set_unicode_mode(uint8_t os) {
   }
 }
 
-void tategaki_toggle() {
+void tategaki_toggle(void) {
   naginata_config.tategaki ^= 1;
   eeconfig_update_user(naginata_config.raw);
 }
 
-void tategaki_on() {
+void tategaki_on(void) {
   naginata_config.tategaki = 1;
   // eeconfig_update_user(naginata_config.raw);
 }
 
-void tategaki_off() {
+void tategaki_off(void) {
   naginata_config.tategaki = 0;
   // eeconfig_update_user(naginata_config.raw);
 }
 
-void kouchi_shift_toggle() {
+void kouchi_shift_toggle(void) {
   naginata_config.kouchi_shift ^= 1;
   eeconfig_update_user(naginata_config.raw);
 }
@@ -1136,7 +1136,7 @@ void ng_delete_with_repeat(void) { // {Del}
 #endif
 }
 
-void ng_cut() {
+void ng_cut(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1169,7 +1169,7 @@ void ng_cut() {
 #endif
 }
 
-void ng_copy() {
+void ng_copy(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1200,7 +1200,7 @@ void ng_copy() {
 #endif
 }
 
-void ng_paste() {
+void ng_paste(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1318,7 +1318,7 @@ void ng_previous_line(void) {
   end_repeating_key();
 }
 
-void ng_home() {
+void ng_home(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1349,7 +1349,7 @@ void ng_home() {
 #endif
 }
 
-void ng_end() {
+void ng_end(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1380,7 +1380,7 @@ void ng_end() {
 #endif
 }
 
-void ng_katakana() {
+void ng_katakana(void) {
 #if defined(NG_BMP)
   bmp_send_string(SS_TAP(X_F7));
 #else
@@ -1388,7 +1388,7 @@ void ng_katakana() {
 #endif
 }
 
-void ng_save() {
+void ng_save(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1420,7 +1420,7 @@ void ng_save() {
 #endif
 }
 
-void ng_hiragana() {
+void ng_hiragana(void) {
 #if defined(NG_BMP)
   bmp_send_string(SS_TAP(X_F6));
 #else
@@ -1428,7 +1428,7 @@ void ng_hiragana() {
 #endif
 }
 
-void ng_redo() {
+void ng_redo(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1459,7 +1459,7 @@ void ng_redo() {
 #endif
 }
 
-void ng_undo() {
+void ng_undo(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1490,7 +1490,7 @@ void ng_undo() {
 #endif
 }
 
-void ng_saihenkan() {
+void ng_saihenkan(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1520,7 +1520,7 @@ void ng_saihenkan() {
 #endif
 }
 
-void ng_eof() {
+void ng_eof(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1578,7 +1578,7 @@ void ng_eof() {
 #endif
 }
 
-void ng_ime_cancel() {
+void ng_ime_cancel(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1625,7 +1625,7 @@ void ng_ime_cancel() {
 #endif
 }
 
-void ng_ime_complete() {
+void ng_ime_complete(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_IOS:
