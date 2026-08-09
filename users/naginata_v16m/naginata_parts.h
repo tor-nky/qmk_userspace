@@ -174,6 +174,7 @@ void ng_send_ryu(void);     // りゅ
 void ng_send_ryo(void);     // りょ
 
 // 清音外来音 濁音外来音
+void ng_send_ye(void);      // いぇ
 void ng_send_thi(void);     // てぃ
 void ng_send_thu(void);     // てゅ
 void ng_send_dhi(void);     // でぃ
@@ -189,7 +190,6 @@ void ng_send_fi(void);      // ふぃ
 void ng_send_fe(void);      // ふぇ
 void ng_send_fo(void);      // ふぉ
 void ng_send_fyu(void);     // ふゅ
-void ng_send_ye(void);      // いぇ
 void ng_send_wi(void);      // うぃ
 void ng_send_we(void);      // うぇ
 void ng_send_who(void);     // うぉ
@@ -210,8 +210,6 @@ void ng_send_gwo(void);     // ぐぉ
 void ng_send_guxwa(void);   // ぐゎ
 void ng_send_tsa(void);     // つぁ
 
-void copy_spc_to_clipboard(void);
-
 // 追加
 void ng_edit_touten(void);  // 、
 void ng_edit_kuten(void);   // 。
@@ -226,7 +224,6 @@ void ng_white_circle(void); // ○{改行}
 void ng_vertical_line(void); // ｜{改行}
 void ng_ellipsis(void); // ……{改行}
 void ng_bar(void); // ――{改行}
-void ng_edit_separate_line(void); // 　　　×　　　×　　　×{改行 2}
 
 void ng_1_back_cursor_r(void); // {↑}
 void ng_s1_back_cursor_r(void); // +{↑}
@@ -252,12 +249,13 @@ void ng_s7_right(void); // +{→ 7}
 void ng_1_left(void); // {←}
 void ng_s1_left(void); // +{←}
 void ng_s7_left(void); // +{← 7}
-void ng_edit_kakutei_end(void); // {Enter}{End}
-void ng_edit_delete_to_end(void); // +{End}{BS}
 void ng_edit_s_home(void); // +{Home}
 void ng_edit_s_end(void); // +{End}
+void ng_edit_kakutei_end(void); // {Enter}{End}
+void ng_edit_delete_to_end(void); // +{End}{BS}
 
 void ng_edit_3_space(void); // {Space 3}
+void ng_edit_separate_line(void); // 　　　×　　　×　　　×{改行 2}
 void ng_edit_togaki(void); // {Home}{改行}{Space 3}{←}
 void ng_edit_serifu(void); // {Home}{改行}{Space 1}{←}
 void ng_edit_togaki_zengyo(void); // {Home}{→}{End}{Del 4}{←}
@@ -277,3 +275,5 @@ void ng_right_double_angle_bracket(void); // 》{改行}
 void ng_right_corner_bracket_next_line(void); // 」{改行}{改行}
 void ng_right_corner_bracket_next_line_left_corner_bracket(void); // 」{改行}{改行}「{改行}
 void ng_right_corner_bracket_next_line_space(void); // 」{改行}{改行}{Space}
+
+void copy_spc_to_clipboard(void);

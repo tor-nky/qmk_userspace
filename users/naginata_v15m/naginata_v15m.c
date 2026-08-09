@@ -25,6 +25,9 @@
 
 #include <string.h>
 
+// 修正: naginata.hはextern宣言のみになったので、実体はここで定義する
+user_config_t naginata_config;
+
 static void ng_set_unicode_mode(uint8_t);
 static void naginata_clear(void);
 
@@ -115,7 +118,7 @@ const Ngkey ng_key[] = {
   [NG_SHFT2 - NG_Q] = B_SHFT,
 };
 
-#define NKEYS 3 // 組み合わせにある同時押しするキーの数、薙刀式なら3
+#define NKEYS 3 // 1同時押しの最大キー数、薙刀式なら3
                 // (最大何キーまでバッファに貯めるか)
 
 // カナ変換テーブル
@@ -133,60 +136,6 @@ typedef struct {
 // (頻度が多いのを下にしたほうが負荷が減る)
 const PROGMEM naginata_keymap ngmap[] = {
   // ********** 3キー同時 **********
-  // 拗音、外来音
-  {.key = B_J|B_W|B_H   , .func = ng_send_gya   },  // ぎゃ
-  {.key = B_J|B_R|B_H   , .func = ng_send_ja    },  // じゃ
-  {.key = B_J|B_G|B_H   , .func = ng_send_dya   },  // ぢゃ
-  {.key = B_J|B_X|B_H   , .func = ng_send_bya   },  // びゃ
-  {.key = B_J|B_W|B_P   , .func = ng_send_gyu   },  // ぎゅ
-  {.key = B_J|B_R|B_P   , .func = ng_send_ju    },  // じゅ
-  {.key = B_J|B_G|B_P   , .func = ng_send_dyu   },  // ぢゅ
-  {.key = B_J|B_X|B_P   , .func = ng_send_byu   },  // びゅ
-  {.key = B_J|B_W|B_I   , .func = ng_send_gyo   },  // ぎょ
-  {.key = B_J|B_R|B_I   , .func = ng_send_jo    },  // じょ
-  {.key = B_J|B_G|B_I   , .func = ng_send_dyo   },  // ぢょ
-  {.key = B_J|B_X|B_I   , .func = ng_send_byo   },  // びょ
-  {.key = B_M|B_X|B_I   , .func = ng_send_pyo   },  // ぴょ
-  {.key = B_M|B_X|B_P   , .func = ng_send_pyu   },  // ぴゅ
-  {.key = B_M|B_X|B_H   , .func = ng_send_pya   },  // ぴゃ
-  {.key = B_M|B_E|B_P   , .func = ng_send_thu   },  // てゅ
-  {.key = B_M|B_E|B_K   , .func = ng_send_thi   },  // てぃ
-  {.key = B_J|B_E|B_P   , .func = ng_send_dhu   },  // でゅ
-  {.key = B_J|B_E|B_K   , .func = ng_send_dhi   },  // でぃ
-  {.key = B_M|B_D|B_L   , .func = ng_send_twu   },  // とぅ
-  {.key = B_J|B_D|B_L   , .func = ng_send_dwu   },  // どぅ
-  {.key = B_M|B_R|B_O   , .func = ng_send_sye   },  // しぇ
-  {.key = B_M|B_G|B_O   , .func = ng_send_tye   },  // ちぇ
-  {.key = B_J|B_R|B_O   , .func = ng_send_je    },  // じぇ
-  {.key = B_J|B_G|B_O   , .func = ng_send_dye   },  // ぢぇ
-  {.key = B_V|B_SCLN|B_O, .func = ng_send_fe    },  // ふぇ
-  {.key = B_V|B_SCLN|B_P, .func = ng_send_fyu   },  // ふゅ
-  {.key = B_V|B_SCLN|B_J, .func = ng_send_fa    },  // ふぁ
-  {.key = B_V|B_SCLN|B_K, .func = ng_send_fi    },  // ふぃ
-  {.key = B_V|B_SCLN|B_N, .func = ng_send_fo    },  // ふぉ
-  {.key = B_M|B_Q|B_O   , .func = ng_send_ve    },  // ヴぇ
-  {.key = B_M|B_Q|B_P   , .func = ng_send_vyu   },  // ヴゅ
-  {.key = B_M|B_Q|B_J   , .func = ng_send_va    },  // ヴぁ
-  {.key = B_M|B_Q|B_K   , .func = ng_send_vi    },  // ヴぃ
-  {.key = B_M|B_Q|B_N   , .func = ng_send_vo    },  // ヴぉ
-  {.key = B_V|B_L|B_O   , .func = ng_send_we    },  // うぇ
-  {.key = B_V|B_L|B_K   , .func = ng_send_wi    },  // うぃ
-  {.key = B_V|B_L|B_N   , .func = ng_send_who   },  // うぉ
-  {.key = B_V|B_K|B_O   , .func = ng_send_ye    },  // いぇ
-  {.key = B_V|B_L|B_J   , .func = ng_send_tsa   },  // つぁ
-  {.key = B_V|B_H|B_O   , .func = ng_send_qe    },  // くぇ
-  {.key = B_V|B_H|B_J   , .func = ng_send_qa    },  // くぁ
-  {.key = B_V|B_H|B_K   , .func = ng_send_qi    },  // くぃ
-  {.key = B_V|B_H|B_N   , .func = ng_send_qo    },  // くぉ
-  {.key = B_V|B_H|B_DOT , .func = ng_send_kuxwa },  // くゎ
-  {.key = B_F|B_H|B_O   , .func = ng_send_gwe   },  // ぐぇ
-  {.key = B_F|B_H|B_J   , .func = ng_send_gwa   },  // ぐぁ
-  {.key = B_F|B_H|B_K   , .func = ng_send_gwi   },  // ぐぃ
-  {.key = B_F|B_H|B_N   , .func = ng_send_gwo   },  // ぐぉ
-  {.key = B_F|B_H|B_DOT , .func = ng_send_guxwa },  // ぐゎ
-  // 非標準の変換
-//  {.key = B_X|B_C|B_M    , .func = ng_send_pyu   },  // ピュ
-
   // 編集モード
   {.key = B_D|B_F|B_Y   , .func = ng_home}, // {Home}
   {.key = B_D|B_F|B_H   , .func = ng_edit_kakutei_end}, // {Enter}{End}
@@ -247,6 +196,60 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_M|B_COMM|B_T, .func = ng_white_circle}, // ○{改行}
   {.key = B_M|B_COMM|B_G, .func = ng_edit_surround_ruby}, // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
   {.key = B_M|B_COMM|B_B, .func = ng_edit_next_line_space}, // {改行}{End}{改行}{Space}
+
+  // 拗音、外来音
+  {.key = B_J|B_W|B_H   , .func = ng_send_gya   },  // ぎゃ
+  {.key = B_J|B_R|B_H   , .func = ng_send_ja    },  // じゃ
+  {.key = B_J|B_G|B_H   , .func = ng_send_dya   },  // ぢゃ
+  {.key = B_J|B_X|B_H   , .func = ng_send_bya   },  // びゃ
+  {.key = B_J|B_W|B_P   , .func = ng_send_gyu   },  // ぎゅ
+  {.key = B_J|B_R|B_P   , .func = ng_send_ju    },  // じゅ
+  {.key = B_J|B_G|B_P   , .func = ng_send_dyu   },  // ぢゅ
+  {.key = B_J|B_X|B_P   , .func = ng_send_byu   },  // びゅ
+  {.key = B_J|B_W|B_I   , .func = ng_send_gyo   },  // ぎょ
+  {.key = B_J|B_R|B_I   , .func = ng_send_jo    },  // じょ
+  {.key = B_J|B_G|B_I   , .func = ng_send_dyo   },  // ぢょ
+  {.key = B_J|B_X|B_I   , .func = ng_send_byo   },  // びょ
+  {.key = B_M|B_X|B_I   , .func = ng_send_pyo   },  // ぴょ
+  {.key = B_M|B_X|B_P   , .func = ng_send_pyu   },  // ぴゅ
+  {.key = B_M|B_X|B_H   , .func = ng_send_pya   },  // ぴゃ
+  {.key = B_M|B_E|B_P   , .func = ng_send_thu   },  // てゅ
+  {.key = B_M|B_E|B_K   , .func = ng_send_thi   },  // てぃ
+  {.key = B_J|B_E|B_P   , .func = ng_send_dhu   },  // でゅ
+  {.key = B_J|B_E|B_K   , .func = ng_send_dhi   },  // でぃ
+  {.key = B_M|B_D|B_L   , .func = ng_send_twu   },  // とぅ
+  {.key = B_J|B_D|B_L   , .func = ng_send_dwu   },  // どぅ
+  {.key = B_M|B_R|B_O   , .func = ng_send_sye   },  // しぇ
+  {.key = B_M|B_G|B_O   , .func = ng_send_tye   },  // ちぇ
+  {.key = B_J|B_R|B_O   , .func = ng_send_je    },  // じぇ
+  {.key = B_J|B_G|B_O   , .func = ng_send_dye   },  // ぢぇ
+  {.key = B_V|B_SCLN|B_O, .func = ng_send_fe    },  // ふぇ
+  {.key = B_V|B_SCLN|B_P, .func = ng_send_fyu   },  // ふゅ
+  {.key = B_V|B_SCLN|B_J, .func = ng_send_fa    },  // ふぁ
+  {.key = B_V|B_SCLN|B_K, .func = ng_send_fi    },  // ふぃ
+  {.key = B_V|B_SCLN|B_N, .func = ng_send_fo    },  // ふぉ
+  {.key = B_M|B_Q|B_O   , .func = ng_send_ve    },  // ヴぇ
+  {.key = B_M|B_Q|B_P   , .func = ng_send_vyu   },  // ヴゅ
+  {.key = B_M|B_Q|B_J   , .func = ng_send_va    },  // ヴぁ
+  {.key = B_M|B_Q|B_K   , .func = ng_send_vi    },  // ヴぃ
+  {.key = B_M|B_Q|B_N   , .func = ng_send_vo    },  // ヴぉ
+  {.key = B_V|B_L|B_O   , .func = ng_send_we    },  // うぇ
+  {.key = B_V|B_L|B_K   , .func = ng_send_wi    },  // うぃ
+  {.key = B_V|B_L|B_N   , .func = ng_send_who   },  // うぉ
+  {.key = B_V|B_K|B_O   , .func = ng_send_ye    },  // いぇ
+  {.key = B_V|B_L|B_J   , .func = ng_send_tsa   },  // つぁ
+  {.key = B_V|B_H|B_O   , .func = ng_send_qe    },  // くぇ
+  {.key = B_V|B_H|B_J   , .func = ng_send_qa    },  // くぁ
+  {.key = B_V|B_H|B_K   , .func = ng_send_qi    },  // くぃ
+  {.key = B_V|B_H|B_N   , .func = ng_send_qo    },  // くぉ
+  {.key = B_V|B_H|B_DOT , .func = ng_send_kuxwa },  // くゎ
+  {.key = B_F|B_H|B_O   , .func = ng_send_gwe   },  // ぐぇ
+  {.key = B_F|B_H|B_J   , .func = ng_send_gwa   },  // ぐぁ
+  {.key = B_F|B_H|B_K   , .func = ng_send_gwi   },  // ぐぃ
+  {.key = B_F|B_H|B_N   , .func = ng_send_gwo   },  // ぐぉ
+  {.key = B_F|B_H|B_DOT , .func = ng_send_guxwa },  // ぐゎ
+  // 非標準の変換
+//  {.key = B_X|B_C|B_M    , .func = ng_send_pyu   },  // ピュ
 
   // ********** 2キー同時 **********
   // 濁音
@@ -438,22 +441,22 @@ static void ng_set_unicode_mode(uint8_t os) {
   }
 }
 
-void tategaki_toggle() {
+void tategaki_toggle(void) {
   naginata_config.tategaki ^= 1;
   eeconfig_update_user(naginata_config.raw);
 }
 
-void tategaki_on() {
+void tategaki_on(void) {
   naginata_config.tategaki = 1;
   // eeconfig_update_user(naginata_config.raw);
 }
 
-void tategaki_off() {
+void tategaki_off(void) {
   naginata_config.tategaki = 0;
   // eeconfig_update_user(naginata_config.raw);
 }
 
-void kouchi_shift_toggle() {
+void kouchi_shift_toggle(void) {
   naginata_config.kouchi_shift ^= 1;
   eeconfig_update_user(naginata_config.raw);
 }
@@ -876,7 +879,9 @@ static void end_repeating_key(void) {
 #else
   if (repeating.code != KC_NO) {
     unregister_code(repeating.code);
-    unregister_code(repeating.mod);
+    if (repeating.mod != KC_NO) {
+      unregister_code(repeating.mod);
+    }
   }
 #endif
   repeating.code = repeating.mod = KC_NO;
@@ -1137,7 +1142,7 @@ void ng_delete_with_repeat(void) { // {Del}
 #endif
 }
 
-void ng_cut() {
+void ng_cut(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1170,7 +1175,7 @@ void ng_cut() {
 #endif
 }
 
-void ng_copy() {
+void ng_copy(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1201,7 +1206,7 @@ void ng_copy() {
 #endif
 }
 
-void ng_paste() {
+void ng_paste(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1268,6 +1273,8 @@ static uint8_t convert_ty(uint8_t code) {
 // リピート対応の方向キー移動
 // リピート中を示す変数を更新
 void ng_move_cursor_with_repeat(bool shift, uint8_t code, uint8_t count) {
+  if (code == KC_NO)  return;
+
   if (shift) {
     repeating.mod = KC_LEFT_SHIFT;
 #if defined(NG_BMP)
@@ -1317,7 +1324,7 @@ void ng_previous_line(void) {
   end_repeating_key();
 }
 
-void ng_home() {
+void ng_home(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1348,7 +1355,7 @@ void ng_home() {
 #endif
 }
 
-void ng_end() {
+void ng_end(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1379,7 +1386,7 @@ void ng_end() {
 #endif
 }
 
-void ng_katakana() {
+void ng_katakana(void) {
 #if defined(NG_BMP)
   bmp_send_string(SS_TAP(X_F7));
 #else
@@ -1387,7 +1394,7 @@ void ng_katakana() {
 #endif
 }
 
-void ng_save() {
+void ng_save(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1419,7 +1426,7 @@ void ng_save() {
 #endif
 }
 
-void ng_hiragana() {
+void ng_hiragana(void) {
 #if defined(NG_BMP)
   bmp_send_string(SS_TAP(X_F6));
 #else
@@ -1427,7 +1434,7 @@ void ng_hiragana() {
 #endif
 }
 
-void ng_redo() {
+void ng_redo(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1458,7 +1465,7 @@ void ng_redo() {
 #endif
 }
 
-void ng_undo() {
+void ng_undo(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1489,7 +1496,7 @@ void ng_undo() {
 #endif
 }
 
-void ng_saihenkan() {
+void ng_saihenkan(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1519,7 +1526,7 @@ void ng_saihenkan() {
 #endif
 }
 
-void ng_eof() {
+void ng_eof(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1587,7 +1594,7 @@ void ng_eof() {
 #endif
 }
 
-void ng_ime_cancel() {
+void ng_ime_cancel(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1634,7 +1641,7 @@ void ng_ime_cancel() {
 #endif
 }
 
-void ng_ime_complete() {
+void ng_ime_complete(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
     case NG_IOS:
