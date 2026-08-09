@@ -20,6 +20,9 @@
 
 #include <string.h>
 
+// 修正: naginata.hはextern宣言のみになったので、実体はここで定義する
+user_config_t naginata_config;
+
 static void ng_set_unicode_mode(uint8_t);
 static void ng_type(bool);
 static void naginata_clear(void);
@@ -111,7 +114,7 @@ const Ngkey ng_key[] = {
   [NG_SHFT2 - NG_Q] = B_SHFT,
 };
 
-#define NKEYS 3 // 組み合わせにある同時押しするキーの数、薙刀式なら3
+#define NKEYS 3 // 1同時押しの最大キー数、薙刀式なら3
                 // (最大何キーまでバッファに貯めるか)
 
 // カナ変換テーブル
@@ -163,9 +166,9 @@ const PROGMEM naginata_keymap ngmap[] = {
 
   // センターシフト
   {.key = B_SHFT|B_Q    , .func = ng_null       },
-  {.key = B_SHFT|B_W    , .func = ng_send_me    },  // め
+  {.key = B_SHFT|B_W    , .func = ng_send_ne    },  // ね
   {.key = B_SHFT|B_E    , .func = ng_send_ri    },  // り
-  {.key = B_SHFT|B_R    , .func = ng_send_ne    },  // ね
+  {.key = B_SHFT|B_R    , .func = ng_send_me    },  // め
   {.key = B_SHFT|B_T    , .func = ng_s1_next_line_r}, // +{←}
   {.key = B_SHFT|B_Y    , .func = ng_s1_previous_line_r}, // +{→}
   {.key = B_SHFT|B_U    , .func = ng_send_sa    },  // さ
@@ -327,7 +330,7 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_D|B_F|B_I   , .func = ng_saihenkan}, // {vk1Csc079}
   {.key = B_D|B_F|B_K   , .func = ng_s1_back_cursor_r}, // +{↑}
   {.key = B_D|B_F|B_COMM, .func = ng_s1_forward_cursor_r}, // +{↓}
-  {.key = B_D|B_F|B_O   , .func = ng_delete_with_repeat}, // {Del}
+  {.key = B_D|B_F|B_O   , .func = ng_delete}, // {Del}
   {.key = B_D|B_F|B_L   , .func = ng_s7_back_cursor_r}, // +{↑ 7}
   {.key = B_D|B_F|B_DOT , .func = ng_s7_forward_cursor_r}, // +{↓ 7}
   {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // +{Esc 3}
@@ -837,11 +840,11 @@ void ng_backspace(void) { // {BS}
   tap_code(KC_BACKSPACE);
 }
 
-void ng_delete_with_repeat(void) { // {Del}
+void ng_delete(void) { // {Del}
   register_code(KC_DELETE);
 }
 
-void ng_cut() {
+void ng_cut(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16(LCTL(KC_X));
@@ -855,7 +858,7 @@ void ng_cut() {
   }
 }
 
-void ng_copy() {
+void ng_copy(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16(LCTL(KC_C));
@@ -869,7 +872,7 @@ void ng_copy() {
   }
 }
 
-void ng_paste() {
+void ng_paste(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16_delay(LCTL(KC_V), LINUX_WAIT_MS);
@@ -911,7 +914,7 @@ void ng_previous_line(void) {
   ng_1_previous_line_r();
 }
 
-void ng_home() {
+void ng_home(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code(KC_HOME);
@@ -925,7 +928,7 @@ void ng_home() {
   }
 }
 
-void ng_end() {
+void ng_end(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code(KC_END);
@@ -939,11 +942,11 @@ void ng_end() {
   }
 }
 
-void ng_katakana() {
+void ng_katakana(void) {
   tap_code(KC_F7);
 }
 
-void ng_save() {
+void ng_save(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16(LCTL(KC_S));
@@ -957,11 +960,11 @@ void ng_save() {
   }
 }
 
-void ng_hiragana() {
+void ng_hiragana(void) {
   tap_code(KC_F6);
 }
 
-void ng_redo() {
+void ng_redo(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16(LCTL(KC_Y));
@@ -975,7 +978,7 @@ void ng_redo() {
   }
 }
 
-void ng_undo() {
+void ng_undo(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16(LCTL(KC_Z));
@@ -989,7 +992,7 @@ void ng_undo() {
   }
 }
 
-void ng_saihenkan() {
+void ng_saihenkan(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16(LWIN(KC_SLASH));
@@ -1004,7 +1007,7 @@ void ng_saihenkan() {
   }
 }
 
-void ng_eof() {
+void ng_eof(void) {
   ng_ime_complete();
   switch (naginata_config.os) {
     case NG_WIN:
@@ -1020,7 +1023,7 @@ void ng_eof() {
   }
 }
 
-void ng_ime_cancel() {
+void ng_ime_cancel(void) {
   switch (naginata_config.os) {
     case NG_WIN:
     case NG_LINUX:
@@ -1036,7 +1039,7 @@ void ng_ime_cancel() {
   }
 }
 
-void ng_ime_complete() {
+void ng_ime_complete(void) {
   switch (naginata_config.os) {
     case NG_WIN:
       tap_code16(LSFT(LCTL(KC_INTERNATIONAL_4))); // Shift+Ctrl+変換

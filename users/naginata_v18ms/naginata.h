@@ -38,7 +38,7 @@ typedef uint_fast16_t Ngmap_num;
 
 void ng_space_or_enter(void);
 void ng_backspace(void);  // {BS}
-void ng_delete_with_repeat(void); // {Del}
+void ng_delete(void); // {Del}
 void ng_cut(void);
 void ng_copy(void);
 void ng_paste(void);
@@ -119,6 +119,8 @@ typedef union {
   };
 } user_config_t;
 
+// 修正: ヘッダでは実体を定義せずextern宣言にする。
+//       naginata_v18ms.c側で定義。-fno-common環境での多重定義リンクエラーを回避
 user_config_t naginata_config;
 
 #define NG_SAFE_RANGE (NG_SHOS + 1)

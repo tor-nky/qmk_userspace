@@ -16,7 +16,6 @@
 
 #include QMK_KEYBOARD_H
 #include "naginata.h"
-#include "naginata_parts.h"
 
 #define NG_SEND_KANA(string) send_string(PSTR(string))
 
@@ -607,10 +606,6 @@ void ng_ellipsis(void) { // ……{改行}
 void ng_bar(void) { // ――{改行}
     ng_send_unicode_string(PSTR("──"));
 }
-void ng_edit_separate_line(void) { // 　　　×　　　×　　　×{改行 2}
-    ng_send_unicode_string(PSTR("　　　×　　　×　　　×"));
-    tap_code(KC_ENTER);
-}
 
 void ng_1_back_cursor_r(void) { // {↑}
     ng_move_cursor(false, KC_UP, 1);
@@ -686,20 +681,6 @@ void ng_s7_left(void) { // +{← 7}
     ng_move_cursor(true, KC_LEFT, 7);
 }
 
-void ng_edit_kakutei_end(void) { // {Enter}{End}
-    ng_ime_complete();
-    ng_end();
-}
-void ng_edit_delete_to_end(void) { // +{End}{BS}
-    add_mods(MOD_BIT(KC_LEFT_SHIFT));
-    ng_end();
-    del_mods(MOD_BIT(KC_LEFT_SHIFT));
-    tap_code(KC_BACKSPACE);
-}
-void ng_delete_current_line(void) { // {End}+{Home}
-    ng_end();
-    ng_edit_s_home();
-}
 void ng_edit_s_home(void) { // +{Home}
     add_mods(MOD_BIT(KC_LEFT_SHIFT));
     ng_home();
@@ -710,12 +691,28 @@ void ng_edit_s_end(void) { // +{End}
     ng_end();
     del_mods(MOD_BIT(KC_LEFT_SHIFT));
 }
+void ng_edit_kakutei_end(void) { // {Enter}{End}
+    ng_ime_complete();
+    ng_end();
+}
+void ng_edit_delete_to_end(void) { // +{End}{BS}
+    ng_edit_s_end();    // +{End}
+    tap_code(KC_BACKSPACE);
+}
+void ng_delete_current_line(void) { // {End}+{Home}
+    ng_end();
+    ng_edit_s_home();
+}
 
 void ng_edit_3_space(void) { // {Space 3}
     ng_ime_complete();
     tap_code(KC_SPACE);
     tap_code(KC_SPACE);
     tap_code(KC_SPACE);
+}
+void ng_edit_separate_line(void) { // 　　　×　　　×　　　×{改行 2}
+    ng_send_unicode_string(PSTR("　　　×　　　×　　　×"));
+    tap_code(KC_ENTER);
 }
 void ng_edit_togaki(void) { // {Home}{改行}{Space 3}{←}
     ng_home();
