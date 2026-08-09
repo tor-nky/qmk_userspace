@@ -20,7 +20,7 @@
 #include "unicode_P.h"
 #if defined(NG_BMP)
 #   include "bmp_host_driver.h"
-#   include "keyboards/ble_micro_pro/keymaps/naginata_v16m/bmp_send_string.h"
+#   include "keyboards/ble_micro_pro/keymaps/naginata_v18m/bmp_send_string.h"
 #endif
 
 #include <string.h>
@@ -149,7 +149,7 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_D|B_F|B_O   , .func = ng_delete_with_repeat}, // {Del}
   {.key = B_D|B_F|B_L   , .func = ng_s7_back_cursor_r}, // +{↑ 7}
   {.key = B_D|B_F|B_DOT , .func = ng_s7_forward_cursor_r}, // +{↓ 7}
-  {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // +{Esc 2}
+  {.key = B_D|B_F|B_P   , .func = ng_ime_cancel}, // +{Esc 3}
   {.key = B_D|B_F|B_SCLN, .func = ng_katakana}, // ^i
   {.key = B_D|B_F|B_SLSH, .func = ng_hiragana}, // ^u
   {.key = B_J|B_K|B_Q   , .func = ng_eof}, // ^{End}
@@ -176,11 +176,11 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_C|B_V|B_K   , .func = ng_1_previous_line_r}, // {→}
   {.key = B_C|B_V|B_COMM, .func = ng_s1_previous_line_r}, // +{→}
   {.key = B_C|B_V|B_O   , .func = ng_paste}, // ^v
-  {.key = B_C|B_V|B_L   , .func = copy_spc_to_clipboard}, // {改行}{Space}+{Home}^x{BS}
-  {.key = B_C|B_V|B_DOT , .func = ng_s7_next_line_r}, // +{← 7}
+  {.key = B_C|B_V|B_L   , .func = ng_s7_next_line_r}, // +{← 7}
+  {.key = B_C|B_V|B_DOT , .func = ng_delete_current_line}, // {End}+{Home}
   {.key = B_C|B_V|B_P   , .func = ng_undo}, // ^z
-  {.key = B_C|B_V|B_SCLN, .func = ng_redo}, // ^y
-  {.key = B_C|B_V|B_SLSH, .func = ng_s7_previous_line_r}, // +{→ 7}
+  {.key = B_C|B_V|B_SCLN, .func = ng_s7_previous_line_r}, // +{→ 7}
+  {.key = B_C|B_V|B_SLSH, .func = ng_redo}, // ^y
   {.key = B_M|B_COMM|B_Q, .func = ng_vertical_line}, // ｜{改行}
   {.key = B_M|B_COMM|B_A, .func = ng_left_double_angle_bracket}, // 《{改行}
   {.key = B_M|B_COMM|B_Z, .func = ng_right_double_angle_bracket}, // 》{改行}
@@ -327,10 +327,10 @@ const PROGMEM naginata_keymap ngmap[] = {
   {.key = B_SHFT|B_Q    , .func = ng_null       },
   {.key = B_SHFT|B_T    , .func = ng_s1_next_line_r}, // +{←}
   {.key = B_SHFT|B_Y    , .func = ng_s1_previous_line_r}, // +{→}
-  {.key = B_SHFT|B_W    , .func = ng_send_nu    },  // ぬ
+  {.key = B_SHFT|B_B    , .func = ng_send_nu    },  // ぬ
   {.key = B_SHFT|B_P    , .func = ng_send_yu    },  // ゆ
-  {.key = B_SHFT|B_B    , .func = ng_send_mu    },  // む
-  {.key = B_SHFT|B_COMM , .func = ng_send_ne    },  // ね
+  {.key = B_SHFT|B_COMM , .func = ng_send_mu    },  // む
+  {.key = B_SHFT|B_W    , .func = ng_send_ne    },  // ね
   {.key = B_SHFT|B_SCLN , .func = ng_send_hu    },  // ふ
   {.key = B_SHFT|B_Z    , .func = ng_send_ho    },  // ほ
   {.key = B_SHFT|B_H    , .func = ng_send_ya    },  // や

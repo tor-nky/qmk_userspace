@@ -253,6 +253,7 @@ void ng_edit_s_home(void); // +{Home}
 void ng_edit_s_end(void); // +{End}
 void ng_edit_kakutei_end(void); // {Enter}{End}
 void ng_edit_delete_to_end(void); // +{End}{BS}
+void ng_delete_current_line(void); // {End}+{Home}
 
 void ng_edit_3_space(void); // {Space 3}
 void ng_edit_separate_line(void); // 　　　×　　　×　　　×{改行 2}
@@ -275,5 +276,3 @@ void ng_right_double_angle_bracket(void); // 》{改行}
 void ng_right_corner_bracket_next_line(void); // 」{改行}{改行}
 void ng_right_corner_bracket_next_line_left_corner_bracket(void); // 」{改行}{改行}「{改行}
 void ng_right_corner_bracket_next_line_space(void); // 」{改行}{改行}{Space}
-
-void copy_spc_to_clipboard(void);

@@ -18,7 +18,7 @@
 #include "naginata.h"
 #if defined(NG_BMP)
 #   include "bmp_host_driver.h"
-#   include "keyboards/ble_micro_pro/keymaps/naginata_v15m/bmp_send_string.h"
+#   include "keyboards/ble_micro_pro/keymaps/naginata_v18m/bmp_send_string.h"
 #   define BMP_DELAY 40
 #endif
 
@@ -1295,56 +1295,6 @@ void ng_send_tsa(void) {    // つぁ
 }
 #endif
 
-void copy_spc_to_clipboard(void) {
-#if defined(NG_BMP)
-    switch (naginata_config.os) {
-    case NG_LINUX:
-        if (get_usb_enabled()) {
-            bmp_send_string(" "SS_DELAY(16));
-            bmp_send_string(SS_DOWN(X_LSFT));
-            ng_back_cursor();
-            bmp_send_string(SS_UP(X_LSFT));
-            bmp_send_string(SS_DELAY(16));
-            ng_cut();
-        }
-        // LinuxとBluetooth接続した時は動作しないので省略
-        break;
-    case NG_IOS:
-        bmp_send_string(" "SS_DELAY(BMP_DELAY));
-        bmp_send_string(SS_DOWN(X_LSFT));
-        ng_back_cursor();
-        bmp_send_string(SS_UP(X_LSFT));
-        ng_cut();
-        break;
-    default:
-        bmp_send_string(" "SS_DOWN(X_LSFT));
-        ng_back_cursor();
-        bmp_send_string(SS_UP(X_LSFT));
-        ng_cut();
-        break;
-    }
-#else
-    switch (naginata_config.os) {
-    case NG_LINUX:
-        wait_ms(8);
-        tap_code_delay(KC_SPACE, 16);
-        add_mods(MOD_BIT(KC_LEFT_SHIFT));
-        ng_back_cursor();
-        del_mods(MOD_BIT(KC_LEFT_SHIFT));
-        wait_ms(16); // 確実に動作させるため
-        ng_cut();
-        break;
-    default:
-        tap_code(KC_SPACE);
-        add_mods(MOD_BIT(KC_LEFT_SHIFT));
-        ng_back_cursor();
-        del_mods(MOD_BIT(KC_LEFT_SHIFT));
-        ng_cut();
-        break;
-    }
-#endif
-}
-
 #if defined(NG_BMP) || defined(NG_USE_DIC)
 // 辞書式用
 static void dic_send_string(const char *str) {
@@ -1543,11 +1493,8 @@ void ng_1_previous_line_r(void) { // {→}
 void ng_s1_previous_line_r(void) { // +{→}
     ng_move_cursor_with_ty_repeat(true, KC_RIGHT, 1);
 }
-void ng_s5_previous_line_r(void) { // +{→ 5}
-    ng_move_cursor_with_ty_repeat(true, KC_RIGHT, 5);
-}
-void ng_s20_previous_line_r(void) { // +{→ 20}
-    ng_move_cursor_with_ty_repeat(true, KC_RIGHT, 20);
+void ng_s7_previous_line_r(void) { // +{→ 7}
+    ng_move_cursor_with_ty_repeat(true, KC_RIGHT, 7);
 }
 void ng_1_next_line_r(void) { // {←}
     ng_move_cursor_with_ty_repeat(false, KC_LEFT, 1);
@@ -1555,11 +1502,8 @@ void ng_1_next_line_r(void) { // {←}
 void ng_s1_next_line_r(void) { // +{←}
     ng_move_cursor_with_ty_repeat(true, KC_LEFT, 1);
 }
-void ng_s5_next_line_r(void) { // +{← 5}
-    ng_move_cursor_with_ty_repeat(true, KC_LEFT, 5);
-}
-void ng_s20_next_line_r(void) { // +{← 20}
-    ng_move_cursor_with_ty_repeat(true, KC_LEFT, 20);
+void ng_s7_next_line_r(void) { // +{← 7}
+    ng_move_cursor_with_ty_repeat(true, KC_LEFT, 7);
 }
 
 void ng_1_up(void) { // {↑}
@@ -1621,14 +1565,6 @@ void ng_edit_s_end(void) { // +{End}
     del_mods(MOD_BIT(KC_LEFT_SHIFT));
 #endif
 }
-void ng_edit_kakutei_down(void) { // {改行}{↓}
-    ng_ime_complete();
-    ng_forward_cursor();
-}
-void ng_edit_kakutei_left(void) { // {改行}{←}
-    ng_ime_complete();
-    ng_next_line();
-}
 void ng_edit_kakutei_end(void) { // {Enter}{End}
     ng_ime_complete();
     ng_end();
@@ -1641,6 +1577,10 @@ void ng_edit_delete_to_end(void) { // +{End}{BS}
     ng_edit_s_end();    // +{End}
     tap_code(KC_BACKSPACE);
 #endif
+}
+void ng_delete_current_line(void) { // {End}+{Home}
+    ng_end();
+    ng_edit_s_home();
 }
 
 void ng_edit_3_space(void) { // {Space 3}
@@ -1747,121 +1687,144 @@ void ng_edit_serifu_zengyo(void) { // {Home}{→}{End}{Del 2}{←}
 #endif
 }
 
-void ng_parenthesis(void) { // (){改行}{↑}
+void ng_left_parenthesis(void) { // ({改行}
 #if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    dic_send_string(PSTR("nagimaka")); // "（）"
-    ng_back_cursor();
+    dic_send_string(PSTR("nagihimaka")); // "（"
 #else
-    ng_send_unicode_string_P(PSTR("（）"));
-    ng_back_cursor();
+    ng_send_unicode_string_P(PSTR("（"));
 #endif
 }
-void ng_corner_bracket(void) { // 「」{改行}{↑}
+void ng_right_parenthesis(void) { // ){改行}
 #if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    dic_send_string(PSTR("nagikaka")); // "「」"
-    ng_back_cursor();
+    dic_send_string(PSTR("nagitomaka")); // "）"
 #else
-    ng_send_unicode_string_P(PSTR("「」"));
-    ng_back_cursor();
+    ng_send_unicode_string_P(PSTR("）"));
 #endif
 }
-void ng_white_corner_bracket(void) { // 『』{改行}{↑}
+void ng_left_corner_bracket(void) { // 「{改行}
 #if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    dic_send_string(PSTR("naginika")); // "『』"
-    ng_back_cursor();
+    dic_send_string(PSTR("nagihikaka")); // "「"
 #else
-    ng_send_unicode_string_P(PSTR("『』"));
-    ng_back_cursor();
+    ng_send_unicode_string_P(PSTR("「"));
 #endif
 }
-void ng_black_lenticular_bracket(void) { // 【】{改行}{↑}
+void ng_right_corner_bracket(void) { // 」{改行}
 #if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    dic_send_string(PSTR("nagisuka")); // "【】"
-    ng_back_cursor();
+    dic_send_string(PSTR("nagitokaka")); // "」"
 #else
-    ng_send_unicode_string_P(PSTR("【】"));
-    ng_back_cursor();
+    ng_send_unicode_string_P(PSTR("」"));
 #endif
 }
-void ng_double_angle_bracket(void) { // 《》{改行}{↑}
+void ng_left_white_corner_bracket(void) { // 『{改行}
 #if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    dic_send_string(PSTR("naginiya")); // "《》"
-    ng_back_cursor();
+    dic_send_string(PSTR("nagihinika")); // "『"
 #else
-    ng_send_unicode_string_P(PSTR("《》"));
-    ng_back_cursor();
+    ng_send_unicode_string_P(PSTR("『"));
 #endif
 }
-void ng_edit_next_line_corner_bracket(void) { // {改行}{End}{改行}「」{改行}{↑}
-#if defined(NG_BMP)
+void ng_right_white_corner_bracket(void) { // 』{改行}
+#if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    ng_end();
-    bmp_send_string("\n");
-    ng_corner_bracket(); // 「」{改行}{↑}
+    dic_send_string(PSTR("nagitonika")); // "』"
 #else
-    ng_ime_complete();
-    ng_end();
-    tap_code(KC_ENTER);
-    ng_corner_bracket(); // 「」{改行}{↑}
+    ng_send_unicode_string_P(PSTR("』"));
 #endif
 }
-void ng_edit_next_line_space(void) { // {改行}{End}{改行}{Space}
-#if defined(NG_BMP)
+void ng_left_black_lenticular_bracket(void) { // 【{改行}
+#if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    ng_end();
-    bmp_send_string("\n ");
+    dic_send_string(PSTR("nagihisuka")); // "【"
 #else
+    ng_send_unicode_string_P(PSTR("【"));
+#endif
+}
+void ng_right_black_lenticular_bracket(void) { // 】{改行}
+#if defined(NG_BMP) || defined(NG_USE_DIC)
     ng_ime_complete();
-    ng_end();
-    tap_code(KC_ENTER);
-    tap_code(KC_SPACE);
+    dic_send_string(PSTR("nagitosuka")); // "】"
+#else
+    ng_send_unicode_string_P(PSTR("】"));
+#endif
+}
+void ng_left_double_angle_bracket(void) { // 《{改行}
+#if defined(NG_BMP) || defined(NG_USE_DIC)
+    ng_ime_complete();
+    dic_send_string(PSTR("nagihiniya")); // "《"
+#else
+    ng_send_unicode_string_P(PSTR("《"));
+#endif
+}
+void ng_right_double_angle_bracket(void) { // 》{改行}
+#if defined(NG_BMP) || defined(NG_USE_DIC)
+    ng_ime_complete();
+    dic_send_string(PSTR("nagitoniya")); // "》"
+#else
+    ng_send_unicode_string_P(PSTR("》"));
 #endif
 }
 
-void ng_edit_surround_parenthesis(void) { // ^x(^v){改行}{Space}+{↑}^x
-    ng_cut();
-    ng_parenthesis(); // (){改行}{↑}
-    ng_paste();
-    ng_forward_cursor();
-    copy_spc_to_clipboard();
-}
-void ng_edit_surround_corner_bracket(void) { // ^x「^v」{改行}{Space}+{↑}^x
-    ng_cut();
-    ng_corner_bracket(); // 「」{改行}{↑}
-    ng_paste();
-    ng_forward_cursor();
-    copy_spc_to_clipboard();
-}
-void ng_edit_surround_white_corner_bracket(void) { // ^x『^v』{改行}{Space}+{↑}^x
-    ng_cut();
-    ng_white_corner_bracket(); // 『』{改行}{↑}
-    ng_paste();
-    ng_forward_cursor();
-    copy_spc_to_clipboard();
-}
-void ng_edit_surround_black_lenticular_bracket(void) { // ^x【^v】{改行}{Space}+{↑}^x
-    ng_cut();
-    ng_black_lenticular_bracket(); // 【】{改行}{↑}
-    ng_paste();
-    ng_forward_cursor();    // 1文字進む
-    copy_spc_to_clipboard();
-}
-void ng_edit_surround_ruby(void) { // ^x｜{改行}^v《》{改行}{↑}{Space}+{↑}^x
-    ng_cut();
-    ng_vertical_line();  // "｜"
-    ng_paste();
-    copy_spc_to_clipboard();
+void ng_right_corner_bracket_next_line(void) { // 」{改行}{改行}
 #if defined(NG_BMP)
-    bmp_send_string(SS_DELAY(8));
-#elif defined(NG_USE_DIC)
-    wait_ms(32);
-#elif !defined(NG_USE_KAWASEMI)
-    wait_ms(40);
+    ng_right_corner_bracket(); // 」{改行}
+    bmp_send_string("\n");
+    bmp_send_string(SS_DELAY(16));  // 連続押し対策
+#else
+    ng_right_corner_bracket(); // 」{改行}
+    tap_code(KC_ENTER);
 #endif
-    ng_double_angle_bracket(); // 《》{改行}{↑}
+}
+void ng_right_corner_bracket_next_line_left_corner_bracket(void) { // 」{改行}{改行}「{改行}
+#if defined(NG_BMP)
+    ng_right_corner_bracket(); // 」{改行}
+    bmp_send_string("\n");
+    bmp_send_string(SS_DELAY(BMP_DELAY));
+    ng_left_corner_bracket(); // 「{改行}
+#else
+    switch (naginata_config.os) {
+    case NG_LINUX:
+        ng_right_corner_bracket(); // 」{改行}
+        tap_code_delay(KC_ENTER, 56);
+        ng_left_corner_bracket(); // 「{改行}
+        break;
+# if !defined(NG_USE_DIC) && !defined(NG_USE_KAWASEMI)
+    case NG_MAC:
+        ng_send_unicode_string_P(PSTR("」「"));
+        tap_code16(LCTL(KC_B)); // 1文字戻る
+        tap_code(KC_ENTER);
+        tap_code16(LCTL(KC_F)); // 1文字進む
+        break;
+# endif
+        default:
+        ng_right_corner_bracket(); // 」{改行}
+        tap_code(KC_ENTER);
+        ng_left_corner_bracket(); // 「{改行}
+        break;
+    }
+#endif
+}
+void ng_right_corner_bracket_next_line_space(void) { // 」{改行}{改行}{Space}
+#if defined(NG_BMP)
+    ng_right_corner_bracket(); // 」{改行}
+    bmp_send_string("\n");
+    bmp_send_string(SS_DELAY(16));  // 秀丸エディタ対策
+    bmp_send_string(" ");
+#else
+    switch (naginata_config.os) {
+    case NG_LINUX:
+        ng_right_corner_bracket(); // 」{改行}
+        tap_code_delay(KC_ENTER, 48);
+        tap_code(KC_SPACE);
+        break;
+    default:
+        ng_right_corner_bracket(); // 」{改行}
+        tap_code(KC_ENTER);
+        tap_code(KC_SPACE);
+        break;
+    }
+#endif
 }
