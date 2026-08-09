@@ -18,7 +18,7 @@
 #include "naginata.h"
 #if defined(NG_BMP)
 #   include "bmp_host_driver.h"
-#   include "keyboards/ble_micro_pro/keymaps/naginata_v17m/bmp_send_string.h"
+#   include "keyboards/ble_micro_pro/keymaps/naginata_v18m/bmp_send_string.h"
 #   define BMP_DELAY 40
 #endif
 
