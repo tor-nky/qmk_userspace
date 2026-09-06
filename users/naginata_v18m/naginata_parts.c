@@ -736,9 +736,9 @@ static void ng_send_kana_fast(const char *str) {
     // 文字を取り出しながら最大限まとめて出力
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
-        // is_nkro = keyboard_protocol && keymap_config.nkro;   // QMK Firmware 0.26.x 以前
+        // is_nkro = keyboard_protocol && keymap_config.nkro;   // QMK Firmware 0.23 〜 0.26.x
         // is_nkro = usb_device_state_get_protocol() && keymap_config.nkro;   // QMK Firmware 0.27 〜 0.28.x
-        is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.29 以降
+        is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.29 〜
     #endif
     #ifdef CONSOLE_ENABLE
         uint keys = 0;
@@ -748,14 +748,14 @@ static void ng_send_kana_fast(const char *str) {
     while (pgm_read_byte(str) != 0) {
         uint8_t len = 0;
         {
-            // すでにバッファに入っている文字を避け、NKROまたはMacではUSBキーコード順が続くかぎり、何文字あるか探索
+            // バッファに入っていない文字が(NKROまたはMacではUSBキーコード昇順で)いくつ続くか探索
             const char *str_copy = str;
             char ascii_code;
             uint8_t last_keycode = 0;
             for ( ; (ascii_code = pgm_read_byte(str_copy++)) != 0; len++) {
                 uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-                // バッファにあるのと同じキー
-                if (is_key_pressed(keycode) // QMK Firmware 0.23 以降
+                // 送信を区切るべきか
+                if (is_key_pressed(keycode) // バッファにある   // QMK Firmware 0.23 〜
                     || ((is_nkro || naginata_config.os == NG_MAC) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)) {
                         break;
@@ -767,8 +767,8 @@ static void ng_send_kana_fast(const char *str) {
         for (uint8_t i = 0; i < len; i++, str++) {
             char ascii_code = pgm_read_byte(str);
             uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
-            // バッファに入れてみたら同じキーがあった
-            if (i > 0 && is_key_pressed(keycode)) { // QMK Firmware 0.23 以降
+            // バッファに同じキーがある
+            if (i > 0 && is_key_pressed(keycode)) { // QMK Firmware 0.23 〜
                 break;
             }
             // バッファにためる

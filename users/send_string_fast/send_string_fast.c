@@ -25,9 +25,9 @@ void send_string_fast(const char *str, bool is_not_apple) {
     bool is_output = false;
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
-        // is_nkro = keyboard_protocol && keymap_config.nkro;   // QMK Firmware 0.26.x 以前
+        // is_nkro = keyboard_protocol && keymap_config.nkro;   // QMK Firmware 0.23 〜 0.26.x
         // is_nkro = usb_device_state_get_protocol() && keymap_config.nkro;   // QMK Firmware 0.27 〜 0.28.x
-        is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.29 以降
+        is_nkro = host_can_send_nkro() && keymap_config.nkro;   // QMK Firmware 0.29 〜
     #endif
     #ifdef CONSOLE_ENABLE
         uint keys = 0;
@@ -38,10 +38,12 @@ void send_string_fast(const char *str, bool is_not_apple) {
     while (is_dead || pgm_read_byte(str) > SS_QMK_PREFIX) {
         bool is_shifted = false;
         bool is_altgred = false;
-        // すでにバッファに入っている文字を避ける、is_shifted と is_altgred が同じ、
-        // NKROまたはMacではUSBキーコード順で、何文字続くか探索
+        // バッファに入っていない is_shifted と is_altgred が同じ文字が
+        // (NKROまたはMacではUSBキーコード昇順で)いくつ続くか探索
+        // ※ バッファを空にする前に調べる必要あり
         uint8_t sendable_length = 0;
-        bool last_has_space = is_key_pressed(KC_SPACE); // QMK Firmware 0.23 以降
+        // デッドキーの後付けスペースキー対策
+        bool last_has_space = is_key_pressed(KC_SPACE); // QMK Firmware 0.23 〜
         {
             const char *str_copy = str;
             char ascii_code;
@@ -60,11 +62,11 @@ void send_string_fast(const char *str, bool is_not_apple) {
                     is_shifted_this = (pgm_read_byte(&((ascii_to_shift_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
                     is_altgred_this = (pgm_read_byte(&((ascii_to_altgr_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
                 }
-                // バッファにあるのと同じキー
+                // 送信を区切るべきか
                 if ((len > 0 && (is_shifted_this != is_shifted || is_altgred_this != is_altgred))
                     || ((is_nkro || !is_not_apple) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)
-                    || is_key_pressed(keycode)  // QMK Firmware 0.23 以降
+                    || is_key_pressed(keycode)  // バッファにある   // QMK Firmware 0.23 〜
                 ) {
                     break;
                 }
@@ -102,15 +104,17 @@ void send_string_fast(const char *str, bool is_not_apple) {
                     ascii_code = pgm_read_byte(str);
                     keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
                 }
-                // バッファにあるのと同じキー
+                // 送信を区切るべきか
                 if ((is_dead && last_has_space)
                     || ((is_nkro || !is_not_apple) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)
-                    || is_key_pressed(keycode)  // QMK Firmware 0.23 以降
+                    || is_key_pressed(keycode)  // バッファにある   // QMK Firmware 0.23 〜
                 ) {
                     break;
                 }
                 add_key(keycode);
+                last_keycode = keycode;
+                is_output = true;
                 #ifdef CONSOLE_ENABLE
                     keys++;
                     if (is_dead) {
@@ -119,11 +123,9 @@ void send_string_fast(const char *str, bool is_not_apple) {
                         uprintf("%c", ascii_code);
                     }
                 #endif
-                last_keycode = keycode;
                 if (is_dead) {
                     is_dead = false;
                 } else {
-                    is_output = true;
                     str++;
                     sendable_length--;
                     is_dead = (pgm_read_byte(&((ascii_to_dead_lut)[((uint8_t)ascii_code) / 8])) >> (((uint8_t)ascii_code) % 8)) & 0x01;
