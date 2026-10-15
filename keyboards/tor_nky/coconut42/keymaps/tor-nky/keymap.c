@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include "keymap_japanese.h"
-#include "users/naginata_v17m/twpair_on_jis.h"
+#include "twpair_on_jis.h"
 
 // Defines names for use in layer keycodes and the keymap
 enum keymap_layers {
