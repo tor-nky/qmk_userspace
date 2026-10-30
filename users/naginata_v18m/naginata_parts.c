@@ -733,6 +733,10 @@ void ng_send_tsa(void) {    // つぁ
 //    6KRO で Mac なら、USBキーコード順にキーが続くかぎり最大6個ためる（やや高速）
 //    NKRO なら、USBキーコード順にキーが続くかぎりためて一度に送出し、離すのも一度に出力（やや高速）
 static void ng_send_kana_fast(const char *str) {
+    if (naginata_config.os == NG_MAC) {
+        send_string_P(str);
+        return;
+    }
     // 文字を取り出しながら最大限まとめて出力
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
@@ -756,7 +760,7 @@ static void ng_send_kana_fast(const char *str) {
                 uint8_t keycode = pgm_read_byte(&ascii_to_keycode_lut[(uint8_t)ascii_code]);
                 // 送信を区切るべきか
                 if (is_key_pressed(keycode) // バッファにある   // QMK Firmware 0.23 〜
-                    || ((is_nkro || naginata_config.os == NG_MAC) && keycode < last_keycode)
+                    || ((is_nkro) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)) {
                         break;
                 }
