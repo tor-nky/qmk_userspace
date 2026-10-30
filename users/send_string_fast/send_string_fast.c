@@ -21,7 +21,7 @@
 //    6KRO(Macを除く) なら、押したキーを最大6個ためて一度に送出し、離すのも一度に出力（最速）
 //    6KRO で Mac なら、USBキーコード順にキーが続くかぎり最大6個ためる（やや高速）
 //    NKRO なら、USBキーコード順にキーが続くかぎりためて一度に送出し、離すのも一度に出力（やや高速）
-void send_string_fast(const char *str, bool is_not_apple) {
+void send_string_fast(const char *str, bool is_apple) {
     bool is_output = false;
     bool is_nkro = false;
     #ifdef NKRO_ENABLE
@@ -64,7 +64,7 @@ void send_string_fast(const char *str, bool is_not_apple) {
                 }
                 // 送信を区切るべきか
                 if ((len > 0 && (is_shifted_this != is_shifted || is_altgred_this != is_altgred))
-                    || ((is_nkro || !is_not_apple) && keycode < last_keycode)
+                    || ((is_nkro || is_apple) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)
                     || is_key_pressed(keycode)  // バッファにある   // QMK Firmware 0.23 〜
                 ) {
@@ -106,7 +106,7 @@ void send_string_fast(const char *str, bool is_not_apple) {
                 }
                 // 送信を区切るべきか
                 if ((is_dead && last_has_space)
-                    || ((is_nkro || !is_not_apple) && keycode < last_keycode)
+                    || ((is_nkro || is_apple) && keycode < last_keycode)
                     || (!is_nkro && len >= KEYBOARD_REPORT_KEYS)
                     || is_key_pressed(keycode)  // バッファにある   // QMK Firmware 0.23 〜
                 ) {

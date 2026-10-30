@@ -134,7 +134,7 @@ const PROGMEM char *test_words[] = {
   };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static bool is_not_apple = false;
+  static bool is_apple = true;
   // #ifdef CONSOLE_ENABLE
   //   const uint16_t key_timer = timer_read();  // 時間測定開始;
   // #endif
@@ -142,19 +142,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case FOR_WIN:
       if (record->event.pressed) {
-        is_not_apple = true;
+        is_apple = false;
       }
       cont = false;
       break;
     case FOR_MAC:
       if (record->event.pressed) {
-        is_not_apple = false;
+        is_apple = true;
       }
       cont = false;
       break;
     case QK_USER_0 ... QK_USER_29:
       if (record->event.pressed) {
-        send_string_fast(PSTR(test_words[keycode - QK_USER_0]), is_not_apple);
+        send_string_fast(PSTR(test_words[keycode - QK_USER_0]), is_apple);
       }
       cont = false;
       break;

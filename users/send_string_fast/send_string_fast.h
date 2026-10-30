@@ -14,4 +14,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-void send_string_fast(const char *str, bool is_not_apple);
+void send_string_fast(const char *, bool);
