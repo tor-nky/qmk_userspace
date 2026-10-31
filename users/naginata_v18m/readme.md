@@ -82,11 +82,7 @@ IMEのキー設定
 「キーボード設定を開く...」から「入力ソース」に英語「U.S.」を加えます。
 「英数」キーでIMをオフにしたとき「U.S.」になるようにしてください。
 
-さらに、[Karabiner-Elements](https://karabiner-elements.pqrs.org/)をインストールします。
-ファイル unicode_hex_input_switcher.json をフォルダ ~/.config/karabiner/assets/complex_modification/ にコピーし、
-Karabiner-Elements に Unicode Hex Input Switcher を登録してください。
-
-念のため、Karabiner-Elements の設定 Device で、本ファームウェアが入ったキーボードが有効になっているか確認してください。
+さらに、[Ishizuki](https://github.com/eswai/Ishizuki)をインストールしてください。
 #### IM に「かわせみ」を使用する場合
 コード入力に Control+Option+Shift+かな を設定してください。
 （config.h の中に ``#define NG_USE_KAWASEMI`` と ``#define UNICODE_KEY_MAC KC_NO`` を書き加えてコンパイルします）

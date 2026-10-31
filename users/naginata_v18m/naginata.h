@@ -38,58 +38,32 @@
 #   include "bmp_custom_keycodes.h" // For BLE Miro Pro new firmware(>=1.0.0)
 #endif
 
+// 薙刀式レイヤーとオン/オフキーを設定する。keyboard_post_init_userから呼ぶ
 void set_naginata(uint8_t, uint16_t *, uint16_t *);
+// process_record_userから呼ぶ。falseを返したらキー入力を消費済み
+bool process_naginata(uint16_t, keyrecord_t *);
 
 void naginata_on(void);
 void naginata_off(void);
 bool naginata_state(void);
+
 void switchOS(uint8_t);
+void ng_show_os(void);
 void tategaki_toggle(void);
 void tategaki_on(void);
 void tategaki_off(void);
 void kouchi_shift_toggle(void);
-void ng_show_os(void);
 
+// Unicode文字列の送出(strはRAM、pstrはPROGMEM)
 void ng_send_unicode_string_P(const char *);
 
-bool process_naginata(uint16_t, keyrecord_t *);
-bool naginata_type(uint16_t, keyrecord_t *);
+// 後置シフト待ち処理
 void kouchi_shift_loop(void);
-
-// typedef struct {
-//   uint16_t keycode;
-//   uint16_t pressTime;
-//   uint16_t releaseTime;
-// } Keystroke;
 
 // 同時押し等の状態を示す、各ビットがキーに対応する型
 typedef uint32_t Ngkey;
 // かな定義配列 ngmap[] の添字の型
 typedef uint_fast16_t Ngmap_num;
-
-void ng_space_or_enter(void);
-void ng_backspace_with_repeat(void);  // {BS}
-void ng_delete_with_repeat(void); // {Del}
-void ng_cut(void);
-void ng_copy(void);
-void ng_paste(void);
-void ng_move_cursor_with_repeat(bool, uint8_t, uint8_t);
-void ng_move_cursor_with_ty_repeat(bool shift, uint8_t code, uint8_t count);
-void ng_back_cursor(void);
-void ng_forward_cursor(void);
-void ng_next_line(void);
-void ng_previous_line(void);
-void ng_home(void);
-void ng_end(void);
-void ng_katakana(void);
-void ng_save(void);
-void ng_hiragana(void);
-void ng_redo(void);
-void ng_undo(void);
-void ng_saihenkan(void);
-void ng_eof(void);
-void ng_ime_cancel(void);
-void ng_ime_complete(void);
 
 #if !defined(QK_NG)
 #   define QK_NG QK_USER
