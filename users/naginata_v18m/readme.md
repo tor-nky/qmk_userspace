@@ -25,7 +25,7 @@ OLED を使わなければ7番目は不要です。
 IMEへの辞書登録が必要ですが、他の設定はいりません。そのため、現行のMS-IMEでも使えます。  
 辞書使用の場合、config.h の中に ``#define NG_USE_DIC`` を書き加えてコンパイルします。
 
-BLE Micro Pro の場合、vial-qmk/keyboards/ble_micro_pro/keymaps/ 下の [naginata_v18m/](https://github.com/tor-nky/vial-qmk/tree/kana/naginata/keyboards/ble_micro_pro/keymaps/naginata_v18m) と [vial/](https://github.com/tor-nky/vial-qmk/tree/kana/naginata/keyboards/ble_micro_pro/keymaps/vial) の内容の違いをお調べ下さい。
+BLE Micro Pro の場合、vial-qmk/keyboards/ble_micro_pro/keymaps/ 下の [naginata_v17m/](https://github.com/tor-nky/vial-qmk/tree/kana/naginata/keyboards/ble_micro_pro/keymaps/naginata_v17m) と [vial/](https://github.com/tor-nky/vial-qmk/tree/kana/naginata/keyboards/ble_micro_pro/keymaps/vial) の内容の違いをお調べ下さい。
 ### 共通
 下表のものを __辞書登録__ してください。
 |単語|読み|参考|
