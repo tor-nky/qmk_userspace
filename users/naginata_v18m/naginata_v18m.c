@@ -620,34 +620,6 @@ static void ng_send_guxwa(void) { ng_send_gu(); ng_send_xwa(); } // ぐゎ
 static void ng_send_tsa(void) { ng_send_t(); ng_send_sa(); } // つぁ
 #endif
 
-#if defined(NG_BMP) || defined(NG_USE_DIC)
-// 辞書式用
-static void dic_send_string(const char *str) {
-#   if defined(NG_BMP)
-    switch (naginata_config.os) {
-    case NG_IOS:
-        bmp_send_string(str);
-        bmp_send_string(SS_DELAY(120));
-        bmp_send_string(" ");
-        ng_ime_complete();
-        break;
-    default:
-        bmp_send_string(str);
-        bmp_send_string(" \n");
-        break;
-    }
-#   else
-    if (naginata_config.os == NG_LINUX) {
-        send_string_with_delay_P(str, 8);
-    } else {
-        send_string_P(str);
-    }
-    tap_code(KC_SPACE);
-    tap_code(KC_ENTER);
-#   endif
-}
-#endif
-
 static void ng_ime_complete(void) {
 #if defined(NG_BMP)
   switch (naginata_config.os) {
@@ -744,6 +716,34 @@ static void ng_ime_cancel(void) {
   }
 #endif
 }
+
+#if defined(NG_BMP) || defined(NG_USE_DIC)
+// 辞書式用
+static void dic_send_string(const char *str) {
+#   if defined(NG_BMP)
+    switch (naginata_config.os) {
+    case NG_IOS:
+        bmp_send_string(str);
+        bmp_send_string(SS_DELAY(120));
+        bmp_send_string(" ");
+        ng_ime_complete();
+        break;
+    default:
+        bmp_send_string(str);
+        bmp_send_string(" \n");
+        break;
+    }
+#   else
+    if (naginata_config.os == NG_LINUX) {
+        send_string_with_delay_P(str, 8);
+    } else {
+        send_string_P(str);
+    }
+    tap_code(KC_SPACE);
+    tap_code(KC_ENTER);
+#   endif
+}
+#endif
 
 // ---- カーソル移動・編集 ----
 
