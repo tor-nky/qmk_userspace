@@ -2408,20 +2408,12 @@ static enum TransState which_trans_state(Ngkey search) {
               state = WaitShift;
             }
             break;
-          default:
-            if (!(remains & B_SHFT)) {
-              return Multipul;
-            } else if (naginata_config.kouchi_shift) {
-              state = WaitShift;
-            }
-            break;
-#else
+#endif
           default:
             if (naginata_config.kouchi_shift || !(remains & B_SHFT)) {
               return Multipul;
             }
             break;
-#endif
         }
       }
     }
