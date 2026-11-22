@@ -1931,8 +1931,11 @@ static const PROGMEM naginata_keymap ngmap[] = {
 
   // 機能部分
   {.key = B_H|B_J       , .func = naginata_on},   //　かなオン
+  {.key = B_SHFT|B_H|B_J, .func = naginata_on},
   {.key = B_F|B_G       , .func = naginata_off},  //　かなオフ
-  {.key = B_V|B_M       , .func = ng_enter},
+  {.key = B_SHFT|B_F|B_G, .func = naginata_off},
+  {.key = B_V|B_M       , .func = ng_enter},      // Enter
+  {.key = B_SHFT|B_V|B_M, .func = ng_enter},
 
   // センターシフト
   {.key = B_SHFT|B_Q    , .func = ng_null       },
