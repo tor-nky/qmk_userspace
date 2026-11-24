@@ -133,6 +133,9 @@ static void naginata_clear(void) {
   pressed_key = 0;
   waiting_count = 0; // 文字キーを数える
   reuse_key_state = Off;
+#if defined (NG_KOUCHI_SHIFT_MS)
+  time_up_kouchi_shift = false;
+#endif
 }
 
 void ng_send_unicode_string_P(const char *str) {
