@@ -2413,22 +2413,16 @@ static enum TransState which_trans_state(Ngkey search) {
             break;
 #if defined (NG_KOUCHI_SHIFT_MS)  // 後置シフトの時間制限あり
           case B_SHFT:
-            if (naginata_config.kouchi_shift && !time_up_kouchi_shift) {
+            if (naginata_config.kouchi_shift) {
               state = WaitShift;
             }
             break;
-          default:
-            if ((naginata_config.kouchi_shift && !time_up_kouchi_shift) || !(remains & B_SHFT)) {
-              return Multipul;
-            }
-            break;
-#else
+#endif
           default:
             if (naginata_config.kouchi_shift || !(remains & B_SHFT)) {
               return Multipul;
             }
             break;
-#endif
         }
       }
     }
@@ -2609,10 +2603,6 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     }
 #endif
   }
-
-#if defined (NG_KOUCHI_SHIFT_MS)
-  time_up_kouchi_shift = false;
-#endif
   return (recent_key == 0);
 }
 
@@ -2622,18 +2612,21 @@ void kouchi_shift_loop(void) {
   // 後置シフトを待ったが時間切れ
   if (trans_state == WaitShift && timer_elapsed(ng_last_pressed_ms) >= (NG_KOUCHI_SHIFT_MS)) {
     time_up_kouchi_shift = true;
+    naginata_config.kouchi_shift = false; // 後置シフトの時間切れなので、一時的に前置シフトとしてキーを処理
+    {
+      keyrecord_t record;
+      record.event.pressed = true;
+      record.event.time = ng_last_pressed_ms;
+      naginata_type(KC_NO, &record); // 未出力キーを処理
+    }
+    naginata_config.kouchi_shift = true;
+    time_up_kouchi_shift = false;
+    return;
   }
-  if (time_up_kouchi_shift
-#   if defined (NG_SHIFTED_DOUJI_MS)
-  // センターシフトを押しながらの同時押しの制限時間を待ったが時間切れ
-      || (trans_state == WaitDouji && timer_elapsed(ng_last_pressed_ms) >= (NG_SHIFTED_DOUJI_MS))
-#   endif
-  ) {
-#elif defined (NG_SHIFTED_DOUJI_MS)
+#endif
+#if defined (NG_SHIFTED_DOUJI_MS)
   // センターシフトを押しながらの同時押しの制限時間を待ったが時間切れ
   if (trans_state == WaitDouji && timer_elapsed(ng_last_pressed_ms) >= (NG_SHIFTED_DOUJI_MS)) {
-#endif
-#if defined (NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS)
     keyrecord_t record;
     record.event.pressed = true;
     record.event.time = ng_last_pressed_ms;
