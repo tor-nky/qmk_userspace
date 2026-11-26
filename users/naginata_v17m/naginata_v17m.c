@@ -132,6 +132,7 @@ static void naginata_clear(void) {
   end_repeating_key();
   pressed_key = 0;
   waiting_count = 0; // 文字キーを数える
+  center_shift_count = 0;
   reuse_key_state = Off;
 #if defined (NG_KOUCHI_SHIFT_MS)
   time_up_kouchi_shift = false;
