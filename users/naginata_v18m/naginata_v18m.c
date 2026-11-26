@@ -132,6 +132,7 @@ static void naginata_clear(void) {
   end_repeating_key();
   pressed_key = 0;
   waiting_count = 0; // 文字キーを数える
+  center_shift_count = 0;
   reuse_key_state = Off;
 #if defined (NG_KOUCHI_SHIFT_MS)
   time_up_kouchi_shift = false;
@@ -2413,22 +2414,16 @@ static enum TransState which_trans_state(Ngkey search) {
             break;
 #if defined (NG_KOUCHI_SHIFT_MS)  // 後置シフトの時間制限あり
           case B_SHFT:
-            if (naginata_config.kouchi_shift && !time_up_kouchi_shift) {
+            if (naginata_config.kouchi_shift) {
               state = WaitShift;
             }
             break;
-          default:
-            if ((naginata_config.kouchi_shift && !time_up_kouchi_shift) || !(remains & B_SHFT)) {
-              return Multipul;
-            }
-            break;
-#else
+#endif
           default:
             if (naginata_config.kouchi_shift || !(remains & B_SHFT)) {
               return Multipul;
             }
             break;
-#endif
         }
       }
     }
@@ -2436,7 +2431,9 @@ static enum TransState which_trans_state(Ngkey search) {
   return state;
 }
 
+#if defined(NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS)
 static enum TransState trans_state = None;
+#endif
 
 // キー入力を文字に変換して出力する
 // 薙刀式のキー入力だったなら false を返す
@@ -2449,8 +2446,6 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   Ngkey recent_key = 0;  // 各ビットがキーに対応する
   const bool pressing = record->event.pressed;
   bool store_key_later = false;
-
-  trans_state = None;  // キー待ちを解除
 
   switch (keycode) {
     case NG_Q ... NG_SLSH:
@@ -2483,6 +2478,9 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
   // キーを押した
   if (pressing) {
     pressed_key |= recent_key;  // キーを加える
+#if defined(NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS)
+    trans_state = None;  // キー待ちを解除
+#endif
 #if defined(NG_KOUCHI_SHIFT_MS)
     // センターシフト(前置シフト限定か制限時間外の後置シフトの場合)
     if (recent_key == B_SHFT && (!naginata_config.kouchi_shift
@@ -2535,6 +2533,9 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
         if (pressing && recent_key && waiting_count < NKEYS) {
 #endif
           // 変換してよいか調べる
+#if !(defined(NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS))
+          enum TransState trans_state;
+#endif
           trans_state = which_trans_state(searching_key);
           // 組み合わせがなくなった
           if (trans_state == None && searching_count > 1) {
@@ -2558,6 +2559,9 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
         center_shift = (bool)(searching_key & B_SHFT);
         // 1回出力したらキー再利用は終わり
         reuse_key_state = Off;
+#if defined(NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS)
+        trans_state = None;  // キー待ちを解除
+#endif
         // 関数naginata_clear()が実行されていたら早期終了
         if (!waiting_count) {
           return false;
@@ -2609,10 +2613,6 @@ static bool naginata_type(uint16_t keycode, keyrecord_t *record) {
     }
 #endif
   }
-
-#if defined (NG_KOUCHI_SHIFT_MS)
-  time_up_kouchi_shift = false;
-#endif
   return (recent_key == 0);
 }
 
@@ -2622,18 +2622,21 @@ void kouchi_shift_loop(void) {
   // 後置シフトを待ったが時間切れ
   if (trans_state == WaitShift && timer_elapsed(ng_last_pressed_ms) >= (NG_KOUCHI_SHIFT_MS)) {
     time_up_kouchi_shift = true;
+    naginata_config.kouchi_shift = false; // 後置シフトの時間切れなので、一時的に前置シフトとしてキーを処理
+    {
+      keyrecord_t record;
+      record.event.pressed = true;
+      record.event.time = ng_last_pressed_ms;
+      naginata_type(KC_NO, &record); // 未出力キーを処理
+    }
+    naginata_config.kouchi_shift = true;
+    time_up_kouchi_shift = false;
+    return;
   }
-  if (time_up_kouchi_shift
-#   if defined (NG_SHIFTED_DOUJI_MS)
-  // センターシフトを押しながらの同時押しの制限時間を待ったが時間切れ
-      || (trans_state == WaitDouji && timer_elapsed(ng_last_pressed_ms) >= (NG_SHIFTED_DOUJI_MS))
-#   endif
-  ) {
-#elif defined (NG_SHIFTED_DOUJI_MS)
+#endif
+#if defined (NG_SHIFTED_DOUJI_MS)
   // センターシフトを押しながらの同時押しの制限時間を待ったが時間切れ
   if (trans_state == WaitDouji && timer_elapsed(ng_last_pressed_ms) >= (NG_SHIFTED_DOUJI_MS)) {
-#endif
-#if defined (NG_KOUCHI_SHIFT_MS) || defined (NG_SHIFTED_DOUJI_MS)
     keyrecord_t record;
     record.event.pressed = true;
     record.event.time = ng_last_pressed_ms;
